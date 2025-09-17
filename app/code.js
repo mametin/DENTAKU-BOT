@@ -150,6 +150,12 @@ client.on("interactionCreate", async (interaction) => {
   else if (interaction.isButton()){
   	if (interaction.customId === 'retryDate') {
     	const modal = createModal_add("input", "予定の入力",storedata);
+
+		await interaction.update({
+      		content: '再入力ウィンドウを表示します…',
+      		components: [] // 元のボタンを消す
+    	});
+		
     	await interaction.showModal(modal);
   	}
   }
