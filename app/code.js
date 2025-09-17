@@ -23,6 +23,8 @@ const ROLE_ID = '1230813869216235530';
 
 var inputData; //送信データ
 
+var storeData; //再入力時私用データ
+
 var postData;
 var responseData;
 
@@ -147,13 +149,7 @@ client.on("interactionCreate", async (interaction) => {
 
   else if (interaction.isButton()){
   	if (interaction.customId === 'retryDate') {
-		const d1 = interaction.fields.getTextInputValue("inputFirst");
-      	const d3 = interaction.fields.getTextInputValue("inputThird");
-      	const d4 = interaction.fields.getTextInputValue("inputFour");
-
-		data = [d1,d3,d4];
-		
-    	const modal = createModal_add("input", "予定の入力",data);
+    	const modal = createModal_add("input", "予定の入力",storedata);
     	await interaction.showModal(modal);
   	}
   }
@@ -171,6 +167,12 @@ client.on("interactionCreate", async (interaction) => {
 				.setLabel('再入力')
 				.setStyle('PRIMARY')
 		);
+
+		const d1 = interaction.fields.getTextInputValue("inputFirst");
+      	const d3 = interaction.fields.getTextInputValue("inputThird");
+      	const d4 = interaction.fields.getTextInputValue("inputFour");
+
+		storedata = [d1,d3,d4];
 
 	　	await interaction.reply({
       		content: '入力エラー！「yyyy/mm/dd」で入力してください。',
