@@ -172,7 +172,7 @@ client.on("interactionCreate", async (interaction) => {
 				.setStyle('PRIMARY')
 		);
 
-	　	await modal.reply({
+	　	await interaction.reply({
       		content: '入力エラー！「yyyy/mm/dd」で入力してください。',
       		components: [retrybutton],
       		ephemeral: true,
