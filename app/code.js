@@ -153,8 +153,8 @@ client.on("interactionCreate", async (interaction) => {
 
 		setTimeout(async () => {
         	const modal = createModal_add("input", "予定の入力", storedata);
-			await interaction.showModal(modal); // 同じ interaction で呼ぶが、update の完了後に呼ぶ
-    	}, 100);
+			await interaction.showModal(modal); 
+    	}, 10);
   	}
   }
 
