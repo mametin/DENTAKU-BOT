@@ -149,10 +149,12 @@ client.on("interactionCreate", async (interaction) => {
 
   else if (interaction.isButton()){
   	if (interaction.customId === 'retryDate') {
-    	const modal = createModal_add("input", "予定の入力",storedata);
+		await interaction.update({ components: [] });
 
-		await interaction.deferUpdate();
-    	await interaction.showModal(modal);
+		setTimeout(async () => {
+        	const modal = createModal_add("input", "予定の入力", storedata);
+			await interaction.showModal(modal); // 同じ interaction で呼ぶが、update の完了後に呼ぶ
+    	}, 100);
   	}
   }
 
