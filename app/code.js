@@ -144,41 +144,74 @@ client.on("interactionCreate", async (interaction) => {
     return commands[interaction.commandName](interaction);
   }
 
+  else if (interaction.isButton()){
+  	if (interaction.customId === 'retryDate') {
+		const d1 = interaction.fields.getTextInputValue("inputFirst");
+      	const d3 = interaction.fields.getTextInputValue("inputThird");
+      	const d4 = interaction.fields.getTextInputValue("inputFour");
+
+		data = [d1,d3,d4];
+		
+    	const modal = createModal_add("input", "予定の入力",data);
+    	await interaction.showModal(modal);
+  	}
+  }
+
   //Modal入力処理
   else if (interaction.isModalSubmit()) {
     if (interaction.customId == "input") {
-      const d1 = interaction.fields.getTextInputValue("inputFirst");
-      const d2 = interaction.fields.getTextInputValue("inputSecond");
-      const d3 = interaction.fields.getTextInputValue("inputThird");
-      const d4 = interaction.fields.getTextInputValue("inputFour");
 
-      //データを配列に格納してモジュールに渡す
-      const dataList = [[d1], [d2], [d3], [d4]];
-      inputData = sendData(dataList, interaction.customId);
+	　//日付入力が正しくない場合
+	  const regulation = /^\d{4}\/\d{2}\/\d{2}$/;
+	  if(!regulation.test(interaction.fields.getTextInputValue("inputSecond"))){
+		const retrybutton = new MessageActionRow().addComponents(
+			new MessageButton()
+				.setCustomId('retryDate')
+				.setLabel('再入力')
+				.setStyle('PRIMARY')
+		);
+
+	　	await modal.reply({
+      		content: '入力エラー！「yyyy/mm/dd」で入力してください。',
+      		components: [retrybutton],
+      		ephemeral: true,
+    	});
+    	return;	  
+	  }
+
+	  else{
+      	const d1 = interaction.fields.getTextInputValue("inputFirst");
+      	const d2 = interaction.fields.getTextInputValue("inputSecond");
+      	const d3 = interaction.fields.getTextInputValue("inputThird");
+      	const d4 = interaction.fields.getTextInputValue("inputFour");
+
+      	//データを配列に格納してモジュールに渡す
+      	const dataList = [[d1], [d2], [d3], [d4]];
+      	inputData = sendData(dataList, interaction.customId);
       
-      await interaction.reply({
-        content: "データの追加が完了しました",
-        ephemeral: true,
-      });
+      	await interaction.reply({
+        	content: "データの追加が完了しました",
+        	ephemeral: true,
+      	});
       
-      const info = new MessageEmbed()
-	    .setColor(0x0099FF)
-	    .setTitle(d1)	//シナリオ名
-      .setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
-	    .setURL(ca_url)	//カレンダーurl
-	    .addFields(
-		    { name: '日時：', value: d2 },
-		    { name: 'KP：', value: d3 },
-		    { name: 'PL：', value: d4 },
-	    )
+      	const info = new MessageEmbed()
+	    	.setColor(0x0099FF)
+	    	.setTitle(d1)	//シナリオ名
+      		.setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
+	    	.setURL(ca_url)	//カレンダーurl
+	    	.addFields(
+		    	{ name: '日時：', value: d2 },
+		    	{ name: 'KP：', value: d3 },
+		    	{ name: 'PL：', value: d4 },
+	    	)
       
-      try {
-          client.channels.cache.get('1141934435562946590').send({ embeds: [info] });
-          return;
-      } catch {
-        return;
-      }
-      
+      	try {
+          	client.channels.cache.get('1141934435562946590').send({ embeds: [info] });
+          	return;
+      	} catch {
+        	return;
+      	}
+	  }
     } else if (interaction.customId == "deletes") {
       const deleteID = interaction.fields.getTextInputValue("Delete");
 
@@ -300,25 +333,32 @@ client.on("messageCreate", async (message) => {
 
 
 //ModalWindow(add)を作成するモジュール
-function createModal_add(customId, title) {
+function createModal_add(customId, title, defaults = ['','', '']) {
   const makingModal = new Modal().setCustomId(customId).setTitle(title);
   const InputTitle = new TextInputComponent()
     .setCustomId("inputFirst")
     .setLabel("シナリオ名")
-    .setStyle("SHORT");
+    .setStyle("SHORT")
+	.setRequired(true)
+	.setValue(defaults[0] || '');
   const InputDate = new TextInputComponent()
     .setCustomId("inputSecond")
     .setLabel("日時(yyyy/mm/dd)")
     .setStyle("SHORT")
-    .setPlaceholder("ex)2025/07/05");
+    .setPlaceholder("ex)2025/07/05")
+	.setRequired(true);
   const InputKPname = new TextInputComponent()
     .setCustomId("inputThird")
     .setLabel("KP名を入力")
-    .setStyle("SHORT");
+    .setStyle("SHORT")
+	.setRequired(true)
+	.setValue(defaults[1] || '');
   const InputPLname = new TextInputComponent()
     .setCustomId("inputFour")
     .setLabel("PL名を入力")
-    .setStyle("SHORT");
+    .setStyle("SHORT")
+	.setRequired(true)
+	.setValue(defaults[2] || '');
 
   makingModal.addComponents(new MessageActionRow().addComponents(InputTitle));
   makingModal.addComponents(new MessageActionRow().addComponents(InputDate));
