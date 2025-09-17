@@ -149,7 +149,6 @@ client.on("interactionCreate", async (interaction) => {
 
   else if (interaction.isButton()){
   	if (interaction.customId === 'retryDate') {
-		await interaction.update({ components: [] });
 
 		setTimeout(async () => {
         	const modal = createModal_add("input", "予定の入力", storedata);
