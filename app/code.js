@@ -248,17 +248,24 @@ client.on("interactionCreate", async (interaction) => {
     }   
      else if (interaction.customId == "searchs") {
       const date = interaction.fields.getTextInputValue("Search");
-
+      await interaction.deferReply({ ephemeral: true });
       //データを配列に格納してモジュールに渡す
-      const dataList = [[date]];
-      inputData = sendData(dataList, interaction.customId);
+const dataList = [[date]];
+  const searchResult = await sendData(dataList, interaction.customId);
 
-      await interaction.reply({
-        content: "日程検索が完了しました。：" + date,
-        embeds: [inputData],
-        ephemeral: true,
-      });
-    }
+  if (searchResult && searchResult.embeds) {
+    await interaction.editReply({
+      content: "日程検索が完了しました。：" + date,
+      embeds: searchResult.embeds,
+      ephemeral: true,
+    });
+  } else {
+    await interaction.editReply({
+      content: "検索に失敗したか、データが見つかりませんでした。",
+      ephemeral: true,
+    });
+  }
+}
 
   } else return;
 });
@@ -425,14 +432,17 @@ function createModal_correct(customId,title){
 }
 
 //ModalWindowの入力値を送信するモジュール
-function sendData(postList, customId) {
+async function sendData(postList, customId) {
   postData = [100, postList, customId];
 
-  axios.post(url, postData).then(async function (response) {
-    responseData = response.data; // 受け取ったデータを格納
-    console.log(postData);
-  });
-  return responseData;
+try {
+    const response = await axios.post(url, postData);
+    // GASの JSON.stringify されたデータは response.data に入ります
+    return response.data; 
+  } catch (error) {
+    console.error("GASエラー:", error);
+    return null;
+  }
 }
 
 //ダイスロールのモジュール
