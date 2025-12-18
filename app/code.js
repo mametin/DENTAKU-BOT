@@ -37,7 +37,7 @@ const ca_url =
 //送信に用いる
 const axiosBase = require("axios");
 const url =
-  "/macros/s/AKfycbz43aSFrQ4--RwFoWa-muphLQIbsMXOTakx4O1WAM9H1oATb_BpdriE3VOYxkYB-WLbFQ/exec"; // gasのドメイン以降のurl
+  "/macros/s/AKfycbxCMHrQF74S6WxTt89EqANR15sJoV-kO_2rjMW01XsHRIU2KqP0JFv8HHP0FGyPY3v6Gw/exec"; // gasのドメイン以降のurl
 const data = { key: "value" }; // 送信するデータ
 
 const axios = axiosBase.create({
