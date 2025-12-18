@@ -255,6 +255,7 @@ client.on("interactionCreate", async (interaction) => {
 
       await interaction.reply({
         content: "日程検索が完了しました。：" + date,
+        embeds: [inputData],
         ephemeral: true,
       });
     }
