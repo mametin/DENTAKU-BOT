@@ -37,7 +37,7 @@ const ca_url =
 //送信に用いる
 const axiosBase = require("axios");
 const url =
-  "/macros/s/AKfycbwv5N8GiolQgGNxPvBnyhoBN8Re1lRh1ws0J1HQdYUkGxGn3vvAqd1HE5M-7HlrK2QvZg/exec"; // gasのドメイン以降のurl
+  "/macros/s/AKfycbyAOQ62LTBsct0Zx4bzTrczRMGLyWGeqB2aZwnjbKjiO8NfXxEBt68PGCwTZMC0qn22WA/exec"; // gasのドメイン以降のurl
 const data = { key: "value" }; // 送信するデータ
 
 const axios = axiosBase.create({
@@ -196,7 +196,8 @@ client.on("interactionCreate", async (interaction) => {
 
       	//データを配列に格納してモジュールに渡す
       	const dataList = [[d1], [d2], [d3], [d4]];
-      	id = await sendData(dataList, interaction.customId);
+      	inputData = await sendData(dataList, interaction.customId);
+        const id = inputData && inputData.id ? inputData.id : 
         
       	await interaction.editReply({
         	content: "データの追加が完了しました",
@@ -205,7 +206,7 @@ client.on("interactionCreate", async (interaction) => {
       
       	const info = new MessageEmbed()
 	    	.setColor(0x0099FF)
-	    	.setTitle(d1 + "(ID:" + String(id) + ")")	//シナリオ名
+	    	.setTitle(`${d1} (ID: ${id})`)	//シナリオ名
       		.setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
 	    	.setURL(ca_url)	//カレンダーurl
 	    	.addFields(
