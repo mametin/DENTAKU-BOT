@@ -37,7 +37,7 @@ const ca_url =
 //送信に用いる
 const axiosBase = require("axios");
 const url =
-  "/macros/s/AKfycbxCMHrQF74S6WxTt89EqANR15sJoV-kO_2rjMW01XsHRIU2KqP0JFv8HHP0FGyPY3v6Gw/exec"; // gasのドメイン以降のurl
+  "/macros/s/AKfycbwv5N8GiolQgGNxPvBnyhoBN8Re1lRh1ws0J1HQdYUkGxGn3vvAqd1HE5M-7HlrK2QvZg/exec"; // gasのドメイン以降のurl
 const data = { key: "value" }; // 送信するデータ
 
 const axios = axiosBase.create({
@@ -191,10 +191,13 @@ client.on("interactionCreate", async (interaction) => {
       	const d3 = interaction.fields.getTextInputValue("inputThird");
       	const d4 = interaction.fields.getTextInputValue("inputFour");
 
+        //GASの処理を待つ
+        await interaction.deferReply({ ephemeral: true });
+
       	//データを配列に格納してモジュールに渡す
       	const dataList = [[d1], [d2], [d3], [d4]];
-      	inputData = sendData(dataList, interaction.customId);
-      
+      	id = sendData(dataList, interaction.customId);
+
       	await interaction.reply({
         	content: "データの追加が完了しました",
         	ephemeral: true,
@@ -202,7 +205,7 @@ client.on("interactionCreate", async (interaction) => {
       
       	const info = new MessageEmbed()
 	    	.setColor(0x0099FF)
-	    	.setTitle(d1)	//シナリオ名
+	    	.setTitle(d1 + "(ID:" + id + ")")	//シナリオ名
       		.setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
 	    	.setURL(ca_url)	//カレンダーurl
 	    	.addFields(
@@ -248,24 +251,27 @@ client.on("interactionCreate", async (interaction) => {
     }   
      else if (interaction.customId == "searchs") {
       const date = interaction.fields.getTextInputValue("Search");
+      
+      //GASの処理を待つ
       await interaction.deferReply({ ephemeral: true });
+      
       //データを配列に格納してモジュールに渡す
-const dataList = [[date]];
-  const searchResult = await sendData(dataList, interaction.customId);
+      const dataList = [[date]];
+      const searchResult = await sendData(dataList, interaction.customId);
 
-  if (searchResult && searchResult.embeds) {
-    await interaction.editReply({
-      content: "日程検索が完了しました。：" + date,
-      embeds: searchResult.embeds,
-      ephemeral: true,
-    });
-  } else {
-    await interaction.editReply({
-      content: "検索に失敗したか、データが見つかりませんでした。",
-      ephemeral: true,
-    });
+      if (searchResult && searchResult.embeds) {
+      await interaction.editReply({
+        content: "日程検索が完了しました。：" + date,
+        embeds: searchResult.embeds,
+        ephemeral: true,
+      });
+    } else {
+      await interaction.editReply({
+        content: "検索に失敗したか、データが見つかりませんでした。",
+        ephemeral: true,
+      });
+    }
   }
-}
 
   } else return;
 });
