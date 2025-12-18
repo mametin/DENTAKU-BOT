@@ -201,7 +201,6 @@ client.on("interactionCreate", async (interaction) => {
         
       	await interaction.editReply({
         	content: "データの追加が完了しました",
-        	ephemeral: true,
       	});
       
       	const info = new MessageEmbed()
