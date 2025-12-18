@@ -205,7 +205,7 @@ client.on("interactionCreate", async (interaction) => {
       
       	const info = new MessageEmbed()
 	    	.setColor(0x0099FF)
-	    	.setTitle(d1 + "(ID:" + id + ")")	//シナリオ名
+	    	.setTitle(d1 + "(ID:" + String(id) + ")")	//シナリオ名
       		.setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
 	    	.setURL(ca_url)	//カレンダーurl
 	    	.addFields(
