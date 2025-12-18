@@ -37,7 +37,7 @@ const ca_url =
 //送信に用いる
 const axiosBase = require("axios");
 const url =
-  "/macros/s/AKfycbw4rUqFWkjAGRBBGDA7pawSj9qPfnI-InSZj95jfgNrPMYGH99qKKTwh3giMLqzswbUFA/exec"; // gasのドメイン以降のurl
+  "/macros/s/AKfycbz43aSFrQ4--RwFoWa-muphLQIbsMXOTakx4O1WAM9H1oATb_BpdriE3VOYxkYB-WLbFQ/exec"; // gasのドメイン以降のurl
 const data = { key: "value" }; // 送信するデータ
 
 const axios = axiosBase.create({
@@ -255,7 +255,7 @@ client.on("interactionCreate", async (interaction) => {
 
       await interaction.reply({
         content: "日程検索が完了しました。：" + date,
-        ephemeral: false,
+        ephemeral: true,
       });
     }
 
