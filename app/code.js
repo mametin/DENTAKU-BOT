@@ -198,7 +198,7 @@ client.on("interactionCreate", async (interaction) => {
       	const dataList = [[d1], [d2], [d3], [d4]];
       	id = sendData(dataList, interaction.customId);
 
-      	await interaction.reply({
+      	await interaction.editReply({
         	content: "データの追加が完了しました",
         	ephemeral: true,
       	});
