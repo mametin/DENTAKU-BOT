@@ -196,8 +196,8 @@ client.on("interactionCreate", async (interaction) => {
 
       	//データを配列に格納してモジュールに渡す
       	const dataList = [[d1], [d2], [d3], [d4]];
-      	id = sendData(dataList, interaction.customId);
-
+      	id = await sendData(dataList, interaction.customId);
+        
       	await interaction.editReply({
         	content: "データの追加が完了しました",
         	ephemeral: true,
