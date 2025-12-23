@@ -67,19 +67,19 @@ const show = {
 };
 
 const deletes = {
-  name: "deletes",
+  name: "delete",
   required: true,
   description: "日程の削除が行えます。",
 };
 
 const corrects = {
-  name: "corrects",
+  name: "correct",
   required: true,
   description: "日程の修正が行えます。",
 };
 
 const searchs = {
-  name: "searchs",
+  name: "search",
   required: true,
   description: "日程の検索が行えます。",
 };
@@ -90,7 +90,35 @@ const omikuji = {
    description: "本日の運勢が占えます",
 };
 
-const commands = [hello,add,show,deletes,corrects,searchs,omikuji];
+
+//ロール選択コマンド
+const role_options = [
+    {
+        name: 'menu1_label',
+        description: 'ロールの説明',
+        type: 'STRING',
+        required: true
+    }
+];
+
+const MAX_ROLES = 20; 
+
+for (let i = 1; i <= MAX_ROLES; i++) {
+    role_options.push({
+        name: `role${i}`,
+        description: `選択肢に入れるロール (${i})`,
+        type: 'ROLE',
+        required: i === 1
+    });
+}
+
+const roles = {
+    name: 'setup_roles',
+    description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
+    options: role_options
+};
+
+const commands = [hello,add,show,deletes,corrects,searchs,omikuji,roles];
 const client = new Client({
   intents: 0,
 });
