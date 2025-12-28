@@ -152,6 +152,7 @@ const commands = {
   // ロール選択パネル生成
   //---------------------------------------------------
   async setup_roles(interaction) {
+    const targetChannel = interaction.options.getChannel('target_channel');
     const label1 = interaction.options.getString('explan_roll');
     const menuRoles = [];
 
@@ -167,29 +168,43 @@ const commands = {
             value: role.id,
             description: 'クリックして着脱'
           });
+
+          roleListText += `・${role}\n`;
         }
       }
     }
 
     //--- メニュー ---
     const embed = new MessageEmbed()
-      .setTitle('ロール選択パネル')
-      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**1. ${label1}**`)
+      .setTitle(label1)
+      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**【対象ロール】**\n${roleListText}`)
       .setColor('BLUE');
 
     // --- SelectMenu の作成 ---
     const selectMenu = new MessageSelectMenu()
       .setCustomId('menu_dynamic')
-      .setPlaceholder(`▼ ${label1} を選択...`)
+      .setPlaceholder(`▼ ロールを選択`)
       .addOptions(menuRoles);
 
     //--- 送信 ---
-    await interaction.reply({
+try {
+    await targetChannel.send({
       embeds: [embed],
-      components: [
-        new MessageActionRow().addComponents(selectMenu)
-      ]
+      components: [new MessageActionRow().addComponents(selectMenu)]
     });
+
+    await interaction.reply({
+      content: `<#${targetChannel.id}> にパネルを設置しました！`,
+      ephemeral: true
+    });
+
+    } catch (error) {
+    console.error(error);
+    await interaction.reply({
+      content: 'パネルの送信に失敗しました。',
+      ephemeral: true
+    });
+  }
   },
 };
 
@@ -352,6 +367,7 @@ client.on("interactionCreate", async (interaction) => {
         return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
       }
 
+      /*
       try {
         // メンバーが既にロールを持っているかチェックして付け外しを行う
         if (interaction.member.roles.cache.has(roleId)) {
@@ -368,6 +384,7 @@ client.on("interactionCreate", async (interaction) => {
           ephemeral: true
         });
       }
+      */
     }
   }
 
