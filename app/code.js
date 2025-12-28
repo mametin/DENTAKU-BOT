@@ -18,8 +18,9 @@ client.on("ready", (message) => {
   console.log("Bot準備完了！");
 });
 
-//ここから
-const ROLE_ID = '1230813869216235530';
+//====================================================
+// 変数宣言
+//====================================================
 
 var inputData; //送信データ
 
@@ -48,9 +49,10 @@ const axios = axiosBase.create({
   },
   responseType: "json",
 });
-//ここまで
 
-//コマンド処理内容の記述
+//====================================================
+// コマンド処理内容の記述
+//====================================================
 const commands = {
   //挨拶
   async hello(interaction) {
@@ -66,16 +68,18 @@ const commands = {
     const lang = interaction.options.get("language");
     return interaction.reply(source[lang.value](name));
   },
-  //挨拶ここまで
-
-  //日程入力
+  
+  //---------------------------------------------------
+  // 日程入力
+  //---------------------------------------------------
   async add(interaction) {
     const modal = createModal_add("input", "予定の入力");
     await interaction.showModal(modal);
   },
-  //日程入力ここまで
 
-  //日程閲覧
+  //---------------------------------------------------
+  // 日程閲覧
+  //---------------------------------------------------
   async show(interaction) {
     const source = {
       sp() {
@@ -92,7 +96,9 @@ const commands = {
     });
   },
 
-  //日程削除
+  //---------------------------------------------------
+  // 日程削除
+  //---------------------------------------------------
   async deletes(interaction) {
     const modal = new Modal().setCustomId("deletes").setTitle("予定の削除");
 
@@ -105,16 +111,18 @@ const commands = {
 
     await interaction.showModal(modal);
   },
-  //日程削除ここまで
-  
-  //日程修正
+
+  //----------------------------------------------------
+  // 日程修正
+  //----------------------------------------------------
   async corrects(interaction) {
     const modal = createModal_correct("corrects", "予定の修正");
     await interaction.showModal(modal);
   },
-  //日程修正ここまで
-  
-  //日程検索
+
+  //--------------------------------------------------- 
+  // 日程検索
+  //---------------------------------------------------
   async searchs(interaction) {
     const modal = new Modal().setCustomId("searchs").setTitle("日付から予定を検索");
 
@@ -128,10 +136,10 @@ const commands = {
 
     await interaction.showModal(modal);
   },
-  
-  //日程検索ここまで
 
-  //おみくじ
+  //---------------------------------------------------
+  // おみくじ
+  //----------------------------------------------------
   async omikuji(interaction) {
     const rollResult = await diceroll(
       "DiceBot",
@@ -139,14 +147,63 @@ const commands = {
     );
     return interaction.reply(rollResult.text.slice(27));
   },
-};
-//スラッシュコマンド処理終了
 
+  //---------------------------------------------------
+  // ロール選択パネル生成
+  //---------------------------------------------------
+  async setup_roles(interaction) {
+    const label1 = interaction.options.getString('menu1_label');
+    const menuRoles = [];
+
+    // --- パネルに配置するロールの一覧を取得 ---
+    for (let i = 1; i <= 20; i++) {
+      const role = interaction.options.getRole(`role${i}`);
+
+      if (role) {
+        const isDuplicate = menuRoles.some(r => r.value === role.id);
+        if (!isDuplicate) {
+          menuRoles.push({
+            label: role.name,
+            value: role.id,
+            description: 'クリックして着脱'
+          });
+        }
+      }
+    }
+
+    //--- メニュー ---
+    const embed = new MessageEmbed()
+      .setTitle('ロール選択パネル')
+      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**1. ${label1}**\n**2. ${FIXED_MENU_2_LABEL}**`)
+      .setColor('BLUE');
+
+    // --- SelectMenu の作成 ---
+    const selectMenu = new MessageSelectMenu()
+      .setCustomId('menu_dynamic')
+      .setPlaceholder(`▼ ${label1} を選択...`)
+      .addOptions(menuRoles);
+
+    //--- 送信 ---
+    await interaction.reply({
+      embeds: [embed],
+      components: [
+        new MessageActionRow().addComponents(selectMenu)
+      ]
+    });
+  },
+};
+
+//====================================================
+// イベント処理
+//====================================================
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isCommand()) {
     return commands[interaction.commandName](interaction);
   }
 
+  //---------------------------------------------------
+  // Button処理
+  //---------------------------------------------------
   else if (interaction.isButton()){
   	if (interaction.customId === 'retryDate') {
 
@@ -157,11 +214,15 @@ client.on("interactionCreate", async (interaction) => {
   	}
   }
 
-  //Modal入力処理
+  //---------------------------------------------------
+  // Modal入力処理
+  //---------------------------------------------------
   else if (interaction.isModalSubmit()) {
+
+    // --- 日程追加 ---
     if (interaction.customId == "input") {
 
-	　//日付入力が正しくない場合
+	  //日付入力が正しくない場合
 	  const regulation = /^\d{4}\/\d{2}\/\d{2}$/;
 	  if(!regulation.test(interaction.fields.getTextInputValue("inputSecond"))){
 		const retrybutton = new MessageActionRow().addComponents(
@@ -177,7 +238,7 @@ client.on("interactionCreate", async (interaction) => {
 
 		storedata = [d1,d3,d4];
 
-	　	await interaction.reply({
+	  	await interaction.reply({
       		content: '入力エラー！「yyyy/mm/dd」で入力してください。',
       		components: [retrybutton],
       		ephemeral: true,
@@ -221,6 +282,8 @@ client.on("interactionCreate", async (interaction) => {
         	return;
       	}
 	  }
+
+    // --- 日程削除 ---
     } else if (interaction.customId == "deletes") {
       const deleteID = interaction.fields.getTextInputValue("Delete");
 
@@ -233,6 +296,8 @@ client.on("interactionCreate", async (interaction) => {
         ephemeral: true,
       });
     }
+
+    // --- 日程変更 ---
     else if (interaction.customId == "corrects") {
       const correctID = interaction.fields.getTextInputValue("correctID");
       const d1 = interaction.fields.getTextInputValue("title");
@@ -248,7 +313,9 @@ client.on("interactionCreate", async (interaction) => {
         content: "データの修正が完了しました",
         ephemeral: true,
       });
-    }   
+    }
+    
+    // --- 日程検索 ---
      else if (interaction.customId == "searchs") {
       const date = interaction.fields.getTextInputValue("Search");
       
@@ -273,11 +340,42 @@ client.on("interactionCreate", async (interaction) => {
     }
   }
 
-  } else return;
+  }
+
+  else if (interaction.isSelectMenu()) {
+    if (interaction.customId === 'menu_dynamic') {
+      const roleId = interaction.values[0];
+      const role = getBuiltinModule.roles.cache.get(roleId);
+
+    if (!role) return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
+
+    try{
+      if(interaction.member.roles.cache.has(roleId)){
+        await interaction.member.roles.remove(roleId);
+        return interaction.reply({ content: `ロール「${role.name}」を外しました。`, ephemeral: true });
+      }
+      else{
+        await interaction.member.roles.add(roleId);
+        return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
+      }
+    }
+    catch(error) {return interaction.reply({ content: 'ロールの変更に失敗しました。', ephemeral: true });}
+    }
+  }
+  
+  else return;
 });
 
+//====================================================
+// 返信処理の記述
+//====================================================
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
+
+  //全角を半角に変換
+  message.content = message.content.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
 
   //CoC
   if (message.content.match(/^(coc|coc7) /i)) {
@@ -351,8 +449,9 @@ client.on("messageCreate", async (message) => {
   } 
 });
 
-
-//ModalWindow(add)を作成するモジュール
+//====================================================
+// ModalWindow(add)を作成するモジュール
+//====================================================
 function createModal_add(customId, title, defaults = ['','', '']) {
   const makingModal = new Modal().setCustomId(customId).setTitle(title);
   const InputTitle = new TextInputComponent()
@@ -388,7 +487,9 @@ function createModal_add(customId, title, defaults = ['','', '']) {
   return makingModal;
 }
 
-//ModalWindow(correct)を作成するモジュール
+//====================================================
+// ModalWindow(correct)を作成するモジュール
+//====================================================
 function createModal_correct(customId,title){
   const makingModal = new Modal().setCustomId(customId).setTitle(title);
     
@@ -437,7 +538,9 @@ function createModal_correct(customId,title){
   return makingModal;
 }
 
-//ModalWindowの入力値を送信するモジュール
+//====================================================
+// ModalWindowの入力値を送信するモジュール
+//====================================================
 async function sendData(postList, customId) {
   postData = [100, postList, customId];
 
@@ -451,14 +554,15 @@ try {
   }
 }
 
-//ダイスロールのモジュール
+//====================================================
+// ダイスロールのモジュール
+//====================================================
 async function diceroll(system, roll) {
   const loader = new DynamicLoader();
   const GameSystem = await loader.dynamicLoad(system);
   const result = GameSystem.eval(roll);
   return result;
 }
-//ここまで
 
 
 client.login(process.env.DISCORD_BOT_TOKEN);

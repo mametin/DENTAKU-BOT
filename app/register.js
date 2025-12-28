@@ -94,7 +94,7 @@ const omikuji = {
 //ロール選択コマンド
 const role_options = [
     {
-        name: 'menu1_label',
+        name: 'explan_roll',
         description: 'ロールの説明',
         type: 'STRING',
         required: true
