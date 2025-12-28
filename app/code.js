@@ -342,19 +342,21 @@ client.on("interactionCreate", async (interaction) => {
 
   }
 
-else if (interaction.isSelectMenu()) {
+  else if (interaction.isSelectMenu()) {
     if (interaction.customId === 'menu_dynamic') {
       const roleId = interaction.values[0];
-      // サーバーのロール一覧（roles）から、選択されたIDのロールを取得
+
       const role = interaction.guild.roles.cache.get(roleId);
 
-      if (!role) return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
+      if (!role) {
+        return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
+      }
 
       try {
-        // メンバーが既にロールを持っているかチェック
+        // メンバーが既にロールを持っているかチェックして付け外しを行う
         if (interaction.member.roles.cache.has(roleId)) {
           await interaction.member.roles.remove(roleId);
-          return interaction.reply({ content: `ロール「${role.name}」を外しました。`, ephemeral: true });
+          return interaction.reply({ content: `ロール「${role.name}」を解除しました。`, ephemeral: true });
         } else {
           await interaction.member.roles.add(roleId);
           return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
