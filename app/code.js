@@ -152,7 +152,7 @@ const commands = {
   // ロール選択パネル生成
   //---------------------------------------------------
   async setup_roles(interaction) {
-    const label1 = interaction.options.getString('menu1_label');
+    const label1 = interaction.options.getString('explan_roll');
     const menuRoles = [];
 
     // --- パネルに配置するロールの一覧を取得 ---
