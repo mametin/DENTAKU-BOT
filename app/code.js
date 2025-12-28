@@ -155,6 +155,7 @@ const commands = {
     const targetChannel = interaction.options.getChannel('target_channel');
     const label1 = interaction.options.getString('explan_roll');
     const menuRoles = [];
+    let roleListText = "";
 
     // --- パネルに配置するロールの一覧を取得 ---
     for (let i = 1; i <= 20; i++) {
@@ -176,8 +177,8 @@ const commands = {
 
     //--- メニュー ---
     const embed = new MessageEmbed()
-      .setTitle(label1)
-      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**【対象ロール】**\n${roleListText}`)
+      .setTitle("ロール選択パネル")
+      .setDescription(`${label1}\n\n**【対象ロール】**\n${roleListText}`)
       .setColor('BLUE');
 
     // --- SelectMenu の作成 ---
@@ -367,24 +368,25 @@ client.on("interactionCreate", async (interaction) => {
         return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
       }
 
-      /*
       try {
         // メンバーが既にロールを持っているかチェックして付け外しを行う
         if (interaction.member.roles.cache.has(roleId)) {
           await interaction.member.roles.remove(roleId);
-          return interaction.reply({ content: `ロール「${role.name}」を解除しました。`, ephemeral: true });
+          //return interaction.reply({ content: `ロール「${role.name}」を解除しました。`, ephemeral: true });
         } else {
           await interaction.member.roles.add(roleId);
-          return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
+          //return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
         }
       } catch (error) {
         console.error(error);
+        /*
         return interaction.reply({
           content: 'ロールの変更に失敗しました。',
           ephemeral: true
+        
         });
+        */
       }
-      */
     }
   }
 

@@ -101,7 +101,7 @@ const role_options = [
   },
   {
     name: 'explan_roll',
-    description: 'ロールの説明',
+    description: 'ロールの説明文を入力してください',
     type: 'STRING',
     required: true
   }
