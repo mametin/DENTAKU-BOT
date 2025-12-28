@@ -2,7 +2,7 @@ const { Client} = require("discord.js");
 const { DynamicLoader } = require("bcdice");
 const { UserDefinedDiceTable } = require("bcdice");
 const wait = require("util");
-const options = { intents: ["GUILDS", "GUILD_MESSAGES"] };
+const options = { intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"] };
 const client = new Client(options);
 const {
   Modal,
@@ -151,7 +151,7 @@ const commands = {
   //---------------------------------------------------
   // ロール選択パネル生成
   //---------------------------------------------------
-  async roles(interaction) {
+  async setup_roles(interaction) {
     const label1 = interaction.options.getString('menu1_label');
     const menuRoles = [];
 
@@ -174,7 +174,7 @@ const commands = {
     //--- メニュー ---
     const embed = new MessageEmbed()
       .setTitle('ロール選択パネル')
-      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**1. ${label1}**\n*`)
+      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**1. ${label1}**`)
       .setColor('BLUE');
 
     // --- SelectMenu の作成 ---
@@ -345,7 +345,7 @@ client.on("interactionCreate", async (interaction) => {
   else if (interaction.isSelectMenu()) {
     if (interaction.customId === 'menu_dynamic') {
       const roleId = interaction.values[0];
-      const role = getBuiltinModule.roles.cache.get(roleId);
+      const role = interaction.roles.cache.get(roleId);
 
     if (!role) return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
 
