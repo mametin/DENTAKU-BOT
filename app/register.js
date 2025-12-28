@@ -37,9 +37,9 @@ const hello = {
 };
 
 const add = {
-   name: "add",
+  name: "add",
   required: true,
-   description: "日程の入力が行えます。",
+  description: "日程の入力が行えます。",
 };
 
 const show = {
@@ -85,40 +85,46 @@ const searchs = {
 };
 
 const omikuji = {
-   name: "omikuji",
+  name: "omikuji",
   required: true,
-   description: "本日の運勢が占えます",
+  description: "本日の運勢が占えます",
 };
 
 
 //ロール選択コマンド
 const role_options = [
-    {
-        name: 'explan_roll',
-        description: 'ロールの説明',
-        type: 'STRING',
-        required: true
-    }
+  {
+    name: 'target_channel',
+    description: 'パネルを設置するチャンネルを選択してください',
+    type: 'CHANNEL',
+    required: true
+  },
+  {
+    name: 'explan_roll',
+    description: 'ロールの説明',
+    type: 'STRING',
+    required: true
+  }
 ];
 
-const MAX_ROLES = 20; 
+const MAX_ROLES = 20;
 
 for (let i = 1; i <= MAX_ROLES; i++) {
-    role_options.push({
-        name: `role${i}`,
-        description: `選択肢に入れるロール (${i})`,
-        type: 'ROLE',
-        required: i === 1
-    });
+  role_options.push({
+    name: `role${i}`,
+    description: `選択肢に入れるロール (${i})`,
+    type: 'ROLE',
+    required: i === 1
+  });
 }
 
 const roles = {
-    name: 'setup_roles',
-    description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
-    options: role_options
+  name: 'setup_roles',
+  description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
+  options: role_options
 };
 
-const commands = [hello,add,show,deletes,corrects,searchs,omikuji,roles];
+const commands = [hello, add, show, deletes, corrects, searchs, omikuji, roles];
 const client = new Client({
   intents: 0,
 });
