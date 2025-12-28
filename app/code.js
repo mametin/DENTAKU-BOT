@@ -11,8 +11,8 @@ const {
   MessageActionRow,
   MessageEmbed,
   MessageButton,
+  MessageSelectMenu,
 } = require("discord.js");
-
 
 client.on("ready", (message) => {
   console.log("Bot準備完了！");
