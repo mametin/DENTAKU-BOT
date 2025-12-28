@@ -151,7 +151,7 @@ const commands = {
   //---------------------------------------------------
   // ロール選択パネル生成
   //---------------------------------------------------
-  async setup_roles(interaction) {
+  async roles(interaction) {
     const label1 = interaction.options.getString('menu1_label');
     const menuRoles = [];
 
@@ -174,7 +174,7 @@ const commands = {
     //--- メニュー ---
     const embed = new MessageEmbed()
       .setTitle('ロール選択パネル')
-      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**1. ${label1}**\n**2. ${FIXED_MENU_2_LABEL}**`)
+      .setDescription(`以下のメニューから必要なロールを選択してください。\n\n**1. ${label1}**\n*`)
       .setColor('BLUE');
 
     // --- SelectMenu の作成 ---
