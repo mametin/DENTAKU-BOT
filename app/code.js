@@ -345,7 +345,7 @@ client.on("interactionCreate", async (interaction) => {
   else if (interaction.isSelectMenu()) {
     if (interaction.customId === 'menu_dynamic') {
       const roleId = interaction.values[0];
-      const role = interaction.roles.cache.get(roleId);
+      const role = interaction.guild.cache.get(roleId);
 
     if (!role) return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
 
