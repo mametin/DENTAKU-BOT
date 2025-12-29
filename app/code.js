@@ -372,11 +372,11 @@ client.on("interactionCreate", async (interaction) => {
         // メンバーが既にロールを持っているかチェックして付け外しを行う
         if (interaction.member.roles.cache.has(roleId)) {
           await interaction.member.roles.remove(roleId);
-          return await interaction.deferUpdate();
+          return await interaction.update();
           //return interaction.reply({ content: `ロール「${role.name}」を解除しました。`, ephemeral: true });
         } else {
           await interaction.member.roles.add(roleId);
-          return await interaction.deferUpdate();
+          return await interaction.update();
           //return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
         }
       } catch (error) {

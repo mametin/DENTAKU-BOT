@@ -23,14 +23,8 @@ const hello = {
       description: "どの言語で挨拶するか指定します。",
       required: true,
       choices: [
-        {
-          name: "English",
-          value: "en",
-        },
-        {
-          name: "Japanese",
-          value: "ja",
-        },
+        { name: "English", value: "en", },
+        { name: "Japanese", value: "ja", },
       ],
     },
   ],
@@ -53,14 +47,8 @@ const show = {
       description: "表示形式の選択",
       required: true,
       choices: [
-        {
-          name: "Spreadsheet",
-          value: "sp",
-        },
-        {
-          name: "Calendar",
-          value: "ca",
-        },
+        { name: "Spreadsheet", value: "sp", },
+        { name: "Calendar", value: "ca", },
       ],
     },
   ],
@@ -81,7 +69,13 @@ const corrects = {
 const searchs = {
   name: "search",
   required: true,
-  description: "日程の検索が行えます。",
+  description: "セッション予定の検索が行えます。",
+  choices: [
+    { name: "タイトル検索", value: "title", },
+    { name: "日付検索", value: "date", },
+    { name: "KP名検索", value: "kp", },
+    { name: "PL検索", value: "pl", },
+  ],
 };
 
 const omikuji = {
@@ -90,8 +84,17 @@ const omikuji = {
   description: "本日の運勢が占えます",
 };
 
+const roles = {
+  name: 'setup_roles',
+  description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
+  options: role_options
+};
 
-//ロール選択コマンド
+//===========================================
+// コマンドオプション設定
+//===========================================
+
+//--- ロール選択コマンド ---
 const role_options = [
   {
     name: 'target_channel',
@@ -118,11 +121,9 @@ for (let i = 1; i <= MAX_ROLES; i++) {
   });
 }
 
-const roles = {
-  name: 'setup_roles',
-  description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
-  options: role_options
-};
+//===========================================
+// コマンドオプション設定 終了
+//===========================================
 
 const commands = [hello, add, show, deletes, corrects, searchs, omikuji, roles];
 const client = new Client({
