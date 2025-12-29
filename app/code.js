@@ -188,24 +188,24 @@ const commands = {
       .addOptions(menuRoles);
 
     //--- 送信 ---
-try {
-    await targetChannel.send({
-      embeds: [embed],
-      components: [new MessageActionRow().addComponents(selectMenu)]
-    });
+    try {
+      await targetChannel.send({
+        embeds: [embed],
+        components: [new MessageActionRow().addComponents(selectMenu)]
+      });
 
-    await interaction.reply({
-      content: `<#${targetChannel.id}> にパネルを設置しました！`,
-      ephemeral: true
-    });
+      await interaction.reply({
+        content: `<#${targetChannel.id}> にパネルを設置しました！`,
+        ephemeral: true
+      });
 
     } catch (error) {
-    console.error(error);
-    await interaction.reply({
-      content: 'パネルの送信に失敗しました。',
-      ephemeral: true
-    });
-  }
+      console.error(error);
+      await interaction.reply({
+        content: 'パネルの送信に失敗しました。',
+        ephemeral: true
+      });
+    }
   },
 };
 
@@ -372,15 +372,25 @@ client.on("interactionCreate", async (interaction) => {
         // メンバーが既にロールを持っているかチェックして付け外しを行う
         if (interaction.member.roles.cache.has(roleId)) {
           await interaction.member.roles.remove(roleId);
-          return await interaction.update();
           //return interaction.reply({ content: `ロール「${role.name}」を解除しました。`, ephemeral: true });
         } else {
           await interaction.member.roles.add(roleId);
-          return await interaction.update();
           //return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
         }
+
+        const row = new MessageActionRow().addComponents(
+          interaction.message.components[0].components
+        );
+
+        await interaction.update({
+          components: [row]
+        });
+
       } catch (error) {
         console.error(error);
+        if (interaction.replied || interaction.deferred) await interaction.followUp({ content: 'エラーが発生しました。', ephemeral: true });
+        else await interaction.reply({ content: 'エラーが発生しました。', ephemeral: true });
+
         /*
         return interaction.reply({
           content: 'ロールの変更に失敗しました。',
