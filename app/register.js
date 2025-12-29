@@ -13,6 +13,41 @@ async function register(client, commands, guildID) {
   return client.application.commands.set(commands, guildID);
 }
 
+//===========================================
+// コマンドオプション設定
+//===========================================
+
+//--- ロール選択コマンド ---
+const role_options = [
+  {
+    name: 'target_channel',
+    description: 'パネルを設置するチャンネルを選択してください',
+    type: 'CHANNEL',
+    required: true
+  },
+  {
+    name: 'explan_roll',
+    description: 'ロールの説明文を入力してください',
+    type: 'STRING',
+    required: true
+  }
+];
+
+const MAX_ROLES = 20;
+
+for (let i = 1; i <= MAX_ROLES; i++) {
+  role_options.push({
+    name: `role${i}`,
+    description: `選択肢に入れるロール (${i})`,
+    type: 'ROLE',
+    required: i === 1
+  });
+}
+
+//===========================================
+// コマンドオプション設定 終了
+//===========================================
+
 const hello = {
   name: "hello",
   description: "botがあなたに挨拶します。",
@@ -87,43 +122,10 @@ const omikuji = {
 const roles = {
   name: 'setup_roles',
   description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
-  options: role_options
+  options: role_options,
 };
 
-//===========================================
-// コマンドオプション設定
-//===========================================
 
-//--- ロール選択コマンド ---
-const role_options = [
-  {
-    name: 'target_channel',
-    description: 'パネルを設置するチャンネルを選択してください',
-    type: 'CHANNEL',
-    required: true
-  },
-  {
-    name: 'explan_roll',
-    description: 'ロールの説明文を入力してください',
-    type: 'STRING',
-    required: true
-  }
-];
-
-const MAX_ROLES = 20;
-
-for (let i = 1; i <= MAX_ROLES; i++) {
-  role_options.push({
-    name: `role${i}`,
-    description: `選択肢に入れるロール (${i})`,
-    type: 'ROLE',
-    required: i === 1
-  });
-}
-
-//===========================================
-// コマンドオプション設定 終了
-//===========================================
 
 const commands = [hello, add, show, deletes, corrects, searchs, omikuji, roles];
 const client = new Client({
