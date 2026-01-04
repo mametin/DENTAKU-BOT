@@ -105,11 +105,17 @@ const searchs = {
   name: "search",
   required: true,
   description: "セッション予定の検索が行えます。",
-  choices: [
-    { name: "タイトル検索", value: "title", },
-    { name: "日付検索", value: "date", },
-    { name: "KP名検索", value: "kp", },
-    { name: "PL検索", value: "pl", },
+  options: [
+    {
+      type: "STRING",
+      name: "type",
+      choices: [
+        { name: "タイトル検索", value: "title", },
+        { name: "日付検索", value: "date", },
+        { name: "KP名検索", value: "kp", },
+        { name: "PL検索", value: "pl", },
+      ],
+    },
   ],
 };
 

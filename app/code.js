@@ -38,7 +38,7 @@ const ca_url =
 //送信に用いる
 const axiosBase = require("axios");
 const url =
-  "/macros/s/AKfycbyAOQ62LTBsct0Zx4bzTrczRMGLyWGeqB2aZwnjbKjiO8NfXxEBt68PGCwTZMC0qn22WA/exec"; // gasのドメイン以降のurl
+  "/macros/s/AKfycbzZ8dMXdthNid46E6FQVtOP5Kq28jfFkQ8pT8v0ZBsqfjlLIzGPTekYUFq7sjtyyXPIqg/exec"; // gasのドメイン以降のurl
 const data = { key: "value" }; // 送信するデータ
 
 const axios = axiosBase.create({
@@ -99,7 +99,7 @@ const commands = {
   //---------------------------------------------------
   // 日程削除
   //---------------------------------------------------
-  async deletes(interaction) {
+  async delete(interaction) {
     const modal = new Modal().setCustomId("deletes").setTitle("予定の削除");
 
     const DeleteID = new TextInputComponent()
@@ -115,7 +115,7 @@ const commands = {
   //----------------------------------------------------
   // 日程修正
   //----------------------------------------------------
-  async corrects(interaction) {
+  async correct(interaction) {
     const modal = createModal_correct("corrects", "予定の修正");
     await interaction.showModal(modal);
   },
@@ -123,16 +123,41 @@ const commands = {
   //--------------------------------------------------- 
   // 日程検索
   //---------------------------------------------------
-  async searchs(interaction) {
-    const modal = new Modal().setCustomId("searchs").setTitle("日付から予定を検索");
+  async search(interaction) {
+    const source = {
+      date: {
+        title: "日付から検索",
+        label: "検索したい予定の日付を入力(yyyy/mm/dd)",
+        placeholder: "ex)2025/07/05"
+      },
+      title: {
+        title: "タイトルから検索",
+        label: "検索したい予定のタイトルを入力",
+        placeholder: "シナリオ名を入力"
+      }
+    }
 
-    const search = new TextInputComponent()
+    const type= interaction.options.get("type")?.value;
+    const config = source[type];
+
+    if (!config) {
+      return interaction.reply({
+        content: "無効な検索タイプです。",
+        ephemeral: true,
+      });
+    }
+
+    // モーダルの作成
+    const modal = new Modal()
+      .setCustomId(`search_${type}`)
+      .setTitle(config.title);
+
+      const input = new TextInputComponent()
       .setCustomId("Search")
-      .setLabel("検索したい予定の日付を入力(yyyy/mm/dd)")
-      .setStyle("SHORT")
-      .setPlaceholder("ex)2025/07/05");
-
-    modal.addComponents(new MessageActionRow().addComponents(search));
+      .setLabel(config.label)
+      .setStyle(TextInputStyle.SHORT)
+      .setPlaceholder(config.placeholder||'')
+      .setRequired(true);
 
     await interaction.showModal(modal);
   },
@@ -300,7 +325,10 @@ client.on("interactionCreate", async (interaction) => {
       }
 
       // --- 日程削除 ---
-    } else if (interaction.customId == "deletes") {
+    } 
+    
+    // --- 日程削除 ---
+    else if (interaction.customId == "deletes") {
       const deleteID = interaction.fields.getTextInputValue("Delete");
 
       //データを配列に格納してモジュールに渡す
@@ -332,19 +360,20 @@ client.on("interactionCreate", async (interaction) => {
     }
 
     // --- 日程検索 ---
-    else if (interaction.customId == "searchs") {
-      const date = interaction.fields.getTextInputValue("Search");
+    else if (interaction.customId.startsWith("search_")) {
+      const searchType = interaction.customId.split("_")[1];
+      const searchText = interaction.fields.getTextInputValue("Search");
 
       //GASの処理を待つ
       await interaction.deferReply({ ephemeral: true });
 
       //データを配列に格納してモジュールに渡す
-      const dataList = [[date]];
+      const dataList = [[searchText]];
       const searchResult = await sendData(dataList, interaction.customId);
 
       if (searchResult && searchResult.embeds) {
         await interaction.editReply({
-          content: "日程検索が完了しました。：" + date,
+          content: "日程検索が完了しました。：" + searchText,
           embeds: searchResult.embeds,
           ephemeral: true,
         });
@@ -372,10 +401,8 @@ client.on("interactionCreate", async (interaction) => {
         // メンバーが既にロールを持っているかチェックして付け外しを行う
         if (interaction.member.roles.cache.has(roleId)) {
           await interaction.member.roles.remove(roleId);
-          //return interaction.reply({ content: `ロール「${role.name}」を解除しました。`, ephemeral: true });
         } else {
           await interaction.member.roles.add(roleId);
-          //return interaction.reply({ content: `ロール「${role.name}」を付与しました。`, ephemeral: true });
         }
 
         const row = new MessageActionRow().addComponents(
@@ -390,14 +417,6 @@ client.on("interactionCreate", async (interaction) => {
         console.error(error);
         if (interaction.replied || interaction.deferred) await interaction.followUp({ content: 'エラーが発生しました。', ephemeral: true });
         else await interaction.reply({ content: 'エラーが発生しました。', ephemeral: true });
-
-        /*
-        return interaction.reply({
-          content: 'ロールの変更に失敗しました。',
-          ephemeral: true
-        
-        });
-        */
       }
     }
   }
