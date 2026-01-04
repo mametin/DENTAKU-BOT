@@ -134,15 +134,25 @@ const commands = {
         title: "タイトルから検索",
         label: "検索したい予定のタイトルを入力",
         placeholder: "シナリオ名を入力"
+      },
+      kp: {
+        title: "KP名から検索",
+        label: "検索したいKPの名前を入力",
+        placeholder: "KP名を入力"
+      },
+      pl: {
+        title: "PL名から検索",
+        label: "検索したいPLの名前を入力",
+        placeholder: "PL名を入力"
       }
-    }
+    };
 
-    const type= interaction.options.get("type")?.value;
+    const type = interaction.options.getString("type");
     const config = source[type];
 
     if (!config) {
       return interaction.reply({
-        content: "無効な検索タイプです。",
+        content: "検索タイプを指定してください。",
         ephemeral: true,
       });
     }
@@ -152,13 +162,14 @@ const commands = {
       .setCustomId(`search_${type}`)
       .setTitle(config.title);
 
-      const input = new TextInputComponent()
+    const input = new TextInputComponent()
       .setCustomId("Search")
       .setLabel(config.label)
       .setStyle("SHORT")
-      .setPlaceholder(config.placeholder||'')
+      .setPlaceholder(config.placeholder || '')
       .setRequired(true);
 
+    modal.addComponents(new MessageActionRow().addComponents(input));
     await interaction.showModal(modal);
   },
 
@@ -325,8 +336,8 @@ client.on("interactionCreate", async (interaction) => {
       }
 
       // --- 日程削除 ---
-    } 
-    
+    }
+
     // --- 日程削除 ---
     else if (interaction.customId == "deletes") {
       const deleteID = interaction.fields.getTextInputValue("Delete");
