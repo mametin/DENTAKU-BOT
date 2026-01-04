@@ -155,7 +155,7 @@ const commands = {
       const input = new TextInputComponent()
       .setCustomId("Search")
       .setLabel(config.label)
-      .setStyle(TextInputStyle.SHORT)
+      .setStyle("SHORT")
       .setPlaceholder(config.placeholder||'')
       .setRequired(true);
 
