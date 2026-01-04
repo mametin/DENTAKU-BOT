@@ -109,6 +109,8 @@ const searchs = {
     {
       type: "STRING",
       name: "type",
+      description: "検索方法の選択",
+      required: true,
       choices: [
         { name: "タイトル検索", value: "title", },
         { name: "日付検索", value: "date", },
