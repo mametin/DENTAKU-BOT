@@ -533,6 +533,7 @@ function createModal_add(customId, title, defaults = ['', '', '']) {
     .setCustomId("inputSecond")
     .setLabel("日時(yyyy/mm/dd)")
     .setStyle("SHORT")
+    setValue(getfullyear(new Date())+"/")
     .setPlaceholder("ex)2025/07/05")
     .setRequired(true);
   const InputKPname = new TextInputComponent()
