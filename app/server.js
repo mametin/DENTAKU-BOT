@@ -74,7 +74,7 @@ async function getSheetData() {
       userColumns.forEach(user => {
         let mark = row.get(user); // "〇", "△", "×", undefined 等
 
-        if (mark || /\d/.test(mark)) mark = '□';
+        if (mark && /\d+-\d+/.test(mark)) mark = '□';
 
         // 詳細データに保存 (空白の場合は '-' にする等も可能)
         availabilityDetails[user] = mark || '-';
