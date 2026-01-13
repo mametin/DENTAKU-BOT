@@ -2,33 +2,59 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>予定空き状況</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スケジュール調整</title>
     <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        .count-ok { color: blue; font-weight: bold; }
+        /* スタイルは適宜調整してください */
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f6f8; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #5865F2; color: white; }
+        .count-ok { color: #2e7d32; font-weight: bold; font-size: 1.2em; }
+        .count-zero { color: #c62828; font-weight: bold; }
+        
+        /* 記号ごとの色分け */
+        .mark-〇 { color: #2e7d32; }
+        .mark-△ { color: #f9a825; }
+        .mark-× { color: #c62828; }
     </style>
 </head>
 <body>
-    <h1>卓予定空き状況一覧</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>〇 (可能)</th>
-                <th>△ (調整中)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% schedules.forEach(s => { %>
-                <tr>
-                    <td><%= s.date %></td>
-                    <td class="count-ok"><%= s.ok %>人</td>
-                    <td><%= s.maybe %>人</td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
+    <div class="container">
+        <h1>📅 日程調整状況</h1>
+        
+        <% if (items && items.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>日付</th>
+                        <th>空き人数</th>
+                        <% items[0].users.forEach(function(user) { %>
+                            <th><%= user %></th>
+                        <% }); %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(function(item) { %>
+                        <tr>
+                            <td><%= item.date %></td>
+                            
+                            <td class="<%= item.count > 0 ? 'count-ok' : 'count-zero' %>">
+                                <%= item.count %>人
+                            </td>
+
+                            <% item.users.forEach(function(user) { %>
+                                <% const mark = item.details[user]; %>
+                                <td class="mark-<%= mark %>"><%= mark || '-' %></td>
+                            <% }); %>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>データがありません。</p>
+        <% } %>
+    </div>
 </body>
 </html>

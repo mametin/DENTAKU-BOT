@@ -1,65 +1,143 @@
-const express = require("express");
-const { GoogleSpreadsheet } = require("google-spreadsheet");
-const { JWT } = require("google-auth-library");
+const express = require('express');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
+const path = require('path');
+
 const app = express();
-const port = process.env.PORT || 8080;
 
-// Discord Botの起動
-require("./code.js");
+// POSTデータ受け取りのための設定
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Google Sheets 設定
-const SPREADSHEET_ID = 'あなたのスプレッドシートID';
-const serviceAccountAuth = new JWT({
-  email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-  key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+// EJSを使う設定
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
+// ====================================================
+// 設定・定数
+// ====================================================
+// スプレッドシートID
+const SPREADSHEET_ID = '1kSk4Zhpc9mNeUMigqUWp_8n_juSZHzNymgkX6AEI688';
 
-app.set("view engine", "ejs");
-app.set("views", "./app/views"); // viewsフォルダを作成してください
+// ヘッダー行のインデックス (ユーザー名)
+const HEADER_ROW_INDEX = 4;
 
-// メインページ：スプレッドシートのデータを集計して表示
-app.get("/", async (req, res) => {
+// ====================================================
+// データ取得関数
+// ====================================================
+async function getSheetData() {
   try {
-    await doc.loadInfo();
-    const sheet = doc.sheetsByIndex[0]; // 最初のシート
+    // 環境変数のチェック
+    if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+      console.log("GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEYが設定されていません。");
+      return [];
+    }
+
+    // 認証設定
+    const serviceAccountAuth = new JWT({
+      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+
+    // スプレッドシート読み込み
+    const s = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
+    await s.loadInfo();
+
+    // 1枚目のシートを取得
+    const sheet = s.sheetsByIndex[0];
+
+    // ヘッダー行を読み込み
+    await sheet.loadHeaderRow(HEADER_ROW_INDEX);
+
+    // データ行を取得
     const rows = await sheet.getRows();
-    
-    // 集計ロジック（例：日付ごとの◯と△をカウント）
-    // rows[i].get('日付') や rows[i].get('PL1') でアクセス
-    let scheduleData = rows.map(row => {
-      let okCount = 0;
-      let maybeCount = 0;
-      // PL1からPL15までをループ（プロパティ名はシートのヘッダーに依存）
-      for(let i=1; i<=15; i++) {
-        const status = row.get(`PL${i}`);
-        if(status === '〇') okCount++;
-        if(status === '△') maybeCount++;
-      }
+
+    // 全ヘッダーからユーザー列を抽出
+    const allHeaders = sheet.headerValues;
+    const userColumns = allHeaders.filter(header => {
+      return header !== '日付' && header !== 'Date' && header !== '' && header !== undefined;
+    });
+
+    // ====================================================
+    // データ整形関数
+    // ====================================================
+    // データを整形＆集計
+    const data = rows.map(row => {
+      // 日付列の取得 (日本語'日付' または 英語'Date' に対応)
+      const dateVal = row.get('日付') || row.get('Date') || '日付不明';
+
+      let availableCount = 0; // 空き数のカウント用
+      const availabilityDetails = {}; // ユーザーごとの詳細 { "PL1": "〇", ... }
+
+      // 各ユーザーの列をチェック
+      userColumns.forEach(user => {
+        const mark = row.get(user); // "〇", "△", "×", undefined 等
+
+        // 詳細データに保存 (空白の場合は '-' にする等も可能)
+        availabilityDetails[user] = mark || '-';
+
+        // 集計ロジック (〇と△をカウント)
+        // 必要に応じて 'OK' など他の文字も条件に追加してください
+        if (mark === '〇' || mark === '△') {
+          availableCount++;
+        }
+      });
+
       return {
-        date: row.get('日付'),
-        ok: okCount,
-        maybe: maybeCount
+        date: dateVal,
+        count: availableCount,
+        details: availabilityDetails,
+        users: userColumns // カラム名リストもViewに渡す
       };
     });
 
-    res.render("index", { schedules: scheduleData });
+    return data;
+
   } catch (error) {
-    console.error(error);
-    res.send("データ読み込みエラー");
+    console.error("Spreadsheet Load Error:", error);
+    return [];
   }
+}
+
+// ---------------------------------------------------------
+// ルーティング
+// ---------------------------------------------------------
+
+// ホームページ表示 (GET /)
+app.get('/', async (req, res) => {
+  const data = await getSheetData();
+  // views/index.ejs にデータを渡す
+  res.render('index', { items: data });
 });
 
-// GASのWakeup用（既存のPOST処理を維持）
-app.post("/", express.urlencoded({ extended: true }), (req, res) => {
-  if (req.body.type === "wake") {
-    console.log("Woke up via POST");
+// GAS等からのWake用アクセス (POST /)
+app.post('/', (req, res) => {
+  const type = req.body.type;
+  if (type === "wake") {
+    console.log("Woke up in post");
+  } else {
+    console.log("Received POST:", type);
   }
-  res.end();
+  res.status(200).end();
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// ====================================================
+// サーバー起動
+// ====================================================
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Web Server running on port ${PORT}`);
 });
+
+// Discord BotのTokenチェック
+if (!process.env.DISCORD_BOT_TOKEN) {
+  console.log("DISCORD_BOT_TOKENが設定されていません。");
+}
+
+// Bot本体の起動
+try {
+  require("./code.js");
+} catch (e) {
+  console.error("Bot起動エラー:", e);
+}
