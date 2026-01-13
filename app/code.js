@@ -523,6 +523,8 @@ client.on("messageCreate", async (message) => {
 //====================================================
 function createModal_add(customId, title, defaults = ['', '', '']) {
   const makingModal = new Modal().setCustomId(customId).setTitle(title);
+  const now = new Date();
+
   const InputTitle = new TextInputComponent()
     .setCustomId("inputFirst")
     .setLabel("シナリオ名")
@@ -533,6 +535,7 @@ function createModal_add(customId, title, defaults = ['', '', '']) {
     .setCustomId("inputSecond")
     .setLabel("日時(yyyy/mm/dd)")
     .setStyle("SHORT")
+    .setValue(now.getFullYear()+"/")
     .setPlaceholder("ex)2025/07/05")
     .setRequired(true);
   const InputKPname = new TextInputComponent()
