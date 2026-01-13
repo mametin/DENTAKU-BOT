@@ -11,7 +11,11 @@
     "bcdice": "^4.6.0",
     "discord.js": "^13.16.0",
     "rest": "^2.0.0",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "google-spreadsheet": "^4.1.1",
+    "google-auth-library": "^9.0.0"
   },
   "engines": {
     "node": "16.x"

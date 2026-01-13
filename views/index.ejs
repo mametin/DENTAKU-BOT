@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>予定空き状況</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        .count-ok { color: blue; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>卓予定空き状況一覧</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>〇 (可能)</th>
+                <th>△ (調整中)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% schedules.forEach(s => { %>
+                <tr>
+                    <td><%= s.date %></td>
+                    <td class="count-ok"><%= s.ok %>人</td>
+                    <td><%= s.maybe %>人</td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>
