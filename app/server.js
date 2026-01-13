@@ -72,7 +72,7 @@ async function getSheetData() {
 
       // 各ユーザーの列をチェック
       userColumns.forEach(user => {
-        const mark = row.get(user); // "〇", "△", "×", undefined 等
+        let mark = row.get(user); // "〇", "△", "×", undefined 等
 
         if (mark || /\d/.test(mark)) mark = '□';
 
