@@ -74,14 +74,22 @@ async function getSheetData() {
       userColumns.forEach(user => {
         const mark = row.get(user); // "〇", "△", "×", undefined 等
 
+        if (mark || /\d/.test(mark)) mark = '□';
+
         // 詳細データに保存 (空白の場合は '-' にする等も可能)
         availabilityDetails[user] = mark || '-';
 
         // 集計ロジック (〇と△をカウント)
         // 必要に応じて 'OK' など他の文字も条件に追加してください
-        if (mark === '〇' || mark === '△') {
+        if (mark === '〇' || mark === '△'|| mark === '▽' || mark === '✕') {
           availableCount++;
         }
+        /*
+        else if(/\d/.test(mark)) {
+          availableCount += parseInt(mark);
+        }
+          */
+
       });
 
       return {
