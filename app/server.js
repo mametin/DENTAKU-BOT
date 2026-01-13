@@ -17,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 // 設定・定数
 // ====================================================
 // スプレッドシートID
-const SPREADSHEET_ID = '1kSk4Zhpc9mNeUMigqUWp_8n_juSZHzNymgkX6AEI688';
+const SPREADSHEET_ID = '1wx0ezY3Vdad7z09KESFhN_sCMeSKaaGWlkH2To1cOiw';
 
 // ヘッダー行のインデックス (ユーザー名)
 const HEADER_ROW_INDEX = 4;
