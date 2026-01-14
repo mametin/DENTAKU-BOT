@@ -112,6 +112,12 @@ async function getSheetData() {
 // ルーティング
 // ---------------------------------------------------------
 
+// Wake用アクセス (GET /wake)
+app.get('/wake', (req, res) => {
+  console.log("Wake up ping received (No sheet load)");
+  res.send("OK");
+});
+
 // ホームページ表示 (GET /)
 app.get('/', async (req, res) => {
   const data = await getSheetData();
