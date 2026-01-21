@@ -5,18 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>スケジュール調整</title>
     <style>
-        /* スタイルは適宜調整してください */
         body { font-family: sans-serif; padding: 20px; background-color: #f4f6f8; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background-color: #5865F2; color: white; }
+
+
+       .container { 
+            /* 幅の制限をなくし、画面幅に合わせる（余白はpaddingで確保） */
+            width: 100%; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            /* はみ出さないように設定 */
+            box-sizing: border-box; 
+        }
+
+        /* ▼▼▼ 追加・変更した部分 ▼▼▼ */
+        
+        /* 表を囲むスクロール用エリア */
+        .table-wrapper {
+            width: 100%;       /* 親要素いっぱいに広げる */
+            overflow-x: auto;  /* 横にはみ出たらスクロールバーを出す */
+            margin-top: 20px;  /* 上の隙間 */
+        }
+
+        table { 
+            border-collapse: collapse; 
+            /* width: 100% を削除し、中身に合わせて広がるように変更 */
+        }
+
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 10px; 
+            text-align: center;
+            
+            /* ▼ セルのサイズを固定する重要な設定 ▼ */
+            min-width: 80px;      /* 1つのマスは最低でも80px確保する（これ以上縮まない） */
+            white-space: nowrap;  /* 文字を勝手に改行させない */
+        }
+
+        /* 日付列だけ少し広くしたい場合（必要なら調整） */
+        th:first-child, td:first-child {
+            min-width: 120px;
+        }
+
+        /* ▲▲▲ ここまで ▲▲▲ */
+
+        th { background-color: #5865F2; color: white; position: sticky; left: 0; } /* おまけ：左端固定設定も可能ですが今回はシンプルにします */
+        
         .count-ok { color: #2e7d32; font-weight: bold; font-size: 1.2em; }
         .count-zero { color: #c62828; font-weight: bold; }
         
         /* 記号ごとの色分け */
         .mark-〇 { color: #2e7d32; }
         .mark-△ { color: #f9a825; }
+        .mark-▽ { color: #f9a825; }
+        .mark-□ { color: #1976d2; font-weight: bold; }
         .mark-× { color: #c62828; }
     </style>
 </head>
