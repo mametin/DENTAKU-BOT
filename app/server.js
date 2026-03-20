@@ -136,6 +136,26 @@ app.post('/', (req, res) => {
   res.status(200).end();
 });
 
+// 新規入力ページ表示 (GET /new)
+app.get('/new', (req, res) => {
+    // views/new.ejs を表示する
+    res.render('new');
+});
+
+app.post('/submit', async (req, res) => {
+    try {
+        const formData = req.body;
+        console.log("受信データ:", formData);
+        
+        // 保存完了後のリダイレクト
+        res.send('<script>alert("送信が完了しました"); window.location.href="/";</script>');
+    } catch (error) {
+        console.error("送信エラー:", error);
+        res.status(500).send("送信中にエラーが発生しました。");
+    }
+});
+
+
 // ====================================================
 // サーバー起動
 // ====================================================

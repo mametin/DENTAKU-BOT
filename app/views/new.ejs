@@ -112,23 +112,22 @@
                 data.responses[i] = val;
             }
 
-            // GASへ送信（WebアプリのURLに書き換えてください）
-            const GAS_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
-            
             try {
-                // GASへの送信処理（実際にはGAS側のCORS設定に合わせたfetchが必要）
-                console.log("送信データ:", data);
-                alert("送信を開始します（GASのURLを設定してください）");
-                
-                /*
-                await fetch(GAS_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                });
-                */
-            } catch (err) {
-                alert("エラーが発生しました");
-            }
+        const response = await fetch('/submit', { // 自分のサーバーの /submit に送る
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            alert("送信完了しました！");
+            window.location.href = "/"; // 一覧へ戻る
+        }
+    } catch (err) {
+        alert("通信エラーが発生しました");
+    }
         };
     </script>
 </body>
