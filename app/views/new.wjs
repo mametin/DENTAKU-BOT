@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日程入力 - スケジュール調整</title>
+    <style>
+        /* index.ejs からのデザイン継承 [cite: 1, 2] */
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f6f8; }
+        .container { 
+            width: 100%; max-width: 800px; margin: 0 auto; 
+            background: white; padding: 20px; border-radius: 8px; box-sizing: border-box; [cite: 3, 4]
+        }
+        
+        h1 { color: #333; border-bottom: 2px solid #5865F2; padding-bottom: 10px; }
+        
+        /* フォーム要素のスタイル */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input[type="text"], textarea {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;
+        }
+
+        /* 日程リストのスタイル */
+        .date-list { margin-top: 30px; }
+        .date-item { 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px; border-bottom: 1px solid #eee; flex-wrap: wrap;
+        }
+        .date-label { font-weight: bold; min-width: 100px; }
+
+        /* 選択肢（排他的制御） */
+        .options { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .option-item { display: flex; align-items: center; gap: 4px; }
+        
+        /* 記号ごとの色分け継承 [cite: 12, 13, 14, 16] */
+        .mark-label-◎ { color: #2e7d32; font-weight: bold; }
+        .mark-label-△, .mark-label-▽ { color: #f9a825; font-weight: bold; }
+        .mark-label-× { color: #c62828; font-weight: bold; }
+
+        .other-input { width: 120px !important; padding: 5px !important; font-size: 0.9em; }
+
+        /* 送信ボタン */
+        .submit-box { margin-top: 30px; text-align: center; }
+        .btn-submit {
+            background-color: #5865F2; color: white; padding: 15px 40px;
+            border: none; border-radius: 5px; font-size: 1.1em; font-weight: bold; cursor: pointer;
+        }
+        .btn-submit:hover { background-color: #4752c4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>日程の新規入力</h1>
+        
+        <form id="scheduleForm">
+            <div class="form-group">
+                <label for="userName">お名前</label>
+                <input type="text" id="userName" name="userName" placeholder="例：山田 太郎" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">一言コメント</label>
+                <textarea id="comment" name="comment" rows="2" placeholder="例：調整可能です！"></textarea>
+            </div>
+
+            <hr>
+
+            <div class="date-list">
+                <h3>日程選択</h3>
+                <% for (let i = 1; i <= 31; i++) { %>
+                    <div class="date-item">
+                        <span class="date-label">3月<%= i %>日</span>
+                        <div class="options">
+                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="◎" required> <span class="mark-label-◎">◎</span></label>
+                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="△"> <span class="mark-label-△">△</span></label>
+                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="▽"> <span class="mark-label-▽">▽</span></label>
+                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="×"> <span class="mark-label-×">×</span></label>
+                            
+                            <div class="option-item">
+                                <input type="radio" name="date_<%= i %>" id="other_radio_<%= i %>" value="その他">
+                                <input type="text" class="other-input" id="other_text_<%= i %>" placeholder="その他(記述)" 
+                                       onfocus="document.getElementById('other_radio_<%= i %>').checked = true;">
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+            <div class="submit-box">
+                <button type="submit" class="btn-submit">GASへ送信する</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('scheduleForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('userName'),
+                comment: formData.get('comment'),
+                responses: {}
+            };
+
+            // 各日付のデータを集計
+            for (let i = 1; i <= 31; i++) {
+                let val = formData.get('date_' + i);
+                if (val === 'その他') {
+                    val = document.getElementById('other_text_' + i).value || '未入力';
+                }
+                data.responses[i] = val;
+            }
+
+            // GASへ送信（WebアプリのURLに書き換えてください）
+            const GAS_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
+            
+            try {
+                // GASへの送信処理（実際にはGAS側のCORS設定に合わせたfetchが必要）
+                console.log("送信データ:", data);
+                alert("送信を開始します（GASのURLを設定してください）");
+                
+                /*
+                await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                */
+            } catch (err) {
+                alert("エラーが発生しました");
+            }
+        };
+    </script>
+</body>
+</html>
