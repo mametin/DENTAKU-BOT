@@ -7,7 +7,6 @@
     <style>
         body { font-family: sans-serif; padding: 20px; background-color: #f4f6f8; }
 
-
        .container { 
             /* 幅の制限をなくし、画面幅に合わせる（余白はpaddingで確保） */
             width: 100%; 
@@ -53,12 +52,37 @@
         .mark-▽ { color: #f9a825; }
         .mark-□ { color: #1976d2; font-weight: bold; }
         .mark-× { color: #c62828; }
+
+        .action-bar {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* 新規作成ボタンのスタイル */
+    .btn-new {
+        background-color: #5865F2;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+    .btn-new:hover {
+        background-color: #4752c4;
+    }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📅 日程調整状況</h1>
+        <h1>日程調整カレンダー</h1>
         
+        <div class="action-bar">
+            <a href="/new" class="btn-new">日程を新規に入力する</a>
+        </div>
+
         <% if (items && items.length > 0) { %>
             <table>
                 <thead>
@@ -90,6 +114,7 @@
         <% } else { %>
             <p>データがありません。</p>
         <% } %>
+        
     </div>
 </body>
 </html>
