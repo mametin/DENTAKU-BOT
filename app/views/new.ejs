@@ -30,11 +30,15 @@
         .date-label { font-weight: bold; min-width: 100px; }
 
         /* 選択肢（排他的制御） */
-        .options { display: none; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .options { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
         /*==============================
         /* カスタムラジオボタン風のスタイル
         /* ============================= */
+
+        .options input[type="radio"] {
+            display: none;
+        }
 
         .option-label {
             display: inline-block;
