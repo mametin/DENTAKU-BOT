@@ -31,7 +31,56 @@
 
         /* 選択肢（排他的制御） */
         .options { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .option-item { display: flex; align-items: center; gap: 4px; }
+        .option-item { display: none; align-items: center; gap: 4px; }
+
+        /*==============================
+        /* カスタムラジオボタン風のスタイル
+        /* ============================= */
+
+        .option-label {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid #5865F2;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: white;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 40px;
+        }
+
+        /* ホバー時の効果 */
+        .option-label:hover {
+            background-color: #f0f2ff;
+        }
+
+        /* チェックが入った時のラベルのスタイル (右図の青背景の状態) */
+        .options input[type="radio"]:checked + .option-label {
+            background-color: #5865F2;
+            color: white;
+        }
+
+        /* 記号ごとの色分けをボタンの文字色に適用 */
+        .mark-◎ { color: #2e7d32; }
+        .mark-△, .mark-▽ { color: #f9a825; }
+        .mark-× { color: #c62828; }
+
+        /* チェック時は文字色を白に強制する */
+        .options input[type="radio"]:checked + .option-label span {
+            color: white !important;
+        }
+
+        /* その他（記述欄）のスタイル微調整 */
+        .other-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        /*============================== */
         
         /* 記号ごとの色分け継承 [cite: 12, 13, 14, 16] */
         .mark-label-◎ { color: #2e7d32; font-weight: bold; }
@@ -72,15 +121,23 @@
                     <div class="date-item">
                         <span class="date-label">3月<%= i %>日</span>
                         <div class="options">
-                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="◎" required> <span class="mark-label-◎">◎</span></label>
-                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="△"> <span class="mark-label-△">△</span></label>
-                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="▽"> <span class="mark-label-▽">▽</span></label>
-                            <label class="option-item"><input type="radio" name="date_<%= i %>" value="×"> <span class="mark-label-×">×</span></label>
-                            
-                            <div class="option-item">
-                                <input type="radio" name="date_<%= i %>" id="other_radio_<%= i %>" value="その他">
-                                <input type="text" class="other-input" id="other_text_<%= i %>" placeholder="その他(記述)" 
-                                       onfocus="document.getElementById('other_radio_<%= i %>').checked = true;">
+                            <input type="radio" name="date_<%= i %>" id="ok_<%= i %>" value="◎" required>
+                            <label for="ok_<%= i %>" class="option-label"><span class="mark-◎">◎</span></label>
+
+                            <input type="radio" name="date_<%= i %>" id="tri_<%= i %>" value="△">
+                            <label for="tri_<%= i %>" class="option-label"><span class="mark-△">△</span></label>
+
+                            <input type="radio" name="date_<%= i %>" id="rev_<%= i %>" value="▽">
+                            <label for="rev_<%= i %>" class="option-label"><span class="mark-▽">▽</span></label>
+
+                            <input type="radio" name="date_<%= i %>" id="ng_<%= i %>" value="×">
+                            <label for="ng_<%= i %>" class="option-label"><span class="mark-×">×</span></label>
+
+                            <div class="other-wrapper">
+                            <input type="radio" name="date_<%= i %>" id="other_radio_<%= i %>" value="その他">
+                            <label for="other_radio_<%= i %>" class="option-label" style="border:none; padding: 0 5px;">他</label>
+                            <input type="text" class="other-input" id="other_text_<%= i %>" placeholder="記述..." 
+                                   onfocus="document.getElementById('other_radio_<%= i %>').checked = true;">
                             </div>
                         </div>
                     </div>
