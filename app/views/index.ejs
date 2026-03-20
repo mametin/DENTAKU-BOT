@@ -18,39 +18,31 @@
             /* はみ出さないように設定 */
             box-sizing: border-box; 
         }
-
-        /* ▼▼▼ 追加・変更した部分 ▼▼▼ */
         
         /* 表を囲むスクロール用エリア */
         .table-wrapper {
-            width: 100%;       /* 親要素いっぱいに広げる */
-            overflow-x: auto;  /* 横にはみ出たらスクロールバーを出す */
-            margin-top: 20px;  /* 上の隙間 */
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
         }
 
         table { 
             border-collapse: collapse; 
-            /* width: 100% を削除し、中身に合わせて広がるように変更 */
         }
 
         th, td { 
             border: 1px solid #ddd; 
-            padding: 10px; 
+            padding: 5px; 
             text-align: center;
             
-            /* ▼ セルのサイズを固定する重要な設定 ▼ */
-            min-width: 80px;      /* 1つのマスは最低でも80px確保する（これ以上縮まない） */
-            white-space: nowrap;  /* 文字を勝手に改行させない */
+            min-width: 80px;
+            white-space: nowrap;
         }
-
-        /* 日付列だけ少し広くしたい場合（必要なら調整） */
         th:first-child, td:first-child {
             min-width: 120px;
         }
 
-        /* ▲▲▲ ここまで ▲▲▲ */
-
-        th { background-color: #5865F2; color: white; position: sticky; left: 0; } /* おまけ：左端固定設定も可能ですが今回はシンプルにします */
+        th { background-color: #5865F2; color: white; position: sticky; left: 0; }
         
         .count-ok { color: #2e7d32; font-weight: bold; font-size: 1.2em; }
         .count-zero { color: #c62828; font-weight: bold; }
