@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日程入力 - スケジュール調整</title>
     <style>
-        /* index.ejs からのデザイン継承 [cite: 1, 2] */
         body { font-family: sans-serif; padding: 20px; background-color: #f4f6f8; }
-        .container { 
-            width: 100%; max-width: 800px; margin: 0 auto; 
-            background: white; padding: 20px; border-radius: 8px; box-sizing: border-box; [cite: 3, 4]
+       .container { 
+        width: 95%;
+        max-width: 1200px;
+        margin: 20px auto; 
+        background: white; 
+        padding: 20px; 
+        border-radius: 8px; 
+        box-sizing: border-box;
+        overflow: hidden;
         }
         
         h1 { color: #333; border-bottom: 2px solid #5865F2; padding-bottom: 10px; }
@@ -107,13 +112,8 @@
         
         <form id="scheduleForm">
             <div class="form-group">
-                <label for="userName">お名前</label>
-                <input type="text" id="userName" name="userName" placeholder="例：山田 太郎" required>
-            </div>
-
-            <div class="form-group">
-                <label for="comment">一言コメント</label>
-                <textarea id="comment" name="comment" rows="2" placeholder="例：調整可能です！"></textarea>
+                <label for="userName">名前</label>
+                <input type="text" id="userName" name="userName" required>
             </div>
 
             <hr>
@@ -147,8 +147,13 @@
                 <% } %>
             </div>
 
+            <div class="form-group">
+                <label for="comment">コメント：</label>
+                <input type="text" id="comment" name="comment">
+            </div>
+
             <div class="submit-box">
-                <button type="submit" class="btn-submit">GASへ送信する</button>
+                <button type="submit" class="btn-submit">送信</button>
             </div>
         </form>
     </div>
