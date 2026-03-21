@@ -31,17 +31,22 @@
 
         th, td { 
             border: 1px solid #ddd; 
-            padding: 5px; 
+            padding: 4px 2px;     /* 5px から縮小：上下4px、左右2px */
             text-align: center;
-            
-            min-width: 80px;
+            font-size: 0.85rem;   /* 文字サイズを少し小さく設定 */
+    
+            min-width: 45px;      /* 80px から大幅に縮小 */
             white-space: nowrap;
         }
+
         th:first-child, td:first-child {
-            min-width: 120px;
+            min-width: 90px;      /* 120px から縮小（日付列） */
+            font-size: 0.85rem;
         }
 
-        th { background-color: #5865F2; color: white; position: sticky; left: 0; }
+        h1 {
+            font-size: 1.2rem;    /* タイトルも少し小さくするとバランスが良いです */
+        }
         
         .count-ok { color: #2e7d32; font-weight: bold; font-size: 1.2em; }
         .count-zero { color: #c62828; font-weight: bold; }
