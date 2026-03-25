@@ -1,17 +1,18 @@
-# Node.jsのバージョン、変える事。
-FROM node:18
+# 1. ベースイメージの指定
+FROM node:20
 
-# 作業ディレクトリを /app に
+# 2. 作業ディレクトリの作成
 WORKDIR /app
 
-# app フォルダ内の内容をコンテナの /app にコピー
-COPY app/ .
+# 3. まず package.json 類をコピー（ルートにある場合）
+COPY package*.json ./
 
-# 依存関係のインストール
-RUN npm install
+# 4. 依存関係のインストール
+# キャッシュをクリアして実行
+RUN npm ci || npm install
 
-# ポートを開ける（Koyeb用）、使用してるポート番号にすること。
-EXPOSE 3000
+# 5. その他のファイルをコピー
+COPY . .
 
-# アプリの起動、コマンドを指定しよう。index.jsなら"node", "index.js"
-CMD ["node", "server.js"]
+# 6. 起動（server.jsがapp/直下にある場合）
+CMD ["node", "app/server.js"]
