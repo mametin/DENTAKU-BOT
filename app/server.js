@@ -1,9 +1,11 @@
 const express = require('express');
+const cors = require('cors');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const path = require('path');
 
 const app = express();
+app.use(cors());
 
 // POSTデータ受け取りのための設定
 app.use(express.urlencoded({ extended: true }));
