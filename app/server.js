@@ -11,7 +11,7 @@ app.use(express.json());
 
 // EJSを使う設定
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'frontend'));
 
 // ====================================================
 // 設定・定数
@@ -171,7 +171,7 @@ if (!process.env.DISCORD_BOT_TOKEN) {
 
 // Bot本体の起動
 try {
-  require("./code.js");
+  require("./bot/code.js");
 } catch (e) {
   console.error("Bot起動エラー:", e);
 }
