@@ -1,4 +1,4 @@
-const { Client, ClientApplication, SlashCommandBuilder } = require("discord.js");
+const { Client, GatewayIntentBits, ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
 /**
  *
  * @param {Client} client
@@ -22,13 +22,13 @@ const role_options = [
   {
     name: 'target_channel',
     description: 'パネルを設置するチャンネルを選択してください',
-    type: 'CHANNEL',
+    type: ApplicationCommandOptionType.Channel,
     required: true
   },
   {
     name: 'explan_roll',
     description: 'ロールの説明文を入力してください',
-    type: 'STRING',
+    type: ApplicationCommandOptionType.String,
     required: true
   }
 ];
@@ -39,7 +39,7 @@ for (let i = 1; i <= MAX_ROLES; i++) {
   role_options.push({
     name: `role${i}`,
     description: `選択肢に入れるロール (${i})`,
-    type: 'ROLE',
+    type: ApplicationCommandOptionType.Role,
     required: i === 1
   });
 }
@@ -53,7 +53,7 @@ const hello = {
   description: "botがあなたに挨拶します。",
   options: [
     {
-      type: "STRING",
+      type: ApplicationCommandOptionType.String,
       name: "language",
       description: "どの言語で挨拶するか指定します。",
       required: true,
@@ -67,17 +67,15 @@ const hello = {
 
 const add = {
   name: "add",
-  required: true,
   description: "日程の入力が行えます。",
 };
 
 const show = {
   name: "show",
-  required: true,
   description: "日程の閲覧が行えます。",
   options: [
     {
-      type: "STRING",
+      type: ApplicationCommandOptionType.String,
       name: "type",
       description: "表示形式の選択",
       required: true,
@@ -91,23 +89,20 @@ const show = {
 
 const deletes = {
   name: "delete",
-  required: true,
   description: "日程の削除が行えます。",
 };
 
 const corrects = {
   name: "correct",
-  required: true,
   description: "日程の修正が行えます。",
 };
 
 const searchs = {
   name: "search",
-  required: true,
   description: "セッション予定の検索が行えます。",
   options: [
     {
-      type: "STRING",
+      type: ApplicationCommandOptionType.String,
       name: "type",
       description: "検索方法の選択",
       required: true,
@@ -123,7 +118,6 @@ const searchs = {
 
 const omikuji = {
   name: "omikuji",
-  required: true,
   description: "本日の運勢が占えます",
 };
 
@@ -131,19 +125,21 @@ const roles = {
   name: 'setup_roles',
   description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
   options: role_options,
+  defaultMemberPermissions: PermissionFlagsBits.Administrator // 管理者のみに制限
 };
 
 
 
 const commands = [hello, add, show, deletes, corrects, searchs, omikuji, roles];
+
 const client = new Client({
-  intents: 0,
+  intents: [GatewayIntentBits.Guilds],
 });
 client.token = process.env.DISCORD_BOT_TOKEN;
 async function main() {
-  client.application = new ClientApplication(client, {});
-  await client.application.fetch();
+  await client.login();
   await register(client, commands, process.argv[2]);
   console.log("registration succeed!");
+  process.exit();
 }
 main().catch((err) => console.error(err));

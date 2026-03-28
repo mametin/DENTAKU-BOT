@@ -1,18 +1,9 @@
-const { Client } = require("discord.js");
+const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require("discord.js");
 const { DynamicLoader } = require("bcdice");
 const { UserDefinedDiceTable } = require("bcdice");
 const wait = require("util");
-const options = { intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"] };
+const options = { intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent] };
 const client = new Client(options);
-const {
-  Modal,
-  TextInputComponent,
-  TextInputStyle,
-  MessageActionRow,
-  MessageEmbed,
-  MessageButton,
-  MessageSelectMenu,
-} = require("discord.js");
 
 client.on("ready", (message) => {
   console.log("Bot準備完了！");
@@ -24,7 +15,7 @@ client.on("ready", (message) => {
 
 var inputData; //送信データ
 
-var storeData; //再入力時私用データ
+var storedata; //再入力時私用データ (元のコードの storeData/storedata の揺れを維持)
 
 var postData;
 var responseData;
@@ -100,14 +91,14 @@ const commands = {
   // 日程削除
   //---------------------------------------------------
   async delete(interaction) {
-    const modal = new Modal().setCustomId("deletes").setTitle("予定の削除");
+    const modal = new ModalBuilder().setCustomId("deletes").setTitle("予定の削除");
 
-    const DeleteID = new TextInputComponent()
+    const DeleteID = new TextInputBuilder()
       .setCustomId("Delete")
       .setLabel("削除したいスケジュールのIDを入力")
-      .setStyle("SHORT");
+      .setStyle(TextInputStyle.Short);
 
-    modal.addComponents(new MessageActionRow().addComponents(DeleteID));
+    modal.addComponents(new ActionRowBuilder().addComponents(DeleteID));
 
     await interaction.showModal(modal);
   },
@@ -158,18 +149,18 @@ const commands = {
     }
 
     // モーダルの作成
-    const modal = new Modal()
+    const modal = new ModalBuilder()
       .setCustomId(`search_${type}`)
       .setTitle(config.title);
 
-    const input = new TextInputComponent()
+    const input = new TextInputBuilder()
       .setCustomId("Search")
       .setLabel(config.label)
-      .setStyle("SHORT")
+      .setStyle(TextInputStyle.Short)
       .setPlaceholder(config.placeholder || '')
       .setRequired(true);
 
-    modal.addComponents(new MessageActionRow().addComponents(input));
+    modal.addComponents(new ActionRowBuilder().addComponents(input));
     await interaction.showModal(modal);
   },
 
@@ -219,13 +210,13 @@ const commands = {
     }
 
     //--- メニュー ---
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle("ロール選択パネル")
       .setDescription(`${label1}\n\n**【対象ロール】**\n${roleListText}`)
-      .setColor('BLUE');
+      .setColor('Blue');
 
     // --- SelectMenu の作成 ---
-    const selectMenu = new MessageSelectMenu()
+    const selectMenu = new StringSelectMenuBuilder()
       .setCustomId('menu_dynamic')
       .setPlaceholder(`▼ ロールを選択`)
       .addOptions(menuRoles);
@@ -234,7 +225,7 @@ const commands = {
     try {
       await targetChannel.send({
         embeds: [embed],
-        components: [new MessageActionRow().addComponents(selectMenu)]
+        components: [new ActionRowBuilder().addComponents(selectMenu)]
       });
 
       await interaction.reply({
@@ -256,7 +247,7 @@ const commands = {
 // イベント処理
 //====================================================
 client.on("interactionCreate", async (interaction) => {
-  if (interaction.isCommand()) {
+  if (interaction.isChatInputCommand()) {
     return commands[interaction.commandName](interaction);
   }
 
@@ -265,11 +256,9 @@ client.on("interactionCreate", async (interaction) => {
   //---------------------------------------------------
   else if (interaction.isButton()) {
     if (interaction.customId === 'retryDate') {
-
-      setTimeout(async () => {
-        const modal = createModal_add("input", "予定の入力", storedata);
-        await interaction.showModal(modal);
-      }, 10);
+      // setTimeoutを削除し即時実行（v14ではshowModalのタイミングが厳格なため）
+      const modal = createModal_add("input", "予定 of 入力", storedata);
+      await interaction.showModal(modal);
     }
   }
 
@@ -284,11 +273,11 @@ client.on("interactionCreate", async (interaction) => {
       //日付入力が正しくない場合
       const regulation = /^\d{4}\/\d{2}\/\d{2}$/;
       if (!regulation.test(interaction.fields.getTextInputValue("inputSecond"))) {
-        const retrybutton = new MessageActionRow().addComponents(
-          new MessageButton()
+        const retrybutton = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
             .setCustomId('retryDate')
             .setLabel('再入力')
-            .setStyle('PRIMARY')
+            .setStyle(ButtonStyle.Primary)
         );
 
         const d1 = interaction.fields.getTextInputValue("inputFirst");
@@ -323,7 +312,7 @@ client.on("interactionCreate", async (interaction) => {
           content: "データの追加が完了しました",
         });
 
-        const info = new MessageEmbed()
+        const info = new EmbedBuilder()
           .setColor(0x0099FF)
           .setTitle(`${d1} (ID: ${id})`)	//シナリオ名
           .setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
@@ -405,7 +394,7 @@ client.on("interactionCreate", async (interaction) => {
 
   }
 
-  else if (interaction.isSelectMenu()) {
+  else if (interaction.isStringSelectMenu()) {
     if (interaction.customId === 'menu_dynamic') {
       const roleId = interaction.values[0];
 
@@ -423,9 +412,7 @@ client.on("interactionCreate", async (interaction) => {
           await interaction.member.roles.add(roleId);
         }
 
-        const row = new MessageActionRow().addComponents(
-          interaction.message.components[0].components
-        );
+        const row = ActionRowBuilder.from(interaction.message.components[0]);
 
         await interaction.update({
           components: [row]
@@ -529,39 +516,39 @@ client.on("messageCreate", async (message) => {
 // ModalWindow(add)を作成するモジュール
 //====================================================
 function createModal_add(customId, title, defaults = ['', '', '']) {
-  const makingModal = new Modal().setCustomId(customId).setTitle(title);
+  const makingModal = new ModalBuilder().setCustomId(customId).setTitle(title);
   const now = new Date();
 
-  const InputTitle = new TextInputComponent()
+  const InputTitle = new TextInputBuilder()
     .setCustomId("inputFirst")
     .setLabel("シナリオ名")
-    .setStyle("SHORT")
+    .setStyle(TextInputStyle.Short)
     .setRequired(true)
     .setValue(defaults[0] || '');
-  const InputDate = new TextInputComponent()
+  const InputDate = new TextInputBuilder()
     .setCustomId("inputSecond")
     .setLabel("日時(yyyy/mm/dd)")
-    .setStyle("SHORT")
+    .setStyle(TextInputStyle.Short)
     .setValue(now.getFullYear()+"/")
     .setPlaceholder("ex)2025/07/05")
     .setRequired(true);
-  const InputKPname = new TextInputComponent()
+  const InputKPname = new TextInputBuilder()
     .setCustomId("inputThird")
     .setLabel("KP名を入力")
-    .setStyle("SHORT")
+    .setStyle(TextInputStyle.Short)
     .setRequired(true)
     .setValue(defaults[1] || '');
-  const InputPLname = new TextInputComponent()
+  const InputPLname = new TextInputBuilder()
     .setCustomId("inputFour")
     .setLabel("PL名を入力")
-    .setStyle("SHORT")
+    .setStyle(TextInputStyle.Short)
     .setRequired(true)
     .setValue(defaults[2] || '');
 
-  makingModal.addComponents(new MessageActionRow().addComponents(InputTitle));
-  makingModal.addComponents(new MessageActionRow().addComponents(InputDate));
-  makingModal.addComponents(new MessageActionRow().addComponents(InputKPname));
-  makingModal.addComponents(new MessageActionRow().addComponents(InputPLname));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputTitle));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputDate));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputKPname));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputPLname));
 
   return makingModal;
 }
@@ -570,49 +557,49 @@ function createModal_add(customId, title, defaults = ['', '', '']) {
 // ModalWindow(correct)を作成するモジュール
 //====================================================
 function createModal_correct(customId, title) {
-  const makingModal = new Modal().setCustomId(customId).setTitle(title);
+  const makingModal = new ModalBuilder().setCustomId(customId).setTitle(title);
 
   const data = {
-    correctID: new TextInputComponent()
+    correctID: new TextInputBuilder()
       .setCustomId("correctID")
       .setLabel("修正したいスケジュールのIDを入力")
-      .setStyle(`SHORT`)
+      .setStyle(TextInputStyle.Short)
       .setRequired(true),
 
-    d1: new TextInputComponent()
+    d1: new TextInputBuilder()
       .setCustomId(`title`)
       .setLabel("シナリオ名")
-      .setStyle("SHORT")
+      .setStyle(TextInputStyle.Short)
       .setRequired(false)
       .setPlaceholder("修正しない場合は未記入"),
 
-    d2: new TextInputComponent()
+    d2: new TextInputBuilder()
       .setCustomId(`date`)
       .setLabel("日時(yyyy/mm/dd)")
-      .setStyle("SHORT")
+      .setStyle(TextInputStyle.Short)
       .setRequired(false)
       .setPlaceholder("修正しない場合は未記入"),
 
-    d3: new TextInputComponent()
+    d3: new TextInputBuilder()
       .setCustomId(`kp`)
       .setLabel("KP名を入力")
-      .setStyle("SHORT")
+      .setStyle(TextInputStyle.Short)
       .setRequired(false)
       .setPlaceholder("修正しない場合は未記入"),
 
-    d4: new TextInputComponent()
+    d4: new TextInputBuilder()
       .setCustomId(`pl`)
       .setLabel("PL名を入力")
-      .setStyle("SHORT")
+      .setStyle(TextInputStyle.Short)
       .setRequired(false)
       .setPlaceholder("修正しない場合は未記入")
   }
 
-  makingModal.addComponents(new MessageActionRow().addComponents(data.correctID),
-    new MessageActionRow().addComponents(data.d1),
-    new MessageActionRow().addComponents(data.d2),
-    new MessageActionRow().addComponents(data.d3),
-    new MessageActionRow().addComponents(data.d4));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(data.correctID),
+    new ActionRowBuilder().addComponents(data.d1),
+    new ActionRowBuilder().addComponents(data.d2),
+    new ActionRowBuilder().addComponents(data.d3),
+    new ActionRowBuilder().addComponents(data.d4));
 
   return makingModal;
 }
