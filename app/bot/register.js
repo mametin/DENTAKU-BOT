@@ -1,4 +1,9 @@
-const { Client, ClientApplication, GatewayIntentBits, ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
+const { 
+  Client, 
+  GatewayIntentBits, 
+  ApplicationCommandOptionType, 
+  PermissionFlagsBits 
+} = require("discord.js");
 /**
  *
  * @param {Client} client

@@ -14,7 +14,6 @@ const { DynamicLoader } = require("bcdice");
 const { UserDefinedDiceTable } = require("bcdice");
 const wait = require("util");
 
-// v14では Intents ではなく GatewayIntentBits を使用します
 const options = { 
   intents: [
     GatewayIntentBits.Guilds, 
