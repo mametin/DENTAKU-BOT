@@ -14,6 +14,7 @@ const { DynamicLoader } = require("bcdice");
 const { UserDefinedDiceTable } = require("bcdice");
 const wait = require("util");
 
+// v14では Intents ではなく GatewayIntentBits を使用します
 const options = { 
   intents: [
     GatewayIntentBits.Guilds, 
@@ -263,4 +264,390 @@ const commands = {
     }
   },
 };
+
+//====================================================
+// イベント処理
+//====================================================
+client.on("interactionCreate", async (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    return commands[interaction.commandName](interaction);
+  }
+
+  //---------------------------------------------------
+  // Button処理
+  //---------------------------------------------------
+  else if (interaction.isButton()) {
+    if (interaction.customId === 'retryDate') {
+      const modal = createModal_add("input", "予定の入力", storedata);
+      await interaction.showModal(modal);
+    }
+  }
+
+  //---------------------------------------------------
+  // Modal入力処理
+  //---------------------------------------------------
+  else if (interaction.isModalSubmit()) {
+
+    // --- 日程追加 ---
+    if (interaction.customId == "input") {
+
+      //日付入力が正しくない場合
+      const regulation = /^\d{4}\/\d{2}\/\d{2}$/;
+      if (!regulation.test(interaction.fields.getTextInputValue("inputSecond"))) {
+        const retrybutton = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setCustomId('retryDate')
+            .setLabel('再入力')
+            .setStyle(ButtonStyle.Primary)
+        );
+
+        const d1 = interaction.fields.getTextInputValue("inputFirst");
+        const d3 = interaction.fields.getTextInputValue("inputThird");
+        const d4 = interaction.fields.getTextInputValue("inputFour");
+
+        storedata = [d1, d3, d4];
+
+        await interaction.reply({
+          content: '入力エラー！「yyyy/mm/dd」で入力してください。',
+          components: [retrybutton],
+          ephemeral: true,
+        });
+        return;
+      }
+
+      else {
+        const d1 = interaction.fields.getTextInputValue("inputFirst");
+        const d2 = interaction.fields.getTextInputValue("inputSecond");
+        const d3 = interaction.fields.getTextInputValue("inputThird");
+        const d4 = interaction.fields.getTextInputValue("inputFour");
+
+        //GASの処理を待つ
+        await interaction.deferReply({ ephemeral: true });
+
+        //データを配列に格納してモジュールに渡す
+        const dataList = [[d1], [d2], [d3], [d4]];
+        inputData = await sendData(dataList, interaction.customId);
+        const id = inputData && inputData.id ? inputData.id : "取得失敗";
+
+        await interaction.editReply({
+          content: "データの追加が完了しました",
+        });
+
+        const info = new EmbedBuilder()
+          .setColor(0x0099FF)
+          .setTitle(`${d1} (ID: ${id})`)	//シナリオ名
+          .setDescription('(シナリオ名をクリックでカレンダーが表示されます)')
+          .setURL(ca_url)	//カレンダーurl
+          .addFields(
+            { name: '日時：', value: d2 },
+            { name: 'KP：', value: d3 },
+            { name: 'PL：', value: d4 },
+          )
+
+        try {
+          client.channels.cache.get('1141934435562946590').send({ embeds: [info] });
+          return;
+        } catch {
+          return;
+        }
+      }
+
+      // --- 日程削除 ---
+    }
+
+    // --- 日程削除 ---
+    else if (interaction.customId == "deletes") {
+      const deleteID = interaction.fields.getTextInputValue("Delete");
+
+      //データを配列に格納してモジュールに渡す
+      const dataList = [[deleteID]];
+      inputData = sendData(dataList, interaction.customId);
+
+      await interaction.reply({
+        content: "データの削除が完了しました",
+        ephemeral: true,
+      });
+    }
+
+    // --- 日程変更 ---
+    else if (interaction.customId == "corrects") {
+      const correctID = interaction.fields.getTextInputValue("correctID");
+      const d1 = interaction.fields.getTextInputValue("title");
+      const d2 = interaction.fields.getTextInputValue("date");
+      const d3 = interaction.fields.getTextInputValue("kp");
+      const d4 = interaction.fields.getTextInputValue("pl");
+
+      //データを配列に格納してモジュールに渡す
+      const dataList = [[correctID], [d1], [d2], [d3], [d4]];
+      inputData = sendData(dataList, interaction.customId);
+
+      await interaction.reply({
+        content: "データの修正が完了しました",
+        ephemeral: true,
+      });
+    }
+
+    // --- 日程検索 ---
+    else if (interaction.customId.startsWith("search_")) {
+      const searchType = interaction.customId.split("_")[1];
+      const searchText = interaction.fields.getTextInputValue("Search");
+
+      //GASの処理を待つ
+      await interaction.deferReply({ ephemeral: true });
+
+      //データを配列に格納してモジュールに渡す
+      const dataList = [[searchText]];
+      const searchResult = await sendData(dataList, interaction.customId);
+
+      if (searchResult && searchResult.embeds) {
+        await interaction.editReply({
+          content: "日程検索が完了しました。：" + searchText,
+          embeds: searchResult.embeds,
+          ephemeral: true,
+        });
+      } else {
+        await interaction.editReply({
+          content: "検索に失敗したか、データが見つかりませんでした。",
+          ephemeral: true,
+        });
+      }
+    }
+
+  }
+
+  else if (interaction.isStringSelectMenu()) {
+    if (interaction.customId === 'menu_dynamic') {
+      const roleId = interaction.values[0];
+
+      const role = interaction.guild.roles.cache.get(roleId);
+
+      if (!role) {
+        return interaction.reply({ content: '指定されたロールが見つかりません。', ephemeral: true });
+      }
+
+      try {
+        // メンバーが既にロールを持っているかチェックして付け外しを行う
+        if (interaction.member.roles.cache.has(roleId)) {
+          await interaction.member.roles.remove(roleId);
+        } else {
+          await interaction.member.roles.add(roleId);
+        }
+
+        const row = ActionRowBuilder.from(interaction.message.components[0]);
+
+        await interaction.update({
+          components: [row]
+        });
+
+      } catch (error) {
+        console.error(error);
+        if (interaction.replied || interaction.deferred) await interaction.followUp({ content: 'エラーが発生しました。', ephemeral: true });
+        else await interaction.reply({ content: 'エラーが発生しました。', ephemeral: true });
+      }
+    }
+  }
+
+  else return;
+});
+
+//====================================================
+// 返信処理の記述
+//====================================================
+client.on("messageCreate", async (message) => {
+  if (message.author.bot) return;
+
+  //全角を半角に変換
+  message.content = message.content.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
+
+  //CoC
+  if (message.content.match(/^(coc|coc7) /i)) {
+    //CoC6th
+    if (message.content.match(/^coc /i)) {
+      var rollResult = await diceroll("Cthulhu", message.content.slice(4));
+      try {
+        message.channel.send(rollResult.text);
+      } catch {
+        return;
+      }
+    }
+
+    //CoC7th
+    if (message.content.match(/^coc7 /i)) {
+      var rollResult = await diceroll("Cthulhu7th", message.content.slice(5));
+      try {
+        message.channel.send(rollResult.text);
+      } catch {
+        return;
+      }
+    }
+    return;
+  }
+
+  //シノビガミ
+  if (message.content.match(/^(sinobi )/i)) {
+    var rollResult = await diceroll("ShinobiGami", message.content.slice(7));
+    try {
+      message.channel.send(rollResult.text);
+    } catch {
+      return;
+    }
+  }
+
+  //SW2.5
+  if (message.content.match(/^(SW )/i)) {
+    var rollResult = await diceroll("SwordWorld2.5", message.content.slice(3));
+    try {
+      message.channel.send(rollResult.text);
+    } catch {
+      return;
+    }
+  }
+
+  //DiceBot
+  if (
+    message.content.match(
+      /^S?([+\-(]*(\d+|D\d+)|\d+B\d+|\d+T[YZ]\d+|C[+\-(]*\d+|choice|D66|(repeat|rep|x)\d+|\d+R\d+|\d+U\d+|BCDiceVersion)/i
+    )
+  ) {
+    var rollResult = await diceroll("DiceBot", message.content);
+    try {
+      message.channel.send(rollResult.text);
+    } catch {
+      return;
+    }
+  }
+
+  //オリジナル表
+  if (message.content.match(/^(table )/i)) {
+    var str = message.content; //.Split('\n');
+
+    const contents = new UserDefinedDiceTable(str);
+    var rollResult = contents.roll();
+    try {
+      message.channel.send(rollResult.text);
+    } catch {
+      return;
+    }
+  }
+});
+
+//====================================================
+// ModalWindow(add)を作成するモジュール
+//====================================================
+function createModal_add(customId, title, defaults = ['', '', '']) {
+  const makingModal = new ModalBuilder().setCustomId(customId).setTitle(title);
+  const now = new Date();
+
+  const InputTitle = new TextInputBuilder()
+    .setCustomId("inputFirst")
+    .setLabel("シナリオ名")
+    .setStyle(TextInputStyle.Short)
+    .setRequired(true)
+    .setValue(defaults[0] || '');
+  const InputDate = new TextInputBuilder()
+    .setCustomId("inputSecond")
+    .setLabel("日時(yyyy/mm/dd)")
+    .setStyle(TextInputStyle.Short)
+    .setValue(now.getFullYear()+"/")
+    .setPlaceholder("ex)2025/07/05")
+    .setRequired(true);
+  const InputKPname = new TextInputBuilder()
+    .setCustomId("inputThird")
+    .setLabel("KP名を入力")
+    .setStyle(TextInputStyle.Short)
+    .setRequired(true)
+    .setValue(defaults[1] || '');
+  const InputPLname = new TextInputBuilder()
+    .setCustomId("inputFour")
+    .setLabel("PL名を入力")
+    .setStyle(TextInputStyle.Short)
+    .setRequired(true)
+    .setValue(defaults[2] || '');
+
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputTitle));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputDate));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputKPname));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(InputPLname));
+
+  return makingModal;
+}
+
+//====================================================
+// ModalWindow(correct)を作成するモジュール
+//====================================================
+function createModal_correct(customId, title) {
+  const makingModal = new ModalBuilder().setCustomId(customId).setTitle(title);
+
+  const data = {
+    correctID: new TextInputBuilder()
+      .setCustomId("correctID")
+      .setLabel("修正したいスケジュールのIDを入力")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true),
+
+    d1: new TextInputBuilder()
+      .setCustomId(`title`)
+      .setLabel("シナリオ名")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(false)
+      .setPlaceholder("修正しない場合は未記入"),
+
+    d2: new TextInputBuilder()
+      .setCustomId(`date`)
+      .setLabel("日時(yyyy/mm/dd)")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(false)
+      .setPlaceholder("修正しない場合は未記入"),
+
+    d3: new TextInputBuilder()
+      .setCustomId(`kp`)
+      .setLabel("KP名を入力")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(false)
+      .setPlaceholder("修正しない場合は未記入"),
+
+    d4: new TextInputBuilder()
+      .setCustomId(`pl`)
+      .setLabel("PL名を入力")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(false)
+      .setPlaceholder("修正しない場合は未記入")
+  }
+
+  makingModal.addComponents(new ActionRowBuilder().addComponents(data.correctID),
+    new ActionRowBuilder().addComponents(data.d1),
+    new ActionRowBuilder().addComponents(data.d2),
+    new ActionRowBuilder().addComponents(data.d3),
+    new ActionRowBuilder().addComponents(data.d4));
+
+  return makingModal;
+}
+
+//====================================================
+// ModalWindowの入力値を送信するモジュール
+//====================================================
+async function sendData(postList, customId) {
+  postData = [100, postList, customId];
+
+  try {
+    const response = await axios.post(url, postData);
+    return response.data;
+  } catch (error) {
+    console.error("GASエラー:", error);
+    return null;
+  }
+}
+
+//====================================================
+// ダイスロールのモジュール
+//====================================================
+async function diceroll(system, roll) {
+  const loader = new DynamicLoader();
+  const GameSystem = await loader.dynamicLoad(system);
+  const result = GameSystem.eval(roll);
+  return result;
+}
+
 client.login(process.env.DISCORD_BOT_TOKEN);
