@@ -2,16 +2,30 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const path = require('path');
 
+//ヘルスチェック用
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
 // ====================================================
 // 設定・定数
 // ====================================================
 // スプレッドシートID
 const SPREADSHEET_ID = '1wx0ezY3Vdad7z09KESFhN_sCMeSKaaGWlkH2To1cOiw';
 
-
-
 // ヘッダー行のインデックス (ユーザー名)
 const HEADER_ROW_INDEX = 4;
+
+// ====================================================
+// ヘルスチェック用
+// ====================================================
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
+
+app.listen(PORT, () => {
+  console.log(`Web Server running on port ${PORT}`);
+});
 
 // ====================================================
 // データ取得関数
