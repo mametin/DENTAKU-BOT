@@ -1,25 +1,14 @@
-const express = require('express');
-const cors = require('cors');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 const path = require('path');
-
-const app = express();
-app.use(cors());
-
-// POSTデータ受け取りのための設定
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// EJSを使う設定
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'frontend'));
 
 // ====================================================
 // 設定・定数
 // ====================================================
 // スプレッドシートID
 const SPREADSHEET_ID = '1wx0ezY3Vdad7z09KESFhN_sCMeSKaaGWlkH2To1cOiw';
+
+
 
 // ヘッダー行のインデックス (ユーザー名)
 const HEADER_ROW_INDEX = 4;
@@ -64,41 +53,29 @@ async function getSheetData() {
     // ====================================================
     // データ整形関数
     // ====================================================
-    // データを整形＆集計
     const data = rows.map(row => {
-      // 日付列の取得 (日本語'日付' または 英語'Date' に対応)
       const dateVal = row.get('日付') || row.get('Date') || '日付不明';
 
-      let availableCount = 0; // 空き数のカウント用
-      const availabilityDetails = {}; // ユーザーごとの詳細 { "PL1": "〇", ... }
+      let availableCount = 0;
+      const availabilityDetails = {};
 
-      // 各ユーザーの列をチェック
       userColumns.forEach(user => {
-        let mark = row.get(user); // "〇", "△", "×", undefined 等
+        let mark = row.get(user);
 
         if (mark && /\d+-\d+/.test(mark)) mark = '□';
 
-        // 詳細データに保存 (空白の場合は '-' にする等も可能)
         availabilityDetails[user] = mark || '-';
 
-        // 集計ロジック (〇と△をカウント)
-        // 必要に応じて 'OK' など他の文字も条件に追加してください
         if (mark === '〇' || mark === '△'|| mark === '▽' || mark === '✕') {
           availableCount++;
         }
-        /*
-        else if(/\d/.test(mark)) {
-          availableCount += parseInt(mark);
-        }
-          */
-
       });
 
       return {
         date: dateVal,
         count: availableCount,
         details: availabilityDetails,
-        users: userColumns // カラム名リストもViewに渡す
+        users: userColumns
       };
     });
 
@@ -110,68 +87,14 @@ async function getSheetData() {
   }
 }
 
-// ---------------------------------------------------------
-// ルーティング
-// ---------------------------------------------------------
-
-// Wake用アクセス (GET /wake)
-app.get('/wake', (req, res) => {
-  console.log("Wake up ping received (No sheet load)");
-  res.send("OK");
-});
-
-// ホームページ表示 (GET /)
-app.get('/', async (req, res) => {
-  const data = await getSheetData();
-  // views/index.ejs にデータを渡す
-  res.render('index', { items: data });
-});
-
-// GAS等からのWake用アクセス (POST /)
-app.post('/', (req, res) => {
-  const type = req.body.type;
-  if (type === "wake") {
-    console.log("Woke up in post");
-  } else {
-    console.log("Received POST:", type);
-  }
-  res.status(200).end();
-});
-
-// 新規入力ページ表示 (GET /new)
-app.get('/new', (req, res) => {
-    // views/new.ejs を表示する
-    res.render('new');
-});
-
-app.post('/submit', async (req, res) => {
-    try {
-        const formData = req.body;
-        console.log("受信データ:", formData);
-        
-        // 保存完了後のリダイレクト
-        res.send('<script>alert("送信が完了しました"); window.location.href="/";</script>');
-    } catch (error) {
-        console.error("送信エラー:", error);
-        res.status(500).send("送信中にエラーが発生しました。");
-    }
-});
-
-
 // ====================================================
-// サーバー起動
+// Bot本体の起動
 // ====================================================
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Web Server running on port ${PORT}`);
-});
-
 // Discord BotのTokenチェック
 if (!process.env.DISCORD_BOT_TOKEN) {
   console.log("DISCORD_BOT_TOKENが設定されていません。");
 }
 
-// Bot本体の起動
 try {
   require("./bot/code.js");
 } catch (e) {

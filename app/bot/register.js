@@ -1,4 +1,4 @@
-const { Client, ClientApplication } = require("discord.js");
+const { Client, ClientApplication, SlashCommandBuilder } = require("discord.js");
 /**
  *
  * @param {Client} client

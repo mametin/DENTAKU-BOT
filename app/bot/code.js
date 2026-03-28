@@ -188,6 +188,13 @@ const commands = {
   // ロール選択パネル生成
   //---------------------------------------------------
   async setup_roles(interaction) {
+    if (!interaction.member.permissions.has("Administrator")) {
+      return interaction.reply({
+        content: "このコマンドを使用する権限がありません。",
+        ephemeral: true,
+      });
+    }
+
     const targetChannel = interaction.options.getChannel('target_channel');
     const label1 = interaction.options.getString('explan_roll');
     const menuRoles = [];

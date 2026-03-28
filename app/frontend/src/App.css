@@ -1,0 +1,180 @@
+body { 
+  margin: 0;
+  font-family: sans-serif; 
+  padding: 20px; 
+  background-color: #f4f6f8; 
+}
+
+.container { 
+  width: 95%;
+  max-width: 1200px;
+  margin: 20px auto; 
+  background: white; 
+  padding: 20px; 
+  border-radius: 8px; 
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 表を囲むスクロール用エリア */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table { 
+  border-collapse: collapse; 
+  width: 100%;
+}
+
+th, td { 
+  border: 1px solid #ddd; 
+  padding: 4px 2px;
+  text-align: center;
+  font-size: 0.85rem;
+  min-width: 45px;
+  white-space: nowrap;
+}
+
+th:first-child, td:first-child {
+  min-width: 90px;
+  font-size: 0.85rem;
+}
+
+h1 {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.count-ok { color: #2e7d32; font-weight: bold; font-size: 1.2em; }
+.count-zero { color: #c62828; font-weight: bold; }
+
+/* 記号ごとの色分け */
+.mark-〇 { color: #2e7d32; }
+.mark-△, .mark-▽ { color: #f9a825; }
+.mark-□ { color: #1976d2; font-weight: bold; }
+.mark-× { color: #c62828; }
+
+.action-bar {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 新規作成ボタンのスタイル */
+.btn-new {
+  background-color: #5865F2;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none; /* button要素用にリセット */
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-new:hover {
+  background-color: #4752c4;
+}
+
+.date-list { margin-top: 30px; }
+.date-item { 
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+    padding: 10px; 
+    border-bottom: 1px solid #eee; 
+    flex-wrap: wrap;
+}
+
+.options { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.options input[type="radio"] { display: none; }
+
+.option-label {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #5865F2;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: white;
+    transition: all 0.2s;
+    text-align: center;
+    min-width: 40px;
+}
+
+.options input[type="radio"]:checked + .option-label {
+    background-color: #5865F2;
+    color: white;
+}
+
+.options input[type="radio"]:checked + .option-label span {
+    color: white !important;
+}
+
+.other-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.other-input { width: 120px !important; padding: 5px !important; font-size: 0.9em; }
+
+.btn-submit {
+    background-color: #5865F2;
+    color: white; 
+    padding: 10px 40px;
+    border: none; 
+    border-radius: 5px; 
+    font-size: 1.0em; 
+    font-weight: bold; 
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #c62828;
+    color: white; 
+    padding: 10px 20px;
+    border: none; 
+    border-radius: 5px; 
+    font-size: 1.0em; 
+    font-weight: bold; 
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.textbox-name-label {
+    color: #333;
+}
+
+.textbox-name-label {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: 1.0em;
+}
+
+.textbox-name {
+    width: 40%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 25px;
+    background: #f7f7f7;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.textbox-coment {
+    width: 40%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 25px;
+    background: #f7f7f7;
+    font-size: 1em;
+    line-height: 1.5;
+}
