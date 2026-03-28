@@ -55,16 +55,14 @@ const commands = {
   //挨拶
   async hello(interaction) {
     const source = {
-      en(name) {
-        return `Hello, ${name}!`;
-      },
-      ja(name) {
-        return `やあ、${name}さん。`;
-      },
+      en(name) { return `Hello, ${name}!`; },
+      ja(name) { return `やあ、${name}さん。`; },
     };
     const name = interaction.member?.displayName ?? interaction.user.username;
-    const lang = interaction.options.get("language");
-    return interaction.reply(source[lang.value](name));
+    
+    const lang = interaction.options.getString("language");
+    
+    return interaction.reply(source[lang](name));
   },
 
   //---------------------------------------------------
@@ -80,16 +78,15 @@ const commands = {
   //---------------------------------------------------
   async show(interaction) {
     const source = {
-      sp() {
-        return `[スプレッドシートリンク](<${sp_url}>)`;
-      },
-      ca() {
-        return `[カレンダーリンク](<${ca_url}>)`;
-      },
+      sp() { return `[スプレッドシートリンク](<${sp_url}>)`; },
+      ca() { return `[カレンダーリンク](<${ca_url}>)`; },
     };
-    const type = interaction.options.get("type");
+    
+    // v14では .getString() を使用
+    const type = interaction.options.getString("type");
+    
     return await interaction.reply({
-      content: source[type.value](),
+      content: source[type](),
       ephemeral: true,
     });
   },
