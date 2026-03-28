@@ -2,7 +2,14 @@ const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ModalBuilder,
 const { DynamicLoader } = require("bcdice");
 const { UserDefinedDiceTable } = require("bcdice");
 const wait = require("util");
-const options = { intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent] };
+const options = { 
+  intents: [
+    GatewayIntentBits.Guilds, 
+    GatewayIntentBits.GuildMessages, 
+    GatewayIntentBits.GuildMembers, 
+    GatewayIntentBits.MessageContent
+  ] 
+};
 const client = new Client(options);
 
 client.on("ready", (message) => {
