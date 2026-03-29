@@ -427,6 +427,7 @@ client.on("interactionCreate", async (interaction) => {
 
     // --- お知らせ ---
      else if (interaction.customId == "notice") {
+      const noticeTitle = interaction.fields.getTextInputValue("title");
       const noticeText = interaction.fields.getTextInputValue("notice");
 
       const info = new EmbedBuilder()
@@ -434,9 +435,10 @@ client.on("interactionCreate", async (interaction) => {
         .setTitle("日程調整くんからのお知らせ")	//お知らせタイトル
         .setDescription('何かあれば@BOT管理用ロールへ連絡してください。')
         .addFields(
-          { name: `${title}`, value: `${notice}` },
+          { name: noticeTitle, value: noticeText },
         ) 
-        client.channels.cache.get(interaction.channelId).send({ embeds: [info] });
+        await client.channels.cache.get(interaction.channelId).send({ embeds: [info] });
+        await interaction.reply({ content: "お知らせを送信しました。", ephemeral: true });
     }
   }
 
@@ -668,8 +670,10 @@ function createModal_notice(customId, title) {
       .setRequired(true)
   }
 
-  makingModal.addComponents(new ActionRowBuilder().addComponents(data.title),
-                            new ActionRowBuilder().addComponents(data.notice));
+makingModal.addComponents(
+    new ActionRowBuilder().addComponents(data.title),
+    new ActionRowBuilder().addComponents(data.notice)
+  );
   return makingModal;
 }
 
