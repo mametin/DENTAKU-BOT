@@ -130,12 +130,19 @@ const roles = {
   name: 'setup_roles',
   description: 'ロール選択パネルを設置します（最大20個まで指定可能）',
   options: role_options,
-  defaultMemberPermissions: PermissionFlagsBits.Administrator // 管理者のみに制限
+  defaultMemberPermissions: PermissionFlagsBits.Administrator
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+};
+
+const notice = {
+  name: 'notice',
+  description: '日程調整くんに話させるコマンド(コマンド制作者のみ使用可能)',
+  defaultMemberPermissions: PermissionFlagsBits.Administrator
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 };
 
 
-
-const commands = [hello, add, show, deletes, corrects, searchs, omikuji, roles];
+const commands = [hello, add, show, deletes, corrects, searchs, omikuji, roles, notice];
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],

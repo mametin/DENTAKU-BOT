@@ -65,7 +65,12 @@ const axios = axiosBase.create({
 // コマンド処理内容の記述
 //====================================================
 const commands = {
-  //挨拶
+
+  //--------------------------------------------------- 
+  // テキスト送信
+  //---------------------------------------------------
+
+  // --- パネルに配置するロールの一覧を取得 ---
   async hello(interaction) {
     const source = {
       en(name) {
@@ -80,6 +85,13 @@ const commands = {
     const lang = interaction.options.getString("language");
     return interaction.reply(source[lang](name));
   },
+
+  // --- パネルに配置するロールの一覧を取得 ---
+  async notice(interaction) {
+    const modal = axiosBase.createModal_notice("notice", "BOTに話させる内容を入力");
+    await interaction.showModal(modal);
+  },
+
 
   //---------------------------------------------------
   // 日程入力
@@ -413,6 +425,18 @@ client.on("interactionCreate", async (interaction) => {
       }
     }
 
+    // --- お知らせ ---
+     else if (interaction.customId == "notice") {
+      const noticeText = interaction.fields.getTextInputValue("notice");
+
+      const info = new EmbedBuilder()
+        .setColor(0xfdce4b)
+        .setTitle("日程調整くんからのお知らせ")	//お知らせタイトル
+        .setDescription('何かあれば@BOT管理用ロールへ連絡してください。')
+        .addFields(
+          { name: `${title}`, value: `${notice}` },
+        ) 
+        client.channels.cache.get(interaction.channelId).send({ embeds: [info] });
   }
 
   else if (interaction.isStringSelectMenu()) {
@@ -622,6 +646,29 @@ function createModal_correct(customId, title) {
     new ActionRowBuilder().addComponents(data.d3),
     new ActionRowBuilder().addComponents(data.d4));
 
+  return makingModal;
+}
+
+//====================================================
+// ModalWindow(notice)を作成するモジュール
+//====================================================
+function createModal_correct(customId, title) {
+  const makingModal = new ModalBuilder().setCustomId(customId).setTitle(title);
+
+  const data = {
+    title: new TextInputBuilder()
+      .setCustomId("title")
+      .setLabel("タイトル")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true),
+    notice: new TextInputBuilder()
+      .setCustomId("notice")
+      .setLabel("BOTに話させる内容を入力")
+      .setStyle(TextInputStyle.Paragraph)
+      .setRequired(true)
+  }
+
+  makingModal.addComponents(new ActionRowBuilder().addComponents(data.notice));
   return makingModal;
 }
 
