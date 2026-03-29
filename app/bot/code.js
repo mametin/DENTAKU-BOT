@@ -88,7 +88,7 @@ const commands = {
 
   // --- パネルに配置するロールの一覧を取得 ---
   async notice(interaction) {
-    const modal = axiosBase.createModal_notice("notice", "BOTに話させる内容を入力");
+    const modal = createModal_notice("notice", "BOTに話させる内容を入力");
     await interaction.showModal(modal);
   },
 
