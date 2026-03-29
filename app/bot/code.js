@@ -668,7 +668,8 @@ function createModal_notice(customId, title) {
       .setRequired(true)
   }
 
-  makingModal.addComponents(new ActionRowBuilder().addComponents(data.notice));
+  makingModal.addComponents(new ActionRowBuilder().addComponents(data.title),
+                            new ActionRowBuilder().addComponents(data.notice));
   return makingModal;
 }
 
