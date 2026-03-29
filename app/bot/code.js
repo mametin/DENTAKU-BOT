@@ -652,7 +652,7 @@ function createModal_correct(customId, title) {
 //====================================================
 // ModalWindow(notice)を作成するモジュール
 //====================================================
-function createModal_correct(customId, title) {
+function createModal_notice(customId, title) {
   const makingModal = new ModalBuilder().setCustomId(customId).setTitle(title);
 
   const data = {
