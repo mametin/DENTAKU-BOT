@@ -437,6 +437,7 @@ client.on("interactionCreate", async (interaction) => {
           { name: `${title}`, value: `${notice}` },
         ) 
         client.channels.cache.get(interaction.channelId).send({ embeds: [info] });
+    }
   }
 
   else if (interaction.isStringSelectMenu()) {
@@ -470,7 +471,6 @@ client.on("interactionCreate", async (interaction) => {
       }
     }
   }
-
   else return;
 });
 
