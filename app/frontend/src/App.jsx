@@ -172,6 +172,19 @@ function CalendarView({ allData }) {
         </button>
 
         <div className={`header-right ${isMenuOpen ? "menu-open" : ""}`}>
+          <div className="mobile-menu-header">
+            {user ? (
+              <div className="mobile-user-info">
+                <img src={user.avatar} alt="avatar" className="mobile-avatar" />
+                <span className="mobile-username">{user.username}</span>
+              </div>
+            ) : (
+              <div className="mobile-user-info">
+                <span className="mobile-guest-text">ゲスト閲覧中</span>
+              </div>
+            )}
+          </div>
+
           <nav className="header-menu">
             <ul>
               {/* 入力ボタン */}
@@ -216,40 +229,61 @@ function CalendarView({ allData }) {
             </ul>
           </nav>
 
+          <div className="mobile-filter-area">
+            <p className="mobile-filter-label">表示設定・絞り込み</p>
+            <div className="filter-controls">
+              <label className="box-sort">
+                <select className="selectbox-sort" onChange={handleSortChange}>
+                  <option value="">使用禁止</option>
+                  <option value="user">ユーザーで絞り込む</option>
+                  <option value="day">曜日で絞り込む</option>
+                  <option value="date">日付で絞り込む</option>
+                </select>
+              </label>
+              {filterConfig.type && (
+                <button className="btn-resetFilter" onClick={resetFilter}>
+                  フィルタ解除
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* --- ログインバナー --- */}
-          {user ? (
-            <div className="user-banner">
-              <img src={user.avatar} alt="avatar" className="avatar-img" />
-              <span className="username-text">
-                {user.username} としてログイン中
-              </span>
-              <button onClick={handleLogout} className="btn-logout">
-                ログアウト
-              </button>
-            </div>
-          ) : (
-            <div className="user-banner">
-              <div className="guest-icon">
-                <span className="material-icons"></span>{" "}
+          <div className="pc-user-banner-only">
+            {user ? (
+              <div className="user-banner">
+                <img src={user.avatar} alt="avatar" className="avatar-img" />
+                <span className="username-text">
+                  {user.username} としてログイン中
+                </span>
+                <button onClick={handleLogout} className="btn-logout">
+                  ログアウト
+                </button>
               </div>
-              <span className="username-text" style={{ color: "#666" }}>
-                ゲスト閲覧中
-              </span>
-              <button
-                onClick={loginWithDiscord}
-                className="user-edit-link"
-                style={{
-                  fontSize: "0.8rem",
-                  cursor: "pointer",
-                  background: "none",
-                  border: "none",
-                  textDecoration: "underline",
-                }}
-              >
-                ログイン
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="user-banner">
+                <div className="guest-icon">
+                  <span className="material-icons"></span>{" "}
+                </div>
+                <span className="username-text" style={{ color: "#666" }}>
+                  ゲスト閲覧中
+                </span>
+                <button
+                  onClick={loginWithDiscord}
+                  className="user-edit-link"
+                  style={{
+                    fontSize: "0.8rem",
+                    cursor: "pointer",
+                    background: "none",
+                    border: "none",
+                    textDecoration: "underline",
+                  }}
+                >
+                  ログイン
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
