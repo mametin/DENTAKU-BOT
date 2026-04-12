@@ -244,7 +244,6 @@ function CalendarView({ allData }) {
                   background: "none",
                   border: "none",
                   textDecoration: "underline",
-                  transform: "skew(25deg)",
                 }}
               >
                 ログイン
