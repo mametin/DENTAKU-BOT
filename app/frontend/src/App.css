@@ -1081,7 +1081,8 @@ h2 {
 }
 
 /* --- PC版の表示調整 --- */
-.mobile-menu-header, .mobile-filter-area {
+.mobile-menu-header,
+.mobile-filter-area {
   display: none;
 }
 
@@ -1163,9 +1164,10 @@ h2 {
   border-radius: 3px;
   z-index: 1;
   transform-origin: center center;
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              opacity 0.55s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    opacity 0.55s ease;
 }
 
 .hamburger-btn.open span:nth-child(1) {
@@ -1182,15 +1184,12 @@ h2 {
   transform: translateY(-9px) rotate(-45deg);
 }
 
-
-
 /* =========================================
    ここから画面幅900px以下の設定（スマホ版）
 ========================================= */
 @media screen and (max-width: 900px) {
-
-/* フィルタ */
-.calendar-controls .controls-right-group {
+  /* フィルタ */
+  .calendar-controls .controls-right-group {
     display: none;
   }
 
@@ -1267,8 +1266,8 @@ h2 {
   }
 
   /* 元のバナーをメニュー内では隠す */
-  .pc-user-banner-only {
-    display: none;
+  .pc-only {
+    display: none !important;
   }
 
   /* ハンバーガーメニュー */
@@ -1290,7 +1289,7 @@ h2 {
     transform: none !important;
   }
 
-.header-right {
+  .header-right {
     position: fixed;
     top: 0;
     right: -100%;
@@ -1305,7 +1304,7 @@ h2 {
     opacity: 1;
     visibility: visible;
     transform: none;
-    transition: right 0.5s cubic-bezier(0.77,0.2,0.05,1.0); 
+    transition: right 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
   }
 
   .header-right.menu-open {
@@ -1330,13 +1329,6 @@ h2 {
     text-align: center;
   }
 
-
-
-
-
-
-
-
   /* --- ログインバナーの調整 --- */
   .user-banner {
     width: 90%;
@@ -1344,4 +1336,3 @@ h2 {
     justify-content: center;
   }
 }
-

@@ -249,41 +249,39 @@ function CalendarView({ allData }) {
           </div>
 
           {/* --- ログインバナー --- */}
-          <div className="pc-user-banner-only">
-            {user ? (
-              <div className="user-banner">
-                <img src={user.avatar} alt="avatar" className="avatar-img" />
-                <span className="username-text">
-                  {user.username} としてログイン中
-                </span>
-                <button onClick={handleLogout} className="btn-logout">
-                  ログアウト
-                </button>
+          {user ? (
+            <div className="user-banner pc-only">
+              <img src={user.avatar} alt="avatar" className="avatar-img" />
+              <span className="username-text">
+                {user.username} としてログイン中
+              </span>
+              <button onClick={handleLogout} className="btn-logout">
+                ログアウト
+              </button>
+            </div>
+          ) : (
+            <div className="user-banner pc-only">
+              <div className="guest-icon">
+                <span className="material-icons"></span>{" "}
               </div>
-            ) : (
-              <div className="user-banner">
-                <div className="guest-icon">
-                  <span className="material-icons"></span>{" "}
-                </div>
-                <span className="username-text" style={{ color: "#666" }}>
-                  ゲスト閲覧中
-                </span>
-                <button
-                  onClick={loginWithDiscord}
-                  className="user-edit-link"
-                  style={{
-                    fontSize: "0.8rem",
-                    cursor: "pointer",
-                    background: "none",
-                    border: "none",
-                    textDecoration: "underline",
-                  }}
-                >
-                  ログイン
-                </button>
-              </div>
-            )}
-          </div>
+              <span className="username-text" style={{ color: "#666" }}>
+                ゲスト閲覧中
+              </span>
+              <button
+                onClick={loginWithDiscord}
+                className="user-edit-link"
+                style={{
+                  fontSize: "0.8rem",
+                  cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  textDecoration: "underline",
+                }}
+              >
+                ログイン
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
