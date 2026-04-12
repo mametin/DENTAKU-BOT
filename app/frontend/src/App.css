@@ -1136,63 +1136,52 @@ h2 {
    ハンバーガーメニュー＆スマホ対応レイアウト
 ========================================= */
 .hamburger-btn {
-  display: none; /* PCでは隠す */
+  display: none;
   position: relative;
   width: 33px;
-  height: 26px;
+  height: 22px;
   background: transparent;
   border: none;
   cursor: pointer;
   z-index: 1000;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .hamburger-btn span {
   display: block;
   width: 33px;
   height: 4px;
-  margin-bottom: 5px;
-  position: relative;
-  background: #ffffff; /* ヘッダーに合わせて白 */
+  margin-bottom: 0;
+  background: #ffffff;
   border-radius: 3px;
   z-index: 1;
-  transform-origin: 4px 0px;
-
-  /* ご提示いただいたなめらかな transition */
-  transition:
-    transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
-    opacity 0.55s ease;
+  transform-origin: center center;
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
 }
 
-.hamburger-btn span:first-child {
-  transform-origin: 0% 0%;
-}
-
-.hamburger-btn span:last-child {
-  transform-origin: 0% 100%;
-  margin-bottom: 0;
-}
-
-/* --- 2. メニューが開いた時（.open）のバネのようなXマーク変形 --- */
-.hamburger-btn.open span:first-child {
+.hamburger-btn.open span:nth-child(1) {
   opacity: 1;
-  transform: rotate(45deg) translate(2px, -2px);
+  transform: translateY(9px) rotate(45deg);
 }
 
 .hamburger-btn.open span:nth-child(2) {
   opacity: 0;
-  transform: rotate(0deg) scale(0.2, 0.2);
+  transform: scale(0.2);
 }
 
-.hamburger-btn.open span:last-child {
-  transform: rotate(-45deg) translate(0, 1px);
+.hamburger-btn.open span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 /* =========================================
-   ここから画面幅850px以下の設定（スマホ版）
+   ここから画面幅900px以下の設定（スマホ版）
 ========================================= */
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 900px) {
   .hamburger-btn {
     display: flex;
   }
@@ -1211,25 +1200,28 @@ h2 {
     transform: none !important;
   }
 
-  /* --- 3. 右からスライドしてくるメニュー --- */
   .header-right {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 300px;
-    max-width: 80vw;
-    height: 100vh;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
     background-color: #212121;
     flex-direction: column;
-    padding: 80px 0 20px 0;
-    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+    padding: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 999;
-    transition: right 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: none; 
   }
 
-  
   .header-right.menu-open {
-    right: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    padding: 20px 0;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease; 
   }
 
   /* --- スマホ時のリストデザイン --- */
