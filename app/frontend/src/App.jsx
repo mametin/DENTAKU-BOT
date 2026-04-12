@@ -11,9 +11,7 @@ import headerIcon from "./IMG_icon.jpg";
 const GAS_URL =
   "https://script.google.com/macros/s/AKfycbytDVAVE1488ftKB3LCPNXILV3yLjuVT01IINEb6eaLv0RCvDZ_VdypRjV03esCZtQ4/exec";
 const DISCORD_URL =
-  "https://discord.com/oauth2/authorize?client_id=1263473828319989772&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcallback&scope=identify";
-
-// Discordの認証ページへ飛ばす関数
+  "https://discord.com/oauth2/authorize?client_id=...&redirect_uri=https%3A%2F%2Fyour-app-name.vercel.app%2Fcallback&scope=identify";
 const loginWithDiscord = () => {
   window.location.href = DISCORD_URL;
 };
