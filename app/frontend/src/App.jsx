@@ -166,7 +166,7 @@ function CalendarView({ allData }) {
               {isAlreadyAnswered ? (
                 <li>
                   <Link
-                    to={`/edit/${encodeURIComponent(user.username)}`}
+                    to={`/edit/${encodeURIComponent(user.username)}?month=${activeMonth === "last" ? "current" : activeMonth}`}
                     className="btn-new"
                   >
                     入力の編集
@@ -174,7 +174,10 @@ function CalendarView({ allData }) {
                 </li>
               ) : (
                 <li>
-                  <Link to="/new" className="btn-new">
+                  <Link
+                    to={`/new?month=${activeMonth === "last" ? "current" : activeMonth}`}
+                    className="btn-new"
+                  >
                     新規入力
                   </Link>
                 </li>
@@ -561,7 +564,7 @@ function CalendarView({ allData }) {
   );
 }
 // --- 入力フォームコンポーネント---
-function EntryForm({ items, setItems }) {
+function EntryForm({ allData }) {
   const navigate = useNavigate();
 
   // localStorage からログイン情報を取得
@@ -575,6 +578,13 @@ function EntryForm({ items, setItems }) {
     });
     return initial;
   });
+
+  //URLから対象月を取得
+  const queryParams = new URLSearchParams(window.location.search);
+  const initialMonth = queryParams.get("month") || "current";
+  const [formMonth, setFormMonth] = useState(initialMonth);
+
+  const items = allData[formMonth] || [];
 
   // usestateの定義
   const { targetName } = useParams();
@@ -789,6 +799,7 @@ function EntryForm({ items, setItems }) {
       name: name,
       comment: comment,
       responses: finalResponses,
+      targetMonth: formMonth,
     };
 
     try {
@@ -850,7 +861,24 @@ function EntryForm({ items, setItems }) {
           <form onSubmit={handleSubmit}>
             <div className="input-header-area">
               <div className="input-info">
-                <h1>日程の新規入力</h1>
+                <div className="tab-container" style={{ marginBottom: "15px" }}>
+                  <button
+                    type="button"
+                    onClick={() => setFormMonth("current")}
+                    className={formMonth === "current" ? "active" : ""}
+                  >
+                    今月
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormMonth("next")}
+                    className={formMonth === "next" ? "active" : ""}
+                  >
+                    来月
+                  </button>
+                </div>
+
+                <h1>日程の{targetName ? "修正" : "新規入力"}</h1>
                 <div className="form-group">
                   <div
                     style={{
@@ -1180,11 +1208,14 @@ function AuthCallback() {
 
     if (code) {
       // 自前サーバーのAPIを叩く
-      fetch("https://puny-stormie-mametin-61164a7d.koyeb.app/api/auth/discord", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      })
+      fetch(
+        "https://puny-stormie-mametin-61164a7d.koyeb.app/api/auth/discord",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code }),
+        },
+      )
         .then((res) => res.json())
         .then((userData) => {
           console.log("Raw Discord Data:", userData);
@@ -1251,11 +1282,11 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<CalendarView allData={allData} />} />
-      <Route path="/new" element={<EntryForm items={allData.current} />} />
+      <Route path="/new" element={<EntryForm allData={allData} />} />
       <Route path="/callback" element={<AuthCallback />} />
       <Route
         path="/edit/:targetName"
-        element={<EntryForm items={allData.current} />}
+        element={<EntryForm allData={allData} />}
       />
     </Routes>
   );
