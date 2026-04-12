@@ -1133,3 +1133,102 @@ h2 {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* =========================================
+   ハンバーガーメニュー＆スマホ対応レイアウト
+========================================= */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* メニューが開いたとき、ボタンを「✕」に変形させるアニメーション */
+.hamburger-btn.open span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.hamburger-btn.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-btn.open span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* --- 画面幅が850px以下になった時の設定 --- */
+@media screen and (max-width: 850px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .header-right {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background-color: #212121;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    
+    /* 初期状態は非表示 */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+  }
+
+  .header-right.menu-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .header-menu ul {
+    flex-direction: column;
+    transform: none; /* 斜め解除 */
+    width: 90%;
+    margin: 0 auto;
+    gap: 10px;
+  }
+
+  .header-menu ul li {
+    width: 100%;
+    border-right: none;
+    border-radius: 8px !important;
+  }
+
+  .header-menu ul li a {
+    transform: none;
+    text-align: center;
+  }
+
+  /* ログインバナーもスマホ用に整える */
+  .user-banner {
+    transform: none;
+    width: 90%;
+    margin: 20px auto 0;
+    justify-content: center;
+  }
+
+  .avatar-img,
+  .username-text,
+  .btn-logout {
+    transform: none;
+  }
+}

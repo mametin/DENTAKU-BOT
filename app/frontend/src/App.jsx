@@ -20,6 +20,9 @@ const loginWithDiscord = () => {
 function CalendarView({ allData }) {
   const navigate = useNavigate();
 
+  //ハンバーガーメニュー開閉ステート
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   // タブの状態管理
   const [activeTab, setActiveTab] = useState(1);
   const [activeMonth, setActiveMonth] = useState("current");
@@ -159,7 +162,16 @@ function CalendarView({ allData }) {
           </h1>
         </div>
 
-        <div className="header-right">
+        <button
+          className={`hamburger-btn ${isMenuOpen ? "open" : ""}`}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div className={`header-right ${isMenuOpen ? "menu-open" : ""}`}>
           <nav className="header-menu">
             <ul>
               {/* 入力ボタン */}
