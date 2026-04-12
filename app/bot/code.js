@@ -81,7 +81,6 @@ const commands = {
       },
     };
     const name = interaction.member?.displayName ?? interaction.user.username;
-    // v14修正: get().value ではなく getString() を使用
     const lang = interaction.options.getString("language");
     return interaction.reply(source[lang](name));
   },

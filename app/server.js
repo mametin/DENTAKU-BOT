@@ -1,26 +1,35 @@
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
-const path = require('path');
+const { GoogleSpreadsheet } = require("google-spreadsheet");
+const { JWT } = require("google-auth-library");
+const path = require("path");
+const cors = require("cors");
 
 //ヘルスチェック用
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// CORS設定
+app.use(cors());
+app.use(express.json());
 
 // ====================================================
 // 設定・定数
 // ====================================================
 // スプレッドシートID
-const SPREADSHEET_ID = '1wx0ezY3Vdad7z09KESFhN_sCMeSKaaGWlkH2To1cOiw';
+const SPREADSHEET_ID = "1wx0ezY3Vdad7z09KESFhN_sCMeSKaaGWlkH2To1cOiw";
 
 // ヘッダー行のインデックス (ユーザー名)
 const HEADER_ROW_INDEX = 4;
 
+// GASのURL
+const GAS_URL =
+  "https://script.google.com/macros/s/AKfycbytDVAVE1488ftKB3LCPNXILV3yLjuVT01IINEb6eaLv0RCvDZ_VdypRjV03esCZtQ4/exec";
+
 // ====================================================
 // ヘルスチェック用
 // ====================================================
-app.get('/', (req, res) => {
-  res.send('Server is running');
+app.get("/", (req, res) => {
+  res.send("Server is running");
 });
 
 app.listen(PORT, () => {
@@ -28,76 +37,105 @@ app.listen(PORT, () => {
 });
 
 // ====================================================
+// React用エンドポイント
+// ====================================================
+app.get("/api/data", async (req, res) => {
+  try {
+    const data = await getSheetData();
+    res.json(data);
+  } catch (error) {
+    console.error("APIデータ取得エラー:", error);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
+app.post("/api/auth/discord", async (req, res) => {
+  const { code } = req.body;
+
+  try {
+    const response = await fetch(GAS_URL, {
+      method: "POST",
+      body: JSON.stringify({ code }),
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Auth failed" });
+  }
+});
+
+// ====================================================
 // データ取得関数
 // ====================================================
 async function getSheetData() {
   try {
-    // 環境変数のチェック
-    if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
-      console.log("GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEYが設定されていません。");
-      return [];
+    if (
+      !process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ||
+      !process.env.GOOGLE_PRIVATE_KEY
+    ) {
+      console.log("認証情報が設定されていません。");
+      return { last: [], current: [], next: [] };
     }
 
-    // 認証設定
     const serviceAccountAuth = new JWT({
       email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
-    // スプレッドシート読み込み
     const s = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
     await s.loadInfo();
 
-    // 1枚目のシートを取得
-    const sheet = s.sheetsByIndex[0];
+    const sheetConfigs = [
+      { index: 0, label: "last" }, // 先月
+      { index: 1, label: "current" }, // 今月
+      { index: 2, label: "next" }, // 来月
+    ];
 
-    // ヘッダー行を読み込み
-    await sheet.loadHeaderRow(HEADER_ROW_INDEX);
+    const result = { last: [], current: [], next: [] };
 
-    // データ行を取得
-    const rows = await sheet.getRows();
+    for (const config of sheetConfigs) {
+      const sheet = s.sheetsByIndex[config.index];
+      if (!sheet) continue;
 
-    // 全ヘッダーからユーザー列を抽出
-    const allHeaders = sheet.headerValues;
-    const userColumns = allHeaders.filter(header => {
-      return header !== '日付' && header !== 'Date' && header !== '' && header !== undefined;
-    });
+      await sheet.loadHeaderRow(HEADER_ROW_INDEX);
+      const rows = await sheet.getRows();
+      const allHeaders = sheet.headerValues;
 
-    // ====================================================
-    // データ整形関数
-    // ====================================================
-    const data = rows.map(row => {
-      const dateVal = row.get('日付') || row.get('Date') || '日付不明';
+      const userColumns = allHeaders.filter(
+        (header) =>
+          header !== "日付" &&
+          header !== "Date" &&
+          header !== "曜日" &&
+          header !== "" &&
+          header !== undefined,
+      );
 
-      let availableCount = 0;
-      const availabilityDetails = {};
+      const data = rows.map((row) => {
+        const dateVal = row.get("日付") || row.get("Date") || "日付不明";
+        const dayVal = row.get("曜日") || "";
 
-      userColumns.forEach(user => {
-        let mark = row.get(user);
+        const availabilityDetails = {};
+        userColumns.forEach((user) => {
+          const val = row.get(user);
+          availabilityDetails[user] =
+            val === null || val === undefined ? "-" : String(val);
+        });
 
-        if (mark && /\d+-\d+/.test(mark)) mark = '□';
-
-        availabilityDetails[user] = mark || '-';
-
-        if (mark === '〇' || mark === '△'|| mark === '▽' || mark === '✕') {
-          availableCount++;
-        }
+        return {
+          date: dateVal,
+          day: dayVal,
+          details: availabilityDetails,
+        };
       });
 
-      return {
-        date: dateVal,
-        count: availableCount,
-        details: availabilityDetails,
-        users: userColumns
-      };
-    });
+      result[config.label] = data;
+    }
 
-    return data;
-
+    return result;
   } catch (error) {
     console.error("Spreadsheet Load Error:", error);
-    return [];
+    return { last: [], current: [], next: [] };
   }
 }
 
