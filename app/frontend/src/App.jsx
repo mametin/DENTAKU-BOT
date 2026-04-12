@@ -567,6 +567,13 @@ function CalendarView({ allData }) {
 function EntryForm({ allData }) {
   const navigate = useNavigate();
 
+  //URLから対象月を取得
+  const queryParams = new URLSearchParams(window.location.search);
+  const initialMonth = queryParams.get("month") || "current";
+  const [formMonth, setFormMonth] = useState(initialMonth);
+
+  const items = allData[formMonth] || [];
+
   // localStorage からログイン情報を取得
   const savedUser = localStorage.getItem("discord_user");
   const user = savedUser ? JSON.parse(savedUser) : null;
@@ -578,13 +585,6 @@ function EntryForm({ allData }) {
     });
     return initial;
   });
-
-  //URLから対象月を取得
-  const queryParams = new URLSearchParams(window.location.search);
-  const initialMonth = queryParams.get("month") || "current";
-  const [formMonth, setFormMonth] = useState(initialMonth);
-
-  const items = allData[formMonth] || [];
 
   // usestateの定義
   const { targetName } = useParams();
