@@ -96,7 +96,7 @@ body {
   padding: 15px 20px;
   color: inherit;
   text-decoration: none;
-  transform: skew(25deg);
+  transform: none;
 }
 
 .header-menu ul::after {
@@ -740,7 +740,7 @@ h2 {
   height: 32px;
   border-radius: 50%;
   border: 2px solid #5865f2; /* Discordカラー */
-  transform: skew(25deg);
+  transform: none;
 }
 
 .guest-icon {
@@ -749,7 +749,7 @@ h2 {
   background-color: #ccc;
   border-radius: 50%;
   border: 2px solid #899194; /* Discordカラー */
-  transform: skew(25deg);
+  transform: none;
 }
 
 .guest-icon {
@@ -786,7 +786,7 @@ h2 {
 .username-text {
   font-weight: bold;
   color: #333;
-  transform: skew(25deg);
+  transform: none;
 }
 
 .btn-logout {
@@ -798,7 +798,7 @@ h2 {
   cursor: pointer;
   font-size: 0.8rem;
   transition: background 0.2s;
-  transform: skew(25deg);
+  transform: none;
 }
 
 .btn-logout:hover {
@@ -1170,7 +1170,7 @@ h2 {
 }
 
 /* --- 画面幅が850px以下になった時の設定 --- */
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 900px) {
   .hamburger-btn {
     display: flex;
   }
