@@ -1137,22 +1137,9 @@ h2 {
 /* =========================================
    ハンバーガーメニュー＆スマホ対応レイアウト
 ========================================= */
-.header-menu ul,
-  .user-banner {
-    transform: none !important;
-  }
-
-  .header-menu ul li a,
-  .avatar-img,
-  .guest-icon,
-  .username-text,
-  .btn-logout,
-  .user-banner .user-edit-link {
-    transform: none !important;
-  }
-
+/* --- ハンバーガーボタンの基本スタイル --- */
 .hamburger-btn {
-  display: none;
+  display: none; /* PCでは隠す */
   flex-direction: column;
   justify-content: space-between;
   width: 30px;
@@ -1183,12 +1170,29 @@ h2 {
   transform: translateY(-9px) rotate(-45deg);
 }
 
-/* --- 画面幅が850px以下になった時の設定 --- */
+/* =========================================
+   ここから画面幅850px以下の設定（スマホ版）
+========================================= */
 @media screen and (max-width: 850px) {
   .hamburger-btn {
-    display: flex;
+    display: flex; /* スマホの時だけボタンを表示 */
   }
 
+  .header-menu ul,
+  .user-banner {
+    transform: none !important;
+  }
+
+  .header-menu ul li a,
+  .avatar-img,
+  .guest-icon,
+  .username-text,
+  .btn-logout,
+  .user-edit-link {
+    transform: none !important;
+  }
+
+  /* --- スマホ時のメニュー設定 --- */
   .header-right {
     position: absolute;
     top: 70px;
@@ -1196,26 +1200,26 @@ h2 {
     width: 100%;
     background-color: #212121;
     flex-direction: column;
-    padding: 20px 0;
+    padding: 0; /* 最初は高さを出さない */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 999;
-    
-    /* 初期状態は非表示 */
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transition: none; 
   }
 
   .header-right.menu-open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    padding: 20px 0;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease; 
   }
 
+  /* --- スマホ時のリストデザイン --- */
   .header-menu ul {
     flex-direction: column;
-    transform: none; /* 斜め解除 */
     width: 90%;
     margin: 0 auto;
     gap: 10px;
@@ -1228,21 +1232,13 @@ h2 {
   }
 
   .header-menu ul li a {
-    transform: none;
     text-align: center;
   }
 
-  /* ログインバナーもスマホ用に整える */
+  /* --- ログインバナーの調整 --- */
   .user-banner {
-    transform: none;
     width: 90%;
     margin: 20px auto 0;
     justify-content: center;
-  }
-
-  .avatar-img,
-  .username-text,
-  .btn-logout {
-    transform: none;
   }
 }
