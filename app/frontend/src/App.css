@@ -8,7 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 200vh;
-  min-width: 80vh;
+  min-width: 50vh;
 }
 
 .container {
