@@ -32,7 +32,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 10px clamp(8px, 2vw, 20px);
   background-color: #212121;
   margin-bottom: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -51,6 +51,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px clamp(4px, 1vw, 12px);
+  border-radius: 8px;
+  gap: clamp(4px, 1vw, 8px);
 }
 
 .header-menu {
@@ -106,7 +110,8 @@ body {
 }
 
 .header-title {
-  font-size: 1.4rem;
+  font-size: clamp(16px, 3vw, 24px);
+  white-space: nowrap;
   margin: 0;
   color: #fff;
   display: flex;
@@ -736,8 +741,8 @@ h2 {
 }
 
 .avatar-img {
-  width: 32px;
-  height: 32px;
+  width: clamp(24px, 3vw, 32px);
+  height: clamp(24px, 3vw, 32px);
   border-radius: 50%;
   border: 2px solid #5865f2; /* Discordカラー */
   transform: skew(25deg);
@@ -792,10 +797,11 @@ h2 {
   background-color: #ff4757;
   color: white;
   border: none;
-  padding: 5px 12px;
+  padding: 6px clamp(6px, 1.2vw, 15px);
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: clamp(11px, 1.5vw, 14px);
+  white-space: nowrap;
   transition: background 0.2s;
   transform: skew(25deg);
 }
@@ -1290,7 +1296,11 @@ h2 {
   }
 
   .header-right {
+    display: flex;
     position: fixed;
+    gap: clamp(4px, 1.5vw, 12px);
+    flex-shrink: 1;
+    min-width: 0;
     top: 0;
     right: -100%;
     left: auto;
