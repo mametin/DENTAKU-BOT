@@ -253,7 +253,7 @@ function CalendarView({ allData }) {
             <div className="user-banner pc-only">
               <img src={user.avatar} alt="avatar" className="avatar-img" />
               <span className="username-text">
-                {user.username} としてログイン中
+                {user.username}
               </span>
               <button onClick={handleLogout} className="btn-logout">
                 ログアウト
