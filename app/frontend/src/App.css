@@ -1169,7 +1169,7 @@ h2 {
 .check-vertical {
   margin: 6em 2em;
 }
-.check-vertical input[type=checkbox] {
+.check-vertical input[type="checkbox"] {
   display: none;
 }
 /*通常時のラベルの設定*/
@@ -1177,42 +1177,44 @@ h2 {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0 0 0 20px;
-  text-overflow: ellipsis;/*テキストがエリアを超えたら'…'で省略*/
+  font-size: 0.85rem;
+  padding: 0 0 0 22px;
+  text-overflow: ellipsis; /*テキストがエリアを超えたら'…'で省略*/
   transition: all 0.15s ease;
   cursor: pointer;
 }
 /*通常時のチェックボックスの設定*/
 .check-vertical label::before {
   position: absolute;
-  left: 0px;
-  content: '';
-  width: 10px;
-  height: 10px;
-  border: 0.2em solid #cccccc;
+  left: 0;
+  content: "";
+  width: 12px;
+  height: 12px;
+  border: 2px solid #cccccc;
+  transform: translateY(-50%);
 }
 /* focus・hover・active・checked時のテキストの設定*/
 .check-vertical label:focus,
 .check-vertical label:hover,
 .check-vertical label:active,
 .check-vertical input:checked + label {
-  color: #da3c41;
+  color: #333333;
 }
 /* focus・hover・active時のチェックボックスの設定*/
 .check-vertical label:focus::before,
 .check-vertical label:hover::before,
 .check-vertical label:active::before {
-  border-color: #da3c41;
+  border-color: #333333;
   background: #ffffff;
 }
 /* checked時のチェックボックスの設定*/
 .check-vertical input:checked + label::before {
-  border-color: #da3c41;
-  background: #da3c41;
+  border-color: #333333;
+  background: #333333;
 }
 
 /*除外設定ラジオボックス*/
-.radio-group-vertical input[type=radio] {
+.radio-group-vertical input[type="radio"] {
   display: none;
 }
 /*focus・hover・active・checked時のラベルの色*/
@@ -1235,8 +1237,8 @@ h2 {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 1em 1em 1em 3em;
-  font-weight: bold;
+  padding: 0 0 0 22px;
+  font-size: 0.85rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
@@ -1246,12 +1248,13 @@ h2 {
 /*通常時のラジオボタンの色*/
 .radio-group-vertical label:before {
   position: absolute;
-  left: 1em;
-  content: '';
-  width: 10px;
-  height: 10px;
+  left: 0;
+  content: "";
+  width: 12px;
+  height: 12px;
   border: 3px solid #cccccc;
   border-radius: 50%;
+  transform: translateY(-50%);
 }
 /*チェック時の設定*/
 .radio-group-vertical input:checked + label:before {

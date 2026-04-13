@@ -1197,7 +1197,7 @@ function UserFilterModal({
         <hr />
 
         <div className="filter-options">
-          <div className="check-vertical" style={{ margin: "10px 0 20px 0" }}>
+          <div className="check-vertical" style={{ margin: "10px 0 12px 0" }}>
             <input
               type="checkbox"
               id="hide_unanswered"
@@ -1211,7 +1211,7 @@ function UserFilterModal({
 
           <div
             className="radio-group-vertical"
-            style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+            style={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <div style={{ position: "relative" }}>
               <input
