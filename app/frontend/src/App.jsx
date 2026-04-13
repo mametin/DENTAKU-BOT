@@ -95,7 +95,19 @@ function CalendarView({ allData }) {
     (key) => !excludedMarks.includes(key),
   );
 
-  const isAlreadyAnswered = user && allUserNames.includes(user.username);
+  const userIdRow = items.find((item) => item.date === "ユーザID");
+
+  let myRegisteredName = null;
+  if (user && userIdRow && userIdRow.details) {
+    for (const [name, id] of Object.entries(userIdRow.details)) {
+      if (id === user.id) {
+        myRegisteredName = name;
+        break;
+      }
+    }
+  }
+
+  const isAlreadyAnswered = !!myRegisteredName;
 
   // 3. 表示する列（カラム）を決定
   const displayColumns =
@@ -104,6 +116,8 @@ function CalendarView({ allData }) {
       : allUserNames;
 
   // 3. 表示する行（日付）をフィルタリング
+  if (item.date === "コメント" || item.date === "ユーザID") return false;
+
   const boundaryIndex = items.findIndex(
     (item) => !item.date || item.date.trim() === "" || item.date === "日付不明",
   );
@@ -191,7 +205,7 @@ function CalendarView({ allData }) {
               {isAlreadyAnswered ? (
                 <li>
                   <Link
-                    to={`/edit/${encodeURIComponent(user.username)}?month=${activeMonth === "last" ? "current" : activeMonth}`}
+                    to={`/edit/${encodeURIComponent(myRegisteredName)}?month=${activeMonth === "last" ? "current" : activeMonth}`}
                     className="btn-new"
                   >
                     入力の編集
