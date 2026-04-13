@@ -836,9 +836,19 @@ function EntryForm({ allData }) {
       }
     });
 
+    const userIdRow = items.find((item) => item.date === "ユーザID");
+    let submidID = user.id;
+
+    if(targetName){
+      const decodeName = decodeURIComponent(targetName);
+      if(userIdRow && userIdRow.details && userIdRow.details[decodeName]){
+        submidID = decodeName;
+      }
+    }
+
     const payload = {
       type: targetName ? "correct" : "submit",
-      id: user.id,
+      id: submidID,
       name: name,
       comment: comment,
       responses: finalResponses,
