@@ -95,19 +95,23 @@ function CalendarView({ allData }) {
     (key) => !excludedMarks.includes(key),
   );
 
-  const userIdRow = items.find((item) => item.date === "ユーザID");
+const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
+  const targetItemsForInput = allData[targetMonthForInput] || [];
 
-  let myRegisteredName = null;
-  if (user && userIdRow && userIdRow.details) {
-    for (const [name, id] of Object.entries(userIdRow.details)) {
+  // ボタンの状態判定は「表示中のタブ」ではなく「遷移先の月」のデータで行う
+  const targetUserIdRow = targetItemsForInput.find((item) => item.date === "ユーザID");
+
+  let targetMyRegisteredName = null;
+  if (user && targetUserIdRow && targetUserIdRow.details) {
+    for (const [name, id] of Object.entries(targetUserIdRow.details)) {
       if (id === user.id) {
-        myRegisteredName = name;
+        targetMyRegisteredName = name;
         break;
       }
     }
   }
+  const isAlreadyAnswered = !!targetMyRegisteredName;
 
-  const isAlreadyAnswered = !!myRegisteredName;
 
   // 3. 表示する列（カラム）を決定
   const displayColumns =
