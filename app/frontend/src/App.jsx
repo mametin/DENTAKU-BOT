@@ -1206,29 +1206,32 @@ function UserFilterModal({
             指定日が未回答(-)のユーザーがいれば除外
           </label>
 
-          <div className="radio-group-vertical">
-            <ul class="radio-exclusion">
-              <li>
-                <input
-                  type="radio"
-                  name="matchTypes"
-                  value="anyone_x"
-                  checked={tmpMatch === "anyone_x"}
-                  onChange={(e) => setTmpMatch(e.target.value)}
-                />
-                <label>一人でも「✕」がいれば除外</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="matchTypes"
-                  value="all_x"
-                  checked={tmpMatch === "all_x"}
-                  onChange={(e) => setTmpMatch(e.target.value)}
-                />
-                <label>全員が「✕」の場合のみ除外</label>
-              </li>
-            </ul>
+          <div
+            className="radio-group-vertical"
+            style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+          >
+            <div style={{ position: "relative" }}>
+              <input
+                type="radio"
+                id="match_anyone"
+                name="matchTypes"
+                value="anyone_x"
+                checked={tmpMatch === "anyone_x"}
+                onChange={(e) => setTmpMatch(e.target.value)}
+              />
+              <label htmlFor="match_anyone">一人でも「✕」がいれば除外</label>{" "}
+            </div>
+            <div style={{ position: "relative" }}>
+              <input
+                type="radio"
+                id="match_all"
+                name="matchTypes"
+                value="all_x"
+                checked={tmpMatch === "all_x"}
+                onChange={(e) => setTmpMatch(e.target.value)}
+              />
+              <label htmlFor="match_all">全員が「✕」の場合のみ除外</label>{" "}
+            </div>
           </div>
         </div>
 
