@@ -1125,6 +1125,39 @@ h2 {
   gap: 10px;
 }
 
+.modal-buttons.btn-cancel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  margin: 0 auto;
+  padding: 0.9em 2em;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #2e2e2e;
+  font-size: 1em;
+}
+
+.modal-buttons.btn-apply {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  margin: 0 auto;
+  padding: 0.9em 2em;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  background-color: #333333;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.modal-buttons.btn-apply:hover {
+  background-color: #232323;
+}
+
 /* =========================================
    ハンバーガーメニュー＆スマホ対応レイアウト
 ========================================= */
