@@ -252,9 +252,7 @@ function CalendarView({ allData }) {
           {user ? (
             <div className="user-banner pc-only">
               <img src={user.avatar} alt="avatar" className="avatar-img" />
-              <span className="username-text">
-                {user.username}
-              </span>
+              <span className="username-text">{user.username}</span>
               <button onClick={handleLogout} className="btn-logout">
                 ログアウト
               </button>
@@ -390,14 +388,12 @@ function CalendarView({ allData }) {
                     <th className="stat-header">✕</th>
                     <th className="stat-header">☐</th>
 
+                    {/* ▼ ここを修正：リンクを外してテキストのみ表示にする */}
                     {displayColumns.map((user) => (
                       <th key={user}>
-                        <Link
-                          to={`/edit/${encodeURIComponent(user)}`}
-                          className="user-edit-link"
-                        >
+                        <span style={{ color: "#666", cursor: "not-allowed" }}>
                           {user}
-                        </Link>
+                        </span>
                       </th>
                     ))}
                   </tr>
@@ -455,12 +451,14 @@ function CalendarView({ allData }) {
 
                     {displayColumns.map((user) => (
                       <th key={user}>
-                        <Link
-                          to={`/edit/${encodeURIComponent(user)}`}
-                          className="user-edit-link"
-                        >
-                          {user}
-                        </Link>
+                        <th key={user}>
+                          <Link
+                            to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
+                            className="user-edit-link"
+                          >
+                            {user}
+                          </Link>
+                        </th>
                       </th>
                     ))}
                   </tr>
@@ -518,12 +516,14 @@ function CalendarView({ allData }) {
 
                     {displayColumns.map((user) => (
                       <th key={user}>
-                        <Link
-                          to={`/edit/${encodeURIComponent(user)}`}
-                          className="user-edit-link"
-                        >
-                          {user}
-                        </Link>
+                        <th key={user}>
+                          <Link
+                            to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
+                            className="user-edit-link"
+                          >
+                            {user}
+                          </Link>
+                        </th>
                       </th>
                     ))}
                   </tr>
@@ -882,9 +882,7 @@ function EntryForm({ allData }) {
           {user ? (
             <div className="user-banner">
               <img src={user.avatar} alt="avatar" className="avatar-img" />
-              <span className="username-text">
-                {user.username}
-              </span>
+              <span className="username-text">{user.username}</span>
             </div>
           ) : (
             <div className="user-banner">
