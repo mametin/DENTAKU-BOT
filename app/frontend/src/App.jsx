@@ -388,7 +388,6 @@ function CalendarView({ allData }) {
                     <th className="stat-header">✕</th>
                     <th className="stat-header">☐</th>
 
-                    {/* ▼ ここを修正：リンクを外してテキストのみ表示にする */}
                     {displayColumns.map((user) => (
                       <th key={user}>
                         <span style={{ color: "#666", cursor: "not-allowed" }}>
