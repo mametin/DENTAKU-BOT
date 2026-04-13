@@ -1197,14 +1197,17 @@ function UserFilterModal({
         <hr />
 
         <div className="filter-options">
-          <label className="checkbox-item">
+          <div className="check-vertical" style={{ margin: "10px 0 20px 0" }}>
             <input
               type="checkbox"
+              id="hide_unanswered"
               checked={tmpHide}
               onChange={(e) => setTmpHide(e.target.checked)}
             />
-            指定日が未回答(-)のユーザーがいれば除外
-          </label>
+            <label htmlFor="hide_unanswered">
+              指定日が未回答(-)のユーザーがいれば除外
+            </label>
+          </div>
 
           <div
             className="radio-group-vertical"
@@ -1219,7 +1222,9 @@ function UserFilterModal({
                 checked={tmpMatch === "anyone_x"}
                 onChange={(e) => setTmpMatch(e.target.value)}
               />
-              <label htmlFor="match_anyone">一人でも「✕」がいれば除外</label>{" "}
+              <label htmlFor="match_anyone">
+                一人でも「✕」がいれば除外
+              </label>{" "}
             </div>
             <div style={{ position: "relative" }}>
               <input
