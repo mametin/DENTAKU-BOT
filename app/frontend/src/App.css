@@ -728,8 +728,8 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
-  padding: 10px 20px;
+  gap: clamp(4px, 1vw, 12px);
+  padding: 4px clamp(4px, 1.2vw, 12px);
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -738,6 +738,8 @@ h2 {
   font-size: 0.9rem;
   line-height: 1;
   color: #ccc;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .avatar-img {
@@ -791,16 +793,23 @@ h2 {
   font-weight: bold;
   color: #333;
   transform: skew(25deg);
+
+  font-size: clamp(12px, 1.5vw, 16px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  max-width: clamp(80px, 15vw, 180px);
 }
 
 .btn-logout {
   background-color: #ff4757;
   color: white;
   border: none;
-  padding: 6px clamp(6px, 1.2vw, 15px);
+  padding: 6px clamp(8px, 1vw, 16px);
   border-radius: 4px;
   cursor: pointer;
-  font-size: clamp(11px, 1.5vw, 14px);
+  font-size: clamp(11px, 1.2vw, 13px);
   white-space: nowrap;
   transition: background 0.2s;
   transform: skew(25deg);
