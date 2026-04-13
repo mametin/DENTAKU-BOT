@@ -1125,7 +1125,14 @@ h2 {
   gap: 10px;
 }
 
-.modal-buttons.btn-cancel {
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal-buttons .btn-cancel {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1139,7 +1146,7 @@ h2 {
   font-size: 1em;
 }
 
-.modal-buttons.btn-apply {
+.modal-buttons .btn-apply {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1154,8 +1161,48 @@ h2 {
   font-size: 1em;
 }
 
-.modal-buttons.btn-apply:hover {
+.modal-buttons .btn-apply:hover {
   background-color: #232323;
+}
+
+/*除外設定ラジオボックス*/
+.radio-exclusion ul {
+  text-align: left;
+  padding-top: 15px;
+  padding-left: 15px;
+  list-style-type: none;
+  margin-bottom: 0;
+}
+
+.radio-exclusion ul li {
+  margin-bottom: 1em;
+}
+
+.radio-exclusion ul li input[type="radio"] + label {
+  font-size: 1.125em;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.radio-exclusion ul li input[type="radio"] + label:before {
+  content: "\f00c";
+  font-family: "FontAwesome";
+  font-size: 12px;
+  color: transparent;
+  padding: 3px;
+  background-color: #d7d7d7;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: 1px;
+}
+
+.radio-exclusion ul li input[type="radio"]:checked + label:before {
+  background-color: #2de1a8;
+  color: white;
+}
+
+.radio-exclusion input[type="radio"] {
+  display: none;
 }
 
 /* =========================================

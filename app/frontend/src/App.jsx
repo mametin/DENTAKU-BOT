@@ -1207,26 +1207,28 @@ function UserFilterModal({
           </label>
 
           <div className="radio-group-vertical">
-            <label>
-              <input
-                type="radio"
-                name="matchTypes"
-                value="anyone_x"
-                checked={tmpMatch === "anyone_x"}
-                onChange={(e) => setTmpMatch(e.target.value)}
-              />
-              一人でも「✕」がいれば除外
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="matchTypes"
-                value="all_x"
-                checked={tmpMatch === "all_x"}
-                onChange={(e) => setTmpMatch(e.target.value)}
-              />
-              全員が「✕」の場合のみ除外
-            </label>
+            <ul class="radio-exclusion">
+              <li>
+                <input
+                  type="radio"
+                  name="matchTypes"
+                  value="anyone_x"
+                  checked={tmpMatch === "anyone_x"}
+                  onChange={(e) => setTmpMatch(e.target.value)}
+                />
+                <label>一人でも「✕」がいれば除外</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  name="matchTypes"
+                  value="all_x"
+                  checked={tmpMatch === "all_x"}
+                  onChange={(e) => setTmpMatch(e.target.value)}
+                />
+                <label>全員が「✕」の場合のみ除外</label>
+              </li>
+            </ul>
           </div>
         </div>
 
