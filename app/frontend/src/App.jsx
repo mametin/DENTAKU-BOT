@@ -95,11 +95,13 @@ function CalendarView({ allData }) {
     (key) => !excludedMarks.includes(key),
   );
 
-const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
+  const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
   const targetItemsForInput = allData[targetMonthForInput] || [];
 
   // ボタンの状態判定は「表示中のタブ」ではなく「遷移先の月」のデータで行う
-  const targetUserIdRow = targetItemsForInput.find((item) => item.date === "ユーザID");
+  const targetUserIdRow = targetItemsForInput.find(
+    (item) => item.date === "ユーザID",
+  );
 
   let targetMyRegisteredName = null;
   if (user && targetUserIdRow && targetUserIdRow.details) {
@@ -111,7 +113,6 @@ const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
     }
   }
   const isAlreadyAnswered = !!targetMyRegisteredName;
-
 
   // 3. 表示する列（カラム）を決定
   const displayColumns =
@@ -202,7 +203,7 @@ const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
               {isAlreadyAnswered ? (
                 <li>
                   <Link
-                    to={`/edit/${encodeURIComponent(myRegisteredName)}?month=${activeMonth === "last" ? "current" : activeMonth}`}
+                    to={`/edit/${encodeURIComponent(targetMyRegisteredName)}?month=${targetMonthForInput}`}
                     className="btn-new"
                   >
                     入力の編集
@@ -211,7 +212,7 @@ const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
               ) : (
                 <li>
                   <Link
-                    to={`/new?month=${activeMonth === "last" ? "current" : activeMonth}`}
+                    to={`/new?month=${targetMonthForInput}`}
                     className="btn-new"
                   >
                     新規入力
@@ -843,9 +844,9 @@ function EntryForm({ allData }) {
     const userIdRow = items.find((item) => item.date === "ユーザID");
     let submidID = user.id;
 
-    if(targetName){
+    if (targetName) {
       const decodeName = decodeURIComponent(targetName);
-      if(userIdRow && userIdRow.details && userIdRow.details[decodeName]){
+      if (userIdRow && userIdRow.details && userIdRow.details[decodeName]) {
         submidID = decodeName;
       }
     }
