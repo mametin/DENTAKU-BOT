@@ -390,9 +390,7 @@ function CalendarView({ allData }) {
 
                     {displayColumns.map((user) => (
                       <th key={user}>
-                        <span style={{ color: "#666", cursor: "not-allowed" }}>
-                          {user}
-                        </span>
+                        <span style={{ color: "#666" }}>{user}</span>
                       </th>
                     ))}
                   </tr>
@@ -450,14 +448,12 @@ function CalendarView({ allData }) {
 
                     {displayColumns.map((user) => (
                       <th key={user}>
-                        <th key={user}>
-                          <Link
-                            to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
-                            className="user-edit-link"
-                          >
-                            {user}
-                          </Link>
-                        </th>
+                        <Link
+                          to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
+                          className="user-edit-link"
+                        >
+                          {user}
+                        </Link>
                       </th>
                     ))}
                   </tr>
@@ -515,14 +511,12 @@ function CalendarView({ allData }) {
 
                     {displayColumns.map((user) => (
                       <th key={user}>
-                        <th key={user}>
-                          <Link
-                            to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
-                            className="user-edit-link"
-                          >
-                            {user}
-                          </Link>
-                        </th>
+                        <Link
+                          to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
+                          className="user-edit-link"
+                        >
+                          {user}
+                        </Link>
                       </th>
                     ))}
                   </tr>
