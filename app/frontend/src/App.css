@@ -67,20 +67,19 @@ body {
   margin: 0;
   padding: 0;
   align-items: center;
-  gap: clamp(4px, 1vw, 10px);
   list-style: none;
   transform: skew(-25deg);
 }
 
 .header-menu ul li {
   background: #fff;
-  float: left;
   border-right: 1px solid #eee;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   color: #555;
   font-weight: bolder;
   transition: all 0.3s linear;
+  display: flex;
 }
 
 .header-menu ul li:first-child {
@@ -98,7 +97,7 @@ body {
 }
 
 .header-menu ul li a {
-  color: white;
+  color: #333 !important;
   padding: 0 clamp(10px, 1.5vw, 20px);
   border-radius: 6px;
   font-size: clamp(12px, 1.3vw, 15px);
@@ -106,6 +105,18 @@ body {
   transition: background-color 0.3s;
   white-space: nowrap;
   transform: skew(25deg);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.header-menu ul li .btn-new::after {
+  display: none !important;
 }
 
 .header-menu ul::after {
@@ -774,6 +785,9 @@ h2 {
   font-size: clamp(12px, 1.5vw, 16px);
   white-space: nowrap;
   max-width: clamp(80px, 15vw, 180px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .btn-logout {
