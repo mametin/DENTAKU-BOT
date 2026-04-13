@@ -90,23 +90,26 @@ function CalendarView({ allData }) {
     }
   });
 
-  const excludedMarks = ["◎", "△", "▽", "✕", "☐", "◎", "✕", "☐", ""];
+  const excludedMarks = ["◎", "△", "▽", "✕", "☐", ""];
   const allUserNames = Array.from(allKeysSet).filter(
-    (key) => !excludedMarks.includes(key),
+    (key) => !excludedMarks.includes(key) && key !== "〄", // 記号などを除外
   );
 
+  // ▼ 新規追加：ユーザIDの行を取得して、自分のIDを照合する
   const userIdRow = items.find((item) => item.date === "ユーザID");
 
   let myRegisteredName = null;
+  // userIdRow が存在し、ログイン中の場合、自分のIDと一致する名前（キー）を探す
   if (user && userIdRow && userIdRow.details) {
     for (const [name, id] of Object.entries(userIdRow.details)) {
       if (id === user.id) {
-        myRegisteredName = name;
+        myRegisteredName = name; // 見つかったら、その名前を「登録名」として保持
         break;
       }
     }
   }
 
+  // 自分のIDが見つかったら「回答済み（編集モード）」とする
   const isAlreadyAnswered = !!myRegisteredName;
 
   // 3. 表示する列（カラム）を決定
@@ -116,8 +119,6 @@ function CalendarView({ allData }) {
       : allUserNames;
 
   // 3. 表示する行（日付）をフィルタリング
-  if (item.date === "コメント" || item.date === "ユーザID") return false;
-
   const boundaryIndex = items.findIndex(
     (item) => !item.date || item.date.trim() === "" || item.date === "日付不明",
   );
@@ -125,6 +126,9 @@ function CalendarView({ allData }) {
     boundaryIndex === -1 ? items : items.slice(0, boundaryIndex);
 
   const displayRow = calendarItems.filter((item) => {
+    // ▼ 追加：「コメント」と「ユーザID」の行はカレンダーの表には描画しない
+    if (item.date === "コメント" || item.date === "ユーザID") return false;
+
     if (
       filterConfig.type !== "user" ||
       filterConfig.selectedUsers.length === 0
@@ -157,13 +161,6 @@ function CalendarView({ allData }) {
 
     return true;
   });
-
-  console.log("1. 届いた全データ:", items);
-  console.log(
-    "2. 最初の行のdetails:",
-    items.length > 0 ? items[0].details : "データなし",
-  );
-  console.log("3. 抽出されたユーザー名:", allUserNames);
 
   return (
     <div className="main-layout">
