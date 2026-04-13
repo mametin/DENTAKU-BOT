@@ -883,7 +883,7 @@ function EntryForm({ allData }) {
             <div className="user-banner">
               <img src={user.avatar} alt="avatar" className="avatar-img" />
               <span className="username-text">
-                {user.username} としてログイン中
+                {user.username}
               </span>
             </div>
           ) : (
