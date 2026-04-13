@@ -1177,21 +1177,23 @@ h2 {
   position: relative;
   display: flex;
   align-items: center;
-  font-size: 0.85rem;
   padding: 0 0 0 22px;
-  text-overflow: ellipsis; /*テキストがエリアを超えたら'…'で省略*/
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
   transition: all 0.15s ease;
   cursor: pointer;
+  min-height: 20px;
 }
 /*通常時のチェックボックスの設定*/
 .check-vertical label::before {
   position: absolute;
   left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   content: "";
   width: 12px;
   height: 12px;
   border: 2px solid #cccccc;
-  transform: translateY(-50%);
 }
 /* focus・hover・active・checked時のテキストの設定*/
 .check-vertical label:focus,
@@ -1238,23 +1240,26 @@ h2 {
   display: flex;
   align-items: center;
   padding: 0 0 0 22px;
+  font-weight: bold;
   font-size: 0.85rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.15s ease;
+  min-height: 20px;
 }
 /*通常時のラジオボタンの色*/
 .radio-group-vertical label:before {
   position: absolute;
   left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   content: "";
   width: 12px;
   height: 12px;
-  border: 3px solid #cccccc;
+  border: 2px solid #cccccc;
   border-radius: 50%;
-  transform: translateY(-50%);
 }
 /*チェック時の設定*/
 .radio-group-vertical input:checked + label:before {
