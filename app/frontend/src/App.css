@@ -1136,7 +1136,7 @@ h2 {
 .modal-buttons .btn-cancel,
 .modal-buttons .btn-apply {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 110px;
   height: 36px;
