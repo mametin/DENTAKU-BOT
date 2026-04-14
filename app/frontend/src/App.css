@@ -1191,9 +1191,11 @@ h2 {
   top: 50%;
   transform: translateY(-50%);
   content: "";
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border: 2px solid #cccccc;
+  border-radius: 3px;
+
 }
 /* focus・hover・active・checked時のテキストの設定*/
 .check-vertical label:focus,

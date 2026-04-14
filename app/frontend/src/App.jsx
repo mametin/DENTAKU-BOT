@@ -1182,15 +1182,16 @@ function UserFilterModal({
         <h3>表示するユーザーを選択</h3>
 
         <div className="user-checkbox-list">
-          {userList.map((user) => (
-            <label key={user} className="checkbox-item">
+          {userList.map((user, index) => (
+            <div key={user} className="check-vertical" style={{ margin: 0 }}>
               <input
                 type="checkbox"
+                id={`user_checkbox_${index}`}
                 checked={tmpUsers.includes(user)}
                 onChange={() => handleToggleUser(user)}
               />
-              {user}
-            </label>
+              <label htmlFor={`user_checkbox_${index}`}>{user}</label>
+            </div>
           ))}
         </div>
 
