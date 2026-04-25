@@ -45,7 +45,7 @@ function CalendarView({ allData }) {
   const summaryData = React.useMemo(() => {
     const displayColumns =
       items.length > 0
-        ? Object.keys(items[0]).filter((Key) => {
+        ? Object.Keys(items[0]).filter((Key) => {
             const isMeta = [
               "date",
               "day",
@@ -54,7 +54,7 @@ function CalendarView({ allData }) {
               "updated_at",
               "username",
             ].includes(Key);
-            const isStringValue = typeof items[0][key] === "string";
+            const isStringValue = typeof items[0][Key] === "string";
             return !isMeta && isStringValue;
           })
         : [];
@@ -117,13 +117,13 @@ function CalendarView({ allData }) {
   const allKeysSet = new Set();
   items.forEach((item) => {
     if (item.details) {
-      Object.keys(item.details).forEach((key) => allKeysSet.add(key));
+      Object.Keys(item.details).forEach((Key) => allKeysSet.add(Key));
     }
   });
 
   const excludedMarks = ["◎", "△", "▽", "✕", "☐", ""];
   const allUserNames = Array.from(allKeysSet).filter(
-    (key) => !excludedMarks.includes(key),
+    (Key) => !excludedMarks.includes(Key),
   );
 
   const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
@@ -444,7 +444,7 @@ function CalendarView({ allData }) {
                   <th className="stat-header">☐</th>
 
                   {displayColumns.map((user) => (
-                    <th key={user}>
+                    <th Key={user}>
                       {activeMonth === "last" ? (
                         <span style={{ color: "#666" }}>{user}</span>
                       ) : (
@@ -461,7 +461,7 @@ function CalendarView({ allData }) {
               </thead>
               <tbody>
                 {displayRow.map((item, idx) => (
-                  <tr key={idx}>
+                  <tr Key={idx}>
                     <td>{item.date}</td>
 
                     <td>{item.details?.["◎"] || 0}</td>
@@ -476,7 +476,7 @@ function CalendarView({ allData }) {
 
                       return (
                         <td
-                          key={u}
+                          Key={u}
                           className={`mark-${isTimeValue ? "☐" : val}`}
                         >
                           {isTimeValue ? (
@@ -511,7 +511,7 @@ function CalendarView({ allData }) {
                     commentRow.details[user] !== "-" &&
                     commentRow.details[user].trim() !== "" && (
                       <li
-                        key={user}
+                        Key={user}
                         className="comment-item"
                         style={{ marginBottom: "10px" }}
                       >
@@ -906,7 +906,7 @@ function EntryForm({ allData }) {
                     <div className="day-selector">
                       {["月", "火", "水", "木", "金", "土", "日"].map(
                         (d, index) => (
-                          <div className="radio-area" key={`bulk-day-${index}`}>
+                          <div className="radio-area" Key={`bulk-day-${index}`}>
                             <input
                               type="radio"
                               name="targetDay"
@@ -925,7 +925,7 @@ function EntryForm({ allData }) {
                   <div className="bulk-action-buttons">
                     {["◎", "△", "▽", "✕"].map((status) => (
                       <button
-                        key={status}
+                        Key={status}
                         type="button"
                         onClick={() => handleBulkUpdate(status)}
                         className={`btn-bulk ${status}`}
@@ -943,7 +943,7 @@ function EntryForm({ allData }) {
             <div className="date-list">
               <h3>日程選択</h3>
               {dates.map((date) => (
-                <div className="date-item-container" key={date}>
+                <div className="date-item-container" Key={date}>
                   <span className="date-label-text">{date}</span>
 
                   <div className="right-content">
@@ -954,7 +954,7 @@ function EntryForm({ allData }) {
                         { val: "▽", label: "rev", mark: "mark-▽" },
                         { val: "✕", label: "ng", mark: "mark-✕" },
                       ].map((opt) => (
-                        <React.Fragment key={opt.val}>
+                        <React.Fragment Key={opt.val}>
                           <input
                             type="radio"
                             id={`${opt.label}_${date}`}
@@ -1004,7 +1004,7 @@ function EntryForm({ allData }) {
                         <div className="time-tag-container">
                           {otherTexts[date].split(",").map((slot, idx) => (
                             <span
-                              key={idx}
+                              Key={idx}
                               className="time-tag"
                               onClick={() => setEditingDate(date)}
                             >
@@ -1108,7 +1108,7 @@ function UserFilterModal({
 
         <div className="user-checkbox-list">
           {userList.map((user, index) => (
-            <div key={user} className="check-vertical" style={{ margin: 0 }}>
+            <div Key={user} className="check-vertical" style={{ margin: 0 }}>
               <input
                 type="checkbox"
                 id={`user_checkbox_${index}`}
