@@ -40,6 +40,29 @@ function CalendarView({ allData }) {
     matchTypes: "anyone_x", // "all_ok","anyone_x"
   });
 
+  // 集計行の表示フラグ
+  const [showSummary, setShowSummary] = useState(true);
+  const summaryData = React.useMemo(() => {
+    const displayColumns = items.length > 0
+    ? Object.keys(items[0]).filter(Key => {
+      const isMeta = ["date", "day", "id", "created_at", "updated_at","username"].includes(key);
+      const isStringValue = typeof items[0][key] === 'string';
+      return !isMeta && isStringValue;
+    })
+    : [];
+  return  items.map(item => {
+    const counts = { ok: 0, am: 0, pm: 0, ng: 0};
+    displayColumns.forEach(user => {
+      const mark = item[user];
+      if(mark === "〇") counts.ok++;
+      if(mark === "△") counts.am++;
+      if(mark === "▽") counts.pm++;
+      if(mark === "×") counts.ng++;
+    });
+    return counts;
+  });
+  }, [items]);
+
   // フィルタ用モーダルの状態管理
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
