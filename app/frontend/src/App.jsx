@@ -45,7 +45,7 @@ function CalendarView({ allData }) {
   const summaryData = React.useMemo(() => {
     const displayColumns =
       items.length > 0
-        ? Object.Keys(items[0]).filter((Key) => {
+        ? Object.keys(items[0]).filter((key) => {
             const isMeta = [
               "date",
               "day",
@@ -53,8 +53,8 @@ function CalendarView({ allData }) {
               "created_at",
               "updated_at",
               "username",
-            ].includes(Key);
-            const isStringValue = typeof items[0][Key] === "string";
+            ].includes(key);
+            const isStringValue = typeof items[0][key] === "string";
             return !isMeta && isStringValue;
           })
         : [];
@@ -114,16 +114,16 @@ function CalendarView({ allData }) {
   const commentRow = items.find((item) => item.date === "コメント");
 
   // --- ユーザー名のリストを取得 ---
-  const allKeysSet = new Set();
+  const allkeysSet = new Set();
   items.forEach((item) => {
     if (item.details) {
-      Object.Keys(item.details).forEach((Key) => allKeysSet.add(Key));
+      Object.keys(item.details).forEach((key) => allkeysSet.add(key));
     }
   });
 
   const excludedMarks = ["◎", "△", "▽", "✕", "☐", ""];
-  const allUserNames = Array.from(allKeysSet).filter(
-    (Key) => !excludedMarks.includes(Key),
+  const allUserNames = Array.from(allkeysSet).filter(
+    (key) => !excludedMarks.includes(key),
   );
 
   const targetMonthForInput = activeMonth === "last" ? "current" : activeMonth;
@@ -444,7 +444,7 @@ function CalendarView({ allData }) {
                   <th className="stat-header">☐</th>
 
                   {displayColumns.map((user) => (
-                    <th Key={user}>
+                    <th key={user}>
                       {activeMonth === "last" ? (
                         <span style={{ color: "#666" }}>{user}</span>
                       ) : (
@@ -461,7 +461,7 @@ function CalendarView({ allData }) {
               </thead>
               <tbody>
                 {displayRow.map((item, idx) => (
-                  <tr Key={idx}>
+                  <tr key={idx}>
                     <td>{item.date}</td>
 
                     <td>{item.details?.["◎"] || 0}</td>
@@ -476,7 +476,7 @@ function CalendarView({ allData }) {
 
                       return (
                         <td
-                          Key={u}
+                          key={u}
                           className={`mark-${isTimeValue ? "☐" : val}`}
                         >
                           {isTimeValue ? (
@@ -511,7 +511,7 @@ function CalendarView({ allData }) {
                     commentRow.details[user] !== "-" &&
                     commentRow.details[user].trim() !== "" && (
                       <li
-                        Key={user}
+                        key={user}
                         className="comment-item"
                         style={{ marginBottom: "10px" }}
                       >
@@ -756,13 +756,13 @@ function EntryForm({ allData }) {
 
     const submissionResponses = {};
     validItems.forEach((item) => {
-      const dateKey = item.date;
-      const val = responses[dateKey];
+      const datekey = item.date;
+      const val = responses[datekey];
 
       if (val === "その他") {
-        submissionResponses[dateKey] = otherTexts[dateKey] || "";
+        submissionResponses[datekey] = otherTexts[datekey] || "";
       } else {
-        submissionResponses[dateKey] = val || ""; // 未選択なら ""
+        submissionResponses[datekey] = val || ""; // 未選択なら ""
       }
     });
 
@@ -906,7 +906,7 @@ function EntryForm({ allData }) {
                     <div className="day-selector">
                       {["月", "火", "水", "木", "金", "土", "日"].map(
                         (d, index) => (
-                          <div className="radio-area" Key={`bulk-day-${index}`}>
+                          <div className="radio-area" key={`bulk-day-${index}`}>
                             <input
                               type="radio"
                               name="targetDay"
@@ -925,7 +925,7 @@ function EntryForm({ allData }) {
                   <div className="bulk-action-buttons">
                     {["◎", "△", "▽", "✕"].map((status) => (
                       <button
-                        Key={status}
+                        key={status}
                         type="button"
                         onClick={() => handleBulkUpdate(status)}
                         className={`btn-bulk ${status}`}
@@ -943,7 +943,7 @@ function EntryForm({ allData }) {
             <div className="date-list">
               <h3>日程選択</h3>
               {dates.map((date) => (
-                <div className="date-item-container" Key={date}>
+                <div className="date-item-container" key={date}>
                   <span className="date-label-text">{date}</span>
 
                   <div className="right-content">
@@ -954,7 +954,7 @@ function EntryForm({ allData }) {
                         { val: "▽", label: "rev", mark: "mark-▽" },
                         { val: "✕", label: "ng", mark: "mark-✕" },
                       ].map((opt) => (
-                        <React.Fragment Key={opt.val}>
+                        <React.Fragment key={opt.val}>
                           <input
                             type="radio"
                             id={`${opt.label}_${date}`}
@@ -1004,7 +1004,7 @@ function EntryForm({ allData }) {
                         <div className="time-tag-container">
                           {otherTexts[date].split(",").map((slot, idx) => (
                             <span
-                              Key={idx}
+                              key={idx}
                               className="time-tag"
                               onClick={() => setEditingDate(date)}
                             >
@@ -1108,7 +1108,7 @@ function UserFilterModal({
 
         <div className="user-checkbox-list">
           {userList.map((user, index) => (
-            <div Key={user} className="check-vertical" style={{ margin: 0 }}>
+            <div key={user} className="check-vertical" style={{ margin: 0 }}>
               <input
                 type="checkbox"
                 id={`user_checkbox_${index}`}
