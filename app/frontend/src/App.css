@@ -166,12 +166,49 @@ body {
   gap: 10px;
 }
 
+/* 日付表示行のenable/disableのスタイル */
+.toggle-summary-enabled {
+  display: inline-block;
+  position: relative;
+  width: 100px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: #dddddd;
+  cursor: pointer;
+  transition: background-color 0.4s;
+}
+
+.toggle-summary-enabled:has(:checked) {
+  background-color: #171717;
+}
+
+.toggle-summary-enabled::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+  background-color: #fff;
+  content: "";
+  transition: left 0.4s;
+}
+
+.toggle-summary-enabled:has(:checked)::after {
+  left: 50px;
+}
+
+.toggle-summary-enabled input {
+  display: none;
+}
+
 /* ソート用セレクトボックスのスタイル */
 .box-filter {
   position: relative;
 }
 
-.box-filter::before,
+.box-Fer::before,
 .box-filter::after {
   position: absolute;
   content: "";
@@ -1195,7 +1232,6 @@ h2 {
   height: 10px;
   border: 2px solid #cccccc;
   border-radius: 3px;
-
 }
 /* focus・hover・active・checked時のテキストの設定*/
 .check-vertical label:focus,

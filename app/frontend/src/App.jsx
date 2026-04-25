@@ -42,34 +42,6 @@ function CalendarView({ allData }) {
 
   // 集計行の表示フラグ
   const [showSummary, setShowSummary] = useState(true);
-  const summaryData = React.useMemo(() => {
-    const displayColumns =
-      items.length > 0
-        ? Object.keys(items[0]).filter((key) => {
-            const isMeta = [
-              "date",
-              "day",
-              "id",
-              "created_at",
-              "updated_at",
-              "username",
-            ].includes(key);
-            const isStringValue = typeof items[0][key] === "string";
-            return !isMeta && isStringValue;
-          })
-        : [];
-    return items.map((item) => {
-      const counts = { ok: 0, am: 0, pm: 0, ng: 0 };
-      displayColumns.forEach((user) => {
-        const mark = item[user];
-        if (mark === "〇") counts.ok++;
-        if (mark === "△") counts.am++;
-        if (mark === "▽") counts.pm++;
-        if (mark === "×") counts.ng++;
-      });
-      return counts;
-    });
-  }, [items]);
 
   // フィルタ用モーダルの状態管理
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -193,6 +165,21 @@ function CalendarView({ allData }) {
 
     return true;
   });
+
+  const summaryData = React.useMemo(() => {
+    return displayRow.map((item) => {
+      const summary = { "◎": 0, "△": 0, "▽": 0, "✕": 0, "☐": 0 };
+      displayColumns.forEach((user) => {
+        const val = item.details?.[user];
+        if (val === "◎") summary["◎"]++;
+        if (val === "△") summary["△"]++;
+        if (val === "▽") summary["▽"]++;
+        if (val === "✕") summary["✕"]++;
+        if (/\d+-\d+/.test(val)) summary["☐"]++;
+      });
+      return summary;
+    });
+  }, [displayRow, displayColumns]);
 
   return (
     <div className="main-layout">
@@ -464,11 +451,15 @@ function CalendarView({ allData }) {
                   <tr key={idx}>
                     <td>{item.date}</td>
 
-                    <td>{item.details?.["◎"] || 0}</td>
-                    <td>{item.details?.["△"] || 0}</td>
-                    <td>{item.details?.["▽"] || 0}</td>
-                    <td>{item.details?.["✕"] || 0}</td>
-                    <td>{item.details?.["☐"] || 0}</td>
+                    {showSummary && (
+                      <>
+                        <td>{item.details?.["◎"] || 0}</td>
+                        <td>{item.details?.["△"] || 0}</td>
+                        <td>{item.details?.["▽"] || 0}</td>
+                        <td>{item.details?.["✕"] || 0}</td>
+                        <td>{item.details?.["☐"] || 0}</td>
+                      </>
+                    )}
 
                     {displayColumns.map((u) => {
                       const val = item.details?.[u] || "-";
