@@ -167,18 +167,18 @@ body {
 }
 
 /* ソート用セレクトボックスのスタイル */
-.box-sort {
+.box-filter {
   position: relative;
 }
 
-.box-sort::before,
-.box-sort::after {
+.box-filter::before,
+.box-filter::after {
   position: absolute;
   content: "";
   pointer-events: none;
 }
 
-.box-sort::before {
+.box-filter::before {
   right: 0;
   display: inline-block;
   width: 2em;
@@ -188,7 +188,7 @@ body {
   content: "";
 }
 
-.box-sort::after {
+.box-filter::after {
   position: absolute;
   top: 50%;
   right: 1em;
@@ -200,7 +200,7 @@ body {
   content: "";
 }
 
-.box-sort select {
+.box-filter select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -214,7 +214,7 @@ body {
   cursor: pointer;
 }
 
-.box-sort select:focus {
+.box-filter select:focus {
   outline: 1px solid #212121;
 }
 
@@ -1378,7 +1378,7 @@ h2 {
   }
 
   /* メニュー内のセレクトボックスを横幅いっぱいに */
-  .mobile-filter-area .box-sort select {
+  .mobile-filter-area .box-filter select {
     width: 100%;
     min-width: unset;
     background-color: #333;

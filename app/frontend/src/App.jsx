@@ -43,24 +43,32 @@ function CalendarView({ allData }) {
   // 集計行の表示フラグ
   const [showSummary, setShowSummary] = useState(true);
   const summaryData = React.useMemo(() => {
-    const displayColumns = items.length > 0
-    ? Object.keys(items[0]).filter(Key => {
-      const isMeta = ["date", "day", "id", "created_at", "updated_at","username"].includes(key);
-      const isStringValue = typeof items[0][key] === 'string';
-      return !isMeta && isStringValue;
-    })
-    : [];
-  return  items.map(item => {
-    const counts = { ok: 0, am: 0, pm: 0, ng: 0};
-    displayColumns.forEach(user => {
-      const mark = item[user];
-      if(mark === "〇") counts.ok++;
-      if(mark === "△") counts.am++;
-      if(mark === "▽") counts.pm++;
-      if(mark === "×") counts.ng++;
+    const displayColumns =
+      items.length > 0
+        ? Object.keys(items[0]).filter((Key) => {
+            const isMeta = [
+              "date",
+              "day",
+              "id",
+              "created_at",
+              "updated_at",
+              "username",
+            ].includes(key);
+            const isStringValue = typeof items[0][key] === "string";
+            return !isMeta && isStringValue;
+          })
+        : [];
+    return items.map((item) => {
+      const counts = { ok: 0, am: 0, pm: 0, ng: 0 };
+      displayColumns.forEach((user) => {
+        const mark = item[user];
+        if (mark === "〇") counts.ok++;
+        if (mark === "△") counts.am++;
+        if (mark === "▽") counts.pm++;
+        if (mark === "×") counts.ng++;
+      });
+      return counts;
     });
-    return counts;
-  });
   }, [items]);
 
   // フィルタ用モーダルの状態管理
@@ -77,7 +85,7 @@ function CalendarView({ allData }) {
   };
 
   // フィルタ選択モーダルを開くハンドラ
-  const handleSortChange = (e) => {
+  const handlefilterChange = (e) => {
     const selectedValue = e.target.value;
 
     if (selectedValue === "user") {
@@ -206,6 +214,7 @@ function CalendarView({ allData }) {
           <span></span>
         </button>
 
+        {/* --- ハンバーガーメニュー --- */}
         <div className={`header-right ${isMenuOpen ? "menu-open" : ""}`}>
           <div className="mobile-menu-header">
             {user ? (
@@ -267,8 +276,11 @@ function CalendarView({ allData }) {
           <div className="mobile-filter-area">
             <p className="mobile-filter-label">表示設定・絞り込み</p>
             <div className="filter-controls">
-              <label className="box-sort">
-                <select className="selectbox-sort" onChange={handleSortChange}>
+              <label className="box-filter">
+                <select
+                  className="selectbox-filter"
+                  onChange={handlefilterChange}
+                >
                   <option value="">使用禁止</option>
                   <option value="user">ユーザーで絞り込む</option>
                   <option value="day">曜日で絞り込む</option>
@@ -383,11 +395,21 @@ function CalendarView({ allData }) {
                 ☐：時間指定（クリックで詳細表示）
               </div>
 
+              {/* --- 集計行を表示するか --- */}
               <div className="filter-controls">
-                <label className="box-sort">
+                <label className="toggle-summary-enabled">
+                  <input
+                    type="checkbox"
+                    checked={showSummary}
+                    onChange={(e) => setShowSummary(e.target.checked)}
+                  />
+                </label>
+
+                {/* --- フィルタ選択 --- */}
+                <label className="box-filter">
                   <select
-                    className="selectbox-sort"
-                    onChange={handleSortChange}
+                    className="selectbox-filter"
+                    onChange={handlefilterChange}
                   >
                     <option value="">使用禁止</option>
                     <option value="user">ユーザーで絞り込む</option>
@@ -410,189 +432,69 @@ function CalendarView({ allData }) {
             </div>
           </div>
 
-          {/*先月のカレンダーを表示*/}
-          {activeTab === 0 && (
-            <div className="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>日付</th>
-                    <th className="stat-header">◎</th>
-                    <th className="stat-header">△</th>
-                    <th className="stat-header">▽</th>
-                    <th className="stat-header">✕</th>
-                    <th className="stat-header">☐</th>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th className="stat-header">◎</th>
+                  <th className="stat-header">△</th>
+                  <th className="stat-header">▽</th>
+                  <th className="stat-header">✕</th>
+                  <th className="stat-header">☐</th>
 
-                    {displayColumns.map((user) => (
-                      <th key={user}>
+                  {displayColumns.map((user) => (
+                    <th key={user}>
+                      {activeMonth === "last" ? (
                         <span style={{ color: "#666" }}>{user}</span>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayRow.map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.date}</td>
-
-                      <td>{item.details?.["◎"] || 0}</td>
-                      <td>{item.details?.["△"] || 0}</td>
-                      <td>{item.details?.["▽"] || 0}</td>
-                      <td>{item.details?.["✕"] || 0}</td>
-                      <td>{item.details?.["☐"] || 0}</td>
-
-                      {displayColumns.map((u) => {
-                        const val = item.details?.[u] || "-";
-                        const isTimeValue = /\d+-\d+/.test(val);
-
-                        return (
-                          <td
-                            key={u}
-                            className={`mark-${isTimeValue ? "☐" : val}`}
-                          >
-                            {isTimeValue ? (
-                              <div className="tooltip-container">
-                                <div className="tooltip-trigger">☐</div>
-                                <span className="tooltip-content">{val}</span>
-                              </div>
-                            ) : (
-                              val
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/*今月のカレンダーを表示*/}
-          {activeTab === 1 && (
-            <div className="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>日付</th>
-                    <th className="stat-header">◎</th>
-                    <th className="stat-header">△</th>
-                    <th className="stat-header">▽</th>
-                    <th className="stat-header">✕</th>
-                    <th className="stat-header">☐</th>
-
-                    {displayColumns.map((user) => (
-                      <th key={user}>
+                      ) : (
                         <Link
                           to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
                           className="user-edit-link"
                         >
                           {user}
                         </Link>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayRow.map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.date}</td>
-
-                      <td>{item.details?.["◎"] || 0}</td>
-                      <td>{item.details?.["△"] || 0}</td>
-                      <td>{item.details?.["▽"] || 0}</td>
-                      <td>{item.details?.["✕"] || 0}</td>
-                      <td>{item.details?.["☐"] || 0}</td>
-
-                      {displayColumns.map((u) => {
-                        const val = item.details?.[u] || "-";
-                        const isTimeValue = /\d+-\d+/.test(val);
-
-                        return (
-                          <td
-                            key={u}
-                            className={`mark-${isTimeValue ? "☐" : val}`}
-                          >
-                            {isTimeValue ? (
-                              <div className="tooltip-container">
-                                <div className="tooltip-trigger">☐</div>
-                                <span className="tooltip-content">{val}</span>
-                              </div>
-                            ) : (
-                              val
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
+                      )}
+                    </th>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                </tr>
+              </thead>
+              <tbody>
+                {displayRow.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>{item.date}</td>
 
-          {/*来月のカレンダーを表示*/}
-          {activeTab === 2 && (
-            <div className="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>日付</th>
-                    <th className="stat-header">◎</th>
-                    <th className="stat-header">△</th>
-                    <th className="stat-header">▽</th>
-                    <th className="stat-header">✕</th>
-                    <th className="stat-header">☐</th>
+                    <td>{item.details?.["◎"] || 0}</td>
+                    <td>{item.details?.["△"] || 0}</td>
+                    <td>{item.details?.["▽"] || 0}</td>
+                    <td>{item.details?.["✕"] || 0}</td>
+                    <td>{item.details?.["☐"] || 0}</td>
 
-                    {displayColumns.map((user) => (
-                      <th key={user}>
-                        <Link
-                          to={`/edit/${encodeURIComponent(user)}?month=${activeMonth}`}
-                          className="user-edit-link"
+                    {displayColumns.map((u) => {
+                      const val = item.details?.[u] || "-";
+                      const isTimeValue = /\d+-\d+/.test(val);
+
+                      return (
+                        <td
+                          key={u}
+                          className={`mark-${isTimeValue ? "☐" : val}`}
                         >
-                          {user}
-                        </Link>
-                      </th>
-                    ))}
+                          {isTimeValue ? (
+                            <div className="tooltip-container">
+                              <div className="tooltip-trigger">☐</div>
+                              <span className="tooltip-content">{val}</span>
+                            </div>
+                          ) : (
+                            val
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
-                </thead>
-                <tbody>
-                  {displayRow.map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.date}</td>
-
-                      <td>{item.details?.["◎"] || 0}</td>
-                      <td>{item.details?.["△"] || 0}</td>
-                      <td>{item.details?.["▽"] || 0}</td>
-                      <td>{item.details?.["✕"] || 0}</td>
-                      <td>{item.details?.["☐"] || 0}</td>
-
-                      {displayColumns.map((u) => {
-                        const val = item.details?.[u] || "-";
-                        const isTimeValue = /\d+-\d+/.test(val);
-
-                        return (
-                          <td
-                            key={u}
-                            className={`mark-${isTimeValue ? "☐" : val}`}
-                          >
-                            {isTimeValue ? (
-                              <div className="tooltip-container">
-                                <div className="tooltip-trigger">☐</div>
-                                <span className="tooltip-content">{val}</span>
-                              </div>
-                            ) : (
-                              val
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {commentRow && (
