@@ -422,11 +422,15 @@ function CalendarView({ allData }) {
               <thead>
                 <tr>
                   <th>日付</th>
-                  <th className="stat-header">◎</th>
-                  <th className="stat-header">△</th>
-                  <th className="stat-header">▽</th>
-                  <th className="stat-header">✕</th>
-                  <th className="stat-header">☐</th>
+                  {showSummary && (
+                    <>
+                      <th className="stat-header"></th>
+                      <th className="stat-header"></th>
+                      <th className="stat-header"></th>
+                      <th className="stat-header"></th>
+                      <th className="stat-header"></th>
+                    </>
+                  )}
 
                   {displayColumns.map((user) => (
                     <th key={user}>
