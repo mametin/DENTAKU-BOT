@@ -382,13 +382,26 @@ function CalendarView({ allData }) {
 
               {/* --- 集計行を表示するか --- */}
               <div className="filter-controls">
-                <label className="toggle-summary-enabled">
-                  <input
-                    type="checkbox"
-                    checked={showSummary}
-                    onChange={(e) => setShowSummary(e.target.checked)}
-                  />
-                </label>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.8rem",
+                      color: "#333",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    集計行( ◎,△,▽,✕,☐ )の表示
+                  </span>
+                  <label className="toggle-summary-enabled">
+                    <input
+                      type="checkbox"
+                      checked={showSummary}
+                      onChange={(e) => setShowSummary(e.target.checked)}
+                    />
+                  </label>
+                </div>
 
                 {/* --- フィルタ選択 --- */}
                 <label className="box-filter">
@@ -424,11 +437,11 @@ function CalendarView({ allData }) {
                   <th>日付</th>
                   {showSummary && (
                     <>
-                      <th className="stat-header"></th>
-                      <th className="stat-header"></th>
-                      <th className="stat-header"></th>
-                      <th className="stat-header"></th>
-                      <th className="stat-header"></th>
+                      <th className="stat-header">◎</th>
+                      <th className="stat-header">△</th>
+                      <th className="stat-header">▽</th>
+                      <th className="stat-header">✕</th>
+                      <th className="stat-header">☐</th>
                     </>
                   )}
 

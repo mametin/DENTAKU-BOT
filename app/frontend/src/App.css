@@ -216,7 +216,7 @@ body {
   position: relative;
 }
 
-.box-Fer::before,
+.box-filter::before,
 .box-filter::after {
   position: absolute;
   content: "";
