@@ -53,7 +53,7 @@ function CalendarView({ allData }) {
               "created_at",
               "updated_at",
               "username",
-            ].includes(key);
+            ].includes(Key);
             const isStringValue = typeof items[0][key] === "string";
             return !isMeta && isStringValue;
           })
