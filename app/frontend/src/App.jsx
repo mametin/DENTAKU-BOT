@@ -166,20 +166,18 @@ function CalendarView({ allData }) {
     return true;
   });
 
-  const summaryData = React.useMemo(() => {
-    return displayRow.map((item) => {
-      const summary = { "◎": 0, "△": 0, "▽": 0, "✕": 0, "☐": 0 };
-      displayColumns.forEach((user) => {
-        const val = item.details?.[user];
-        if (val === "◎") summary["◎"]++;
-        if (val === "△") summary["△"]++;
-        if (val === "▽") summary["▽"]++;
-        if (val === "✕") summary["✕"]++;
-        if (/\d+-\d+/.test(val)) summary["☐"]++;
-      });
-      return summary;
+  const summaryData = displayRow.map((item) => {
+    const summary = { "◎": 0, "△": 0, "▽": 0, "✕": 0, "☐": 0 };
+    displayColumns.forEach((user) => {
+      const val = item.details?.[user];
+      if (val === "◎") summary["◎"]++;
+      if (val === "△") summary["△"]++;
+      if (val === "▽") summary["▽"]++;
+      if (val === "✕") summary["✕"]++;
+      if (/\d+-\d+/.test(val)) summary["☐"]++;
     });
-  }, [displayRow, displayColumns]);
+    return summary;
+  });
 
   return (
     <div className="main-layout">
