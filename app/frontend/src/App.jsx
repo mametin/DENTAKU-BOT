@@ -260,6 +260,18 @@ function CalendarView({ allData }) {
 
           <div className="mobile-filter-area">
             <p className="mobile-filter-label">表示設定・絞り込み</p>
+
+            <div className="mobile-summary-toggle">
+              <span>集計行の表示</span>
+              <label className="toggle-summary-enabled">
+                <input
+                  type="checkbox"
+                  checked={showSummary}
+                  onChange={(e) => setShowSummary(e.target.checked)}
+                />
+              </label>
+            </div>
+
             <div className="filter-controls">
               <label className="box-filter">
                 <select
@@ -389,10 +401,9 @@ function CalendarView({ allData }) {
                     style={{
                       fontSize: "0.8rem",
                       color: "#333",
-                      fontWeight: "bold",
                     }}
                   >
-                    集計行( ◎,△,▽,✕,☐ )の表示
+                    集計行( ◎△▽✕☐ )の表示：
                   </span>
                   <label className="toggle-summary-enabled">
                     <input

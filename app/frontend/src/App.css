@@ -187,7 +187,7 @@ body {
 }
 
 .toggle-summary-enabled:has(:checked) {
-  background-color: #171717;
+  background-color: #333;
 }
 
 .toggle-summary-enabled::after {
@@ -229,7 +229,7 @@ body {
   width: 2em;
   height: 2em;
   border-radius: 0 3px 3px 0;
-  background-color: #212121;
+  background-color: #333;
   content: "";
 }
 
@@ -252,7 +252,7 @@ body {
   min-width: 230px;
   height: 2em;
   padding: 0.4em 3.6em 0.4em 0.8em;
-  border: 2px solid #212121;
+  border: 2px solid #333;
   border-radius: 3px;
   color: #333333;
   font-size: 1em;
@@ -1368,7 +1368,7 @@ h2 {
     display: none;
   }
 
-  /* 2. メニュー内の表示を有効化 */
+  /* メニュー内の表示を有効化 */
   .mobile-menu-header {
     display: flex;
     align-items: center;
@@ -1383,7 +1383,7 @@ h2 {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-right: 50px; /* ハンバーガーボタン(X)と重ならないための余白 */
+    margin-right: 50px;
   }
 
   .mobile-avatar {
@@ -1404,7 +1404,22 @@ h2 {
     font-size: 0.8rem;
   }
 
-  /* 3. メニュー内のソートエリア */
+  /* メニュー内のトグルボタン */
+  .mobile-summary-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 5px;
+    color: #fff;
+  }
+
+  .mobile-summary-toggle span {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  /* メニュー内のソートエリア */
   .mobile-filter-area {
     display: block;
     margin-top: 30px;
