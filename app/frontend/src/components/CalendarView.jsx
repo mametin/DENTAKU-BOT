@@ -118,7 +118,7 @@ function CalendarView({ allData }) {
 
   // 表示する列（カラム）を決定
   const displayColumns =
-    filterConfig.type === "user" && filterConfig.selectedUsers.length > 0
+    filterConfig.selectedUsers.length > 0
       ? filterConfig.selectedUsers
       : allUserNames;
 
@@ -133,13 +133,6 @@ function CalendarView({ allData }) {
     if (item.date === "コメント" || item.date === "ユーザID") return false;
 
     // 曜日フィルタの処理
-    if (filterConfig.type === "day" && filterConfig.selectedDays.length === 0) {
-      if (!filterConfig.selectedDays.includes(item.day)) {
-        return false;
-      }
-    }
-
-    // ユーザーフィルタの判定
     if (filterConfig.selectedDays.length > 0) {
       const match = item.date.match(/\((.)\)/);
       const day = match ? match[1] : null;
@@ -154,7 +147,7 @@ function CalendarView({ allData }) {
       const targetStatuses = filterConfig.selectedUsers.map(
         (u) => item.details?.[u],
       );
-
+      
       // 指定日が未回答(-)のユーザーがいれば除外
       if (filterConfig.hideUnanswered && targetStatuses.some((s) => s === "-"))
         return false;
