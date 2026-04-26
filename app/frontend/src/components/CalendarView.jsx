@@ -132,14 +132,6 @@ function CalendarView({ allData }) {
   const displayRow = calendarItems.filter((item) => {
     if (item.date === "コメント" || item.date === "ユーザID") return false;
 
-    // ユーザーフィルタの判定
-    if (
-      filterConfig.type !== "user" ||
-      filterConfig.selectedUsers.length === 0
-    ) {
-      return true;
-    }
-
     // 曜日フィルタの処理
     if (filterConfig.type === "day" && filterConfig.selectedDays.length === 0) {
       if (!filterConfig.selectedDays.includes(item.day)) {
@@ -147,29 +139,39 @@ function CalendarView({ allData }) {
       }
     }
 
-    const targetStatuses = filterConfig.selectedUsers.map(
-      (u) => item.details?.[u],
-    );
+    // ユーザーフィルタの判定
+    if (filterConfig.selectedDays.length > 0) {
+      const match = item.date.match(/\((.)\)/);
+      const day = match ? match[1] : null;
 
-    // 指定日が未回答(-)のユーザーを除外する判定
-    if (filterConfig.hideUnanswered && targetStatuses.some((s) => s === "-")) {
-      return false;
+      if (!filterConfig.selectedDays.includes(day)) {
+        return false;
+      }
     }
 
-    // ✕ に関する判定
-    if (
-      filterConfig.matchTypes === "anyone_x" &&
-      targetStatuses.includes("✕")
-    ) {
-      return false;
-    }
-    if (
-      filterConfig.matchTypes === "all_x" &&
-      targetStatuses.every((s) => s === "✕")
-    ) {
-      return false;
-    }
+    // ユーザーフィルタの判定
+    if (filterConfig.selectedUsers.length > 0) {
+      const targetStatuses = filterConfig.selectedUsers.map(
+        (u) => item.details?.[u],
+      );
 
+      // 指定日が未回答(-)のユーザーがいれば除外
+      if (filterConfig.hideUnanswered && targetStatuses.some((s) => s === "-"))
+        return false;
+
+      // ✕ に関する判定
+      if (
+        filterConfig.matchTypes === "anyone_x" &&
+        targetStatuses.includes("✕")
+      )
+        return false;
+
+      if (
+        filterConfig.matchTypes === "all_x" &&
+        targetStatuses.every((s) => s === "✕")
+      )
+        return false;
+    }
     return true;
   });
 
@@ -292,7 +294,8 @@ function CalendarView({ allData }) {
                   <option value="date">日付で絞り込む</option>
                 </select>
               </label>
-              {filterConfig.type && (
+              {(filterConfig.selectedUsers.length > 0 ||
+                filterConfig.selectedDays.length > 0) && (
                 <button className="btn-resetFilter" onClick={resetFilter}>
                   フィルタ解除
                 </button>
@@ -341,13 +344,19 @@ function CalendarView({ allData }) {
           isOpen={isFilterModalOpen}
           onClose={() => {
             setIsFilterModalOpen(false);
-            setFilterSelectValue(filterConfig.type || "");
+            setFilterSelectValue("");
           }}
           userList={allUserNames}
           currentConfig={filterConfig}
           onApply={(config) => {
-            setFilterConfig(config);
+            setFilterConfig((prev) => ({
+              ...prev,
+              selectedUsers: config.selectedUsers,
+              hideUnanswered: config.hideUnanswered,
+              matchTypes: config.matchTypes,
+            }));
             setIsFilterModalOpen(false);
+            setFilterSelectValue("");
           }}
         />
 
@@ -356,16 +365,16 @@ function CalendarView({ allData }) {
           isOpen={isDayFilterModalOpen}
           onClose={() => {
             setIsDayFilterModalOpen(false);
-            setFilterSelectValue(filterConfig.type || "");
+            setFilterSelectValue("");
           }}
           currentConfig={filterConfig}
           onApply={(config) => {
             setFilterConfig((prev) => ({
               ...prev,
-              type: "day",
               selectedDays: config.selectedDays,
             }));
             setIsDayFilterModalOpen(false);
+            setFilterSelectValue("");
           }}
         />
 
@@ -457,20 +466,21 @@ function CalendarView({ allData }) {
                     <option value="date">日付で絞り込む</option>
                   </select>
                 </label>
-                {filterConfig.type && (
+                {(filterConfig.selectedUsers.length > 0 ||
+                  filterConfig.selectedDays.length > 0) && (
                   <button className="btn-resetFilter" onClick={resetFilter}>
                     ✕
                   </button>
                 )}
               </div>
 
-              {filterConfig.type === "user" && (
+              {filterConfig.selectedUsers.length > 0 && (
                 <div className="filter-status-badge">
                   絞り込み中: {filterConfig.selectedUsers.join(", ")}
                 </div>
               )}
 
-              {filterConfig.type === "day" && (
+              {filterConfig.selectedDays.length > 0 && (
                 <div className="filter-status-badge">
                   絞り込み中: {filterConfig.selectedDays.join(", ")}曜日
                 </div>
