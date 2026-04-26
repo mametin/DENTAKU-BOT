@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserFilterModal from "./UserFilterModal";
+import DayFilterModal from "./DayFilterModal";
 import headerIcon from "../IMG_icon.jpg";
 import { loginWithDiscord } from "../constants";
 
@@ -23,7 +24,8 @@ function CalendarView({ allData }) {
   // フィルタ状態の管理
   const [filterConfig, setFilterConfig] = useState({
     type: null, // "user", "day", "date"
-    selectedUsers: [],
+    selectedUsers: [], // 絞り込むユーザーのリスト
+    selectedDays: [], // 絞り込む曜日のリスト
     hideUnanswered: true, // 未回答を非表示にするか
     matchTypes: "anyone_x", // "all_ok","anyone_x"
   });
@@ -36,12 +38,14 @@ function CalendarView({ allData }) {
 
   // フィルタ用モーダルの状態管理
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isDayFilterModalOpen, setIsDayFilterModalOpen] = useState(false);
 
   // フィルタ解除関数
   const resetFilter = () => {
     setFilterConfig({
       type: null,
       selectedUsers: [],
+      selectedDays: [],
       hideUnanswered: true,
       matchTypes: "anyone_x",
     });
@@ -56,7 +60,9 @@ function CalendarView({ allData }) {
     if (selectedValue === "user") {
       setIsFilterModalOpen(true);
     }
-    // 今後、'day' や 'date' もここで分岐させます
+    if (selectedValue === "day") {
+      setIsDayFilterModalOpen(true);
+    }
   };
 
   const handleLogout = () => {
@@ -110,13 +116,13 @@ function CalendarView({ allData }) {
   }
   const isAlreadyAnswered = !!targetMyRegisteredName;
 
-  // 3. 表示する列（カラム）を決定
+  // 表示する列（カラム）を決定
   const displayColumns =
     filterConfig.type === "user" && filterConfig.selectedUsers.length > 0
       ? filterConfig.selectedUsers
       : allUserNames;
 
-  // 3. 表示する行（日付）をフィルタリング
+  // 表示する行（日付）をフィルタリング
   const boundaryIndex = items.findIndex(
     (item) => !item.date || item.date.trim() === "" || item.date === "日付不明",
   );
@@ -126,11 +132,19 @@ function CalendarView({ allData }) {
   const displayRow = calendarItems.filter((item) => {
     if (item.date === "コメント" || item.date === "ユーザID") return false;
 
+    // ユーザーフィルタの判定
     if (
       filterConfig.type !== "user" ||
       filterConfig.selectedUsers.length === 0
     ) {
       return true;
+    }
+
+    // 曜日フィルタの処理
+    if (filterConfig.type === "day" && filterConfig.selectedDays.length === 0) {
+      if (!filterConfig.selectedDays.includes(item.day)) {
+        return false;
+      }
     }
 
     const targetStatuses = filterConfig.selectedUsers.map(
@@ -321,6 +335,7 @@ function CalendarView({ allData }) {
         </div>
       </header>
 
+      {/* --- ユーザフィルタモーダル --- */}
       <div className="container">
         <UserFilterModal
           isOpen={isFilterModalOpen}
@@ -333,6 +348,24 @@ function CalendarView({ allData }) {
           onApply={(config) => {
             setFilterConfig(config);
             setIsFilterModalOpen(false);
+          }}
+        />
+
+        {/* --- 曜日フィルタモーダル --- */}
+        <DayFilterModal
+          isOpen={isDayFilterModalOpen}
+          onClose={() => {
+            setIsDayFilterModalOpen(false);
+            setFilterSelectValue(filterConfig.type || "");
+          }}
+          currentConfig={filterConfig}
+          onApply={(config) => {
+            setFilterConfig((prev) => ({
+              ...prev,
+              type: "day",
+              selectedDays: config.selectedDays,
+            }));
+            setIsDayFilterModalOpen(false);
           }}
         />
 
@@ -434,6 +467,12 @@ function CalendarView({ allData }) {
               {filterConfig.type === "user" && (
                 <div className="filter-status-badge">
                   絞り込み中: {filterConfig.selectedUsers.join(", ")}
+                </div>
+              )}
+
+              {filterConfig.type === "day" && (
+                <div className="filter-status-badge">
+                  絞り込み中: {filterConfig.selectedDays.join(", ")}曜日
                 </div>
               )}
             </div>
