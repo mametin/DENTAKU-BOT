@@ -276,7 +276,7 @@ body {
 .box-calendar-explanation {
   padding: 0.5em 1em;
   color: #333;
-  font-size: 1em;
+  font-size: clamp(8px, 3vw, 16px);
 }
 
 /* ボックスの説明テキスト */
@@ -530,7 +530,7 @@ h2 {
   color: #333;
   display: inline-block;
   margin-bottom: 5px;
-  font-size: 1em;
+  font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
 .textbox-name,
@@ -611,6 +611,13 @@ h2 {
   font-size: 0.6em;
 }
 
+/* 予定入力フォーム */
+/* 入力画面のタイトルのスタイル */
+.input-info h1{
+  font-size: clamp(16px, 4vw, 24px);
+  margin : 10px 0;
+}
+
 /* モーダルのスタイル */
 /* ポップアップの背景 */
 .modal-overlay {
@@ -682,7 +689,7 @@ h2 {
 /* 日付のテキスト */
 .date-label-text {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
   color: #333;
   margin-bottom: 0;
 }
@@ -729,17 +736,19 @@ h2 {
 }
 
 .option-label {
-  display: inline-block;
+display: inline-block;
   border: 1px solid #333333;
-  padding: 8px 15px;
   border-radius: 5px;
   cursor: pointer;
   background-color: #fff;
   color: #333333 !important;
   text-decoration: none !important;
   transition: all 0.2s;
-  min-width: 45px;
   text-align: center;
+
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 15px);
+  min-width: clamp(35px, 8vw, 45px);
 }
 
 /* 選択時の色：背景黒、文字白 */
@@ -1529,5 +1538,82 @@ h2 {
     width: 90%;
     margin: 20px auto 0;
     justify-content: center;
+  }
+
+  /* =========================================
+     入力フォーム (EntryForm) のスマホレイアウト
+  ========================================= */
+  
+  /* 上部の入力エリアと一括変更パネルを縦並びに */
+  .input-header-area {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* 一括変更パネルの固定幅を解除し、画面幅に合わせる */
+  .bulk-update-panel {
+    min-width: unset;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+  }
+
+  /* 一括変更の中身も縦並びに */
+  .bulk-controls-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* 曜日選択を折り返し可能に */
+  .day-selector {
+    flex-wrap: wrap;
+  }
+
+  /* 日付とボタン群を縦並びに */
+  .date-item-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* ボタン群を横幅いっぱいに広げる */
+  .right-content {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .options-group {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .options-group .option-label {
+    flex: 1; /* 全てのボタンを均等の幅に引き伸ばす */
+    text-align: center;
+  }
+
+  /* テキストボックスの調整（※スマホでタップ時のズームを防ぐため最小16px） */
+  .textbox-name,
+  .textbox-coment {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: clamp(16px, 3vw, 1rem); 
+  }
+
+  /* 送信・キャンセルボタンを縦並びに大きく */
+  .submit-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px !important;
+  }
+
+  .btn-submit,
+  .btn-cancel {
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
   }
 }
