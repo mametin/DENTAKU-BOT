@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { use } from "react";
 
@@ -53,7 +53,11 @@ function UserFilterModal({
         <hr />
 
         <div className="filter-options">
-          <div className="check-vertical" style={{ margin: "10px 0 12px 0" }}>
+          <h4 style={{ margin: "0 0 12px 0", fontSize: "1rem", color: "#333" }}>
+            詳細設定
+          </h4>
+
+          <div className="check-vertical" style={{ margin: "0 0 10px 0" }}>
             <input
               type="checkbox"
               id="hide_unanswered"
@@ -61,13 +65,13 @@ function UserFilterModal({
               onChange={(e) => setTmpHide(e.target.checked)}
             />
             <label htmlFor="hide_unanswered">
-              指定日が未回答(-)のユーザーがいれば除外
+              指定日が未回答(-)のユーザーがいる日程を除外
             </label>
           </div>
 
           <div
             className="radio-group-vertical"
-            style={{ display: "flex", flexDirection: "column", gap: "6px" }}
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
             <div style={{ position: "relative" }}>
               <input
@@ -79,7 +83,7 @@ function UserFilterModal({
                 onChange={(e) => setTmpMatch(e.target.value)}
               />
               <label htmlFor="match_anyone">
-                一人でも「✕」がいれば除外
+                一人でも「✕」がいる日程を除外
               </label>{" "}
             </div>
             <div style={{ position: "relative" }}>
@@ -91,7 +95,7 @@ function UserFilterModal({
                 checked={tmpMatch === "all_x"}
                 onChange={(e) => setTmpMatch(e.target.value)}
               />
-              <label htmlFor="match_all">全員が「✕」の場合のみ除外</label>{" "}
+              <label htmlFor="match_all">全員が「✕」の日程を除外</label>{" "}
             </div>
           </div>
         </div>
