@@ -1,47 +1,56 @@
 # DENTAKU-BOT (電卓BOT)
+![電卓アイコン](app/frontend/src/IMG_icon.jpg)
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)
 ![Discord.js](https://img.shields.io/badge/Discord.js-5865F2?logo=discord&logoColor=fff)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=fff)
 
-Discordサーバー向けの多機能スケジュール管理BOTです。日程調整、ダイスロール、ロール管理など、様々な機能を提供します。
+## 概要
+東京電機大学非電源ゲーム部TRPG部門「電卓」で使用しているスケジュール調整botです。
+Discordサーバー向けの多機能スケジュール管理BOTです。
+日程調整をサポートする様々な機能を使用することができます。
 
-## 🌐 Website
+使用方法は下記Noteでも解説しています。
+![日程調整くん(電卓Discord bot)の使い方](https://note.com/dentaku_trpg/n/n850a19e349da)
 
+## Website
+今月と前後1ヶ月の空き日程を登録することが可能です。
+登録にはDiscordアカウントとの連携が必須です。
 [https://dentaku-bot.vercel.app](https://dentaku-bot.vercel.app)
 
-## ✨ 主な機能
+## 主な機能
 
-### 📅 スケジュール管理
+### スケジュール管理
+Discord内のスラッシュコマンドで日程の操作を行うことが可能です。
+
 - **日程追加**: Google Spreadsheetに日程情報を登録
 - **日程表示**: Google Spreadsheet・Googleカレンダーへのリンク提供
 - **日程削除**: 登録された日程をIDで削除
 - **日程修正**: 既存の日程情報を更新
 - **日程検索**: 日付・タイトル・KP名・PL名で検索可能
 
-### 🎲 ダイスロール機能
-複数のテーブルトークRPGシステムに対応：
-- **クトゥルフ神話TRPG (CoC)**
-  - CoC 6th Edition
-  - CoC 7th Edition
-- **シノビガミ** (ShinobiGami)
-- **ソードワールド2.5** (Sword World 2.5)
-- **カスタムダイス**: 汎用ダイスロール・カスタム表
+### ダイスロール機能
+bcdiceを用いたダイスロールを行うことが可能です。
 
-### 🎯 その他の機能
+現在対応済みのシステム一覧：
+- **クトゥルフ神話TRPG**
+  - CoC 6th
+  - CoC 7th
+- **シノビガミ**
+- **ソードワールド2.5**
+
+汎用ダイスロール・カスタム表も使用可能です。
+
+### その他の機能
 - **おみくじ**: ランダムに吉凶を占う
-- **ロール選択パネル**: サーバーメンバーがロールを自由に選択・切り替え可能
-- **お知らせ機能**: BOT管理者がサーバー全体にお知らせを配信
+- **ロール選択パネル**: サーバーメンバーがロールを自由に選択・切り替え可能 (管理者のみ使用可能)
+- **お知らせ機能**: サーバー全体にお知らせを配信 (管理者のみ使用可能)
 
-## 🏗️ システムアーキテクチャ
+## システムアーキテクチャ
 
 DENTAKU-BOTは、Discord、WebUI、Google連携サービスから構成されたマイクロサービスアーキテクチャです。以下、データフローに沿ってシステム全体を説明します。
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    DENTAKU-BOT System                        │
-└─────────────────────────────────────────────────────────────┘
-```
+![DENTAKU-BOTアーキテクチャ図](./architecture.png)
 
 ### ① Discord (ユーザーインターフェース)
 
@@ -237,7 +246,7 @@ npm run dev
 npm start
 ```
 
-## 📦  主な依存関係
+## 主な依存関係
 
 | パッケージ | 用途 |
 |----------|------|
@@ -250,7 +259,7 @@ npm start
 | `react` | フロントエンド (UI フレームワーク) |
 | `vite` | フロントエンド ビルドツール |
 
-## 🔧 コマンド一覧
+## コマンド一覧
 
 | コマンド | 説明 |
 |--------|------|
@@ -287,14 +296,14 @@ SW 2d6
 choice[赤,青,緑]
 ```
 
-## 🐳 Docker での実行
+## Docker での実行
 
 ```bash
 docker build -t dentaku-bot .
 docker run --env-file .env dentaku-bot
 ```
 
-## 📁 プロジェクト構成
+## プロジェクト構成
 
 ```
 DENTAKU-BOT/
@@ -313,20 +322,21 @@ DENTAKU-BOT/
 └── README.md                 # このファイル
 ```
 
-## 📝 License
+## License
 
 このプロジェクトはMITライセンスの下で公開されています。
 
-## 🐛 Issues & Contributions
+## Issues & Contributions
 
-不具合報告や機能提案は、[GitHub Issues](https://github.com/mametin/DENTAKU-BOT/issues) でお願いします。
+不具合報告や機能提案は、
+[GitHub Issues](https://github.com/mametin/DENTAKU-BOT/issues) もしくは
+[日程調整くん問い合わせフォーム](https://docs.google.com/forms/d/e/1FAIpQLSdnyWu4jT7FPyFUg6qVreQqlCgD7YuBAUg2zcrWtQ4zCN7AvA/viewform)
+までお願いします。
 
-プルリクエストも歓迎です！
+## Contact
 
-## 📧 Contact
-
-質問やサポートが必要な場合は、Discordで管理者にご連絡ください。
+`mamerugon [at] gmail.com`
 
 ---
 
-**Last Updated:** 2026-06-14
+**Last Updated:** 2026-06-16
