@@ -11,7 +11,7 @@ Discordサーバー向けの多機能スケジュール管理BOTです。
 日程調整をサポートする様々な機能を使用することができます。
 
 使用方法は下記Noteでも解説しています。
-![日程調整くん(電卓Discord bot)の使い方](https://note.com/dentaku_trpg/n/n850a19e349da)
+[日程調整くん(電卓Discord bot)の使い方](https://note.com/dentaku_trpg/n/n850a19e349da)
 
 ## Website
 今月と前後1ヶ月の空き日程を登録することが可能です。
