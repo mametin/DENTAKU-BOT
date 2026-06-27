@@ -387,18 +387,27 @@ h2 {
 
 /* 記号ごとの色分け */
 .mark-◎ {
-  color: #2e7d32;
+  background-color: #dff6e8;
+  color: #111111;
+  font-weight: bold;
 }
 .mark-△,
 .mark-▽ {
-  color: #f9a825;
-}
-.mark-□ {
-  color: #1976d2;
+  background-color: #fff4cc;
+  color: #111111;
   font-weight: bold;
 }
-.mark-× {
-  color: #c62828;
+.mark-□,
+.mark-☐ {
+  background-color: #dce9ff;
+  color: #111111;
+  font-weight: bold;
+}
+.mark-×,
+.mark-✕ {
+  background-color: #ffe2e2;
+  color: #111111;
+  font-weight: bold;
 }
 
 .action-bar {

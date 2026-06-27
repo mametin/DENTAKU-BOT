@@ -230,23 +230,23 @@ function EntryForm({ allData }) {
       if (val === "その他") {
         submissionResponses[datekey] = otherTexts[datekey] || "";
       } else {
-        submissionResponses[datekey] = val || ""; // 未選択なら ""
+        submissionResponses[datekey] = val || ""; 
       }
     });
 
     const userIdRow = items.find((item) => item.date === "ユーザID");
-    let submidID = user.id;
+    let submitId = user.id;
 
     if (targetName) {
-      const decodeName = decodeURIComponent(targetName);
-      if (userIdRow && userIdRow.details && userIdRow.details[decodeName]) {
-        submidID = decodeName;
+      const decodedName = decodeURIComponent(targetName);
+      if (userIdRow && userIdRow.details && userIdRow.details[decodedName]) {
+        submitId = userIdRow.details[decodedName];
       }
     }
 
     const payload = {
       type: targetName ? "correct" : "submit",
-      id: submidID,
+      id: submitId,
       name: name,
       comment: comment,
       responses: finalResponses,
