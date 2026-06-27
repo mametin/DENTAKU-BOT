@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import './styles/Modal.css';
 
 function DayFilterModal({ isOpen, onClose, onApply, currentConfig }) {
     const daysOfWeek = ["月", "火", "水", "木", "金", "土", "日"];

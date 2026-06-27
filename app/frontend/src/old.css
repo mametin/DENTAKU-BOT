@@ -1,0 +1,207 @@
+
+
+.title-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.box-calendar-explanation {
+  padding: 0.5em 1em;
+  color: #333;
+  font-size: clamp(8px, 3vw, 16px);
+}
+
+
+
+
+
+
+
+.user-banner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(4px, 1vw, 12px);
+  padding: 4px clamp(4px, 1.2vw, 12px);
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transform: skew(-25deg);
+  height: 100%;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: #ccc;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+
+
+.guest-icon {
+  display: inline-block;
+  position: relative;
+  border-radius: 50%;
+  background-color: #ccd4d6;
+  width: 1em;
+  height: 1em;
+  font-size: 32px;
+  overflow: hidden;
+  border: 2px solid #899194; /* Discordカラー */
+  transform: skew(25deg);
+}
+.guest-icon::before,
+.guest-icon::after {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background-color: #899194;
+  content: "";
+}
+.guest-icon::before {
+  top: 0.15em;
+  width: 0.4em;
+  height: 0.4em;
+}
+.guest-icon::after {
+  bottom: -0.4em;
+  width: 0.8em;
+  height: 0.8em;
+}
+
+.username-text {
+  font-weight: bold;
+  color: #333;
+  transform: skew(25deg);
+  font-size: clamp(12px, 1.5vw, 16px);
+  white-space: nowrap;
+  max-width: clamp(80px, 15vw, 180px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.input-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+
+
+
+.bulk-select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-weight: bold;
+}
+
+.overwrite-checkbox {
+  font-size: 0.85rem;
+  color: #666;
+  cursor: pointer;
+}
+
+.bulk-controls-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.modal-buttons .btn-cancel,
+.modal-buttons .btn-apply {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.modal-buttons .btn-cancel {
+  border: 1px solid #333333;
+  background-color: #fff;
+  color: #2e2e2e;
+}
+
+.modal-buttons .btn-apply {
+  border: 1px solid #333333;
+  background-color: #333333;
+  color: #fff;
+  font-weight: 600;
+}
+
+.modal-buttons .btn-apply:hover {
+  background-color: #232323;
+}
+
+/* =========================================
+   ここから画面幅900px以下の設定（スマホ版）
+========================================= */
+@media screen and (max-width: 900px) {
+  /* フィルタ */
+
+  /* --- ログインバナーの調整 --- */
+  .user-banner {
+    width: 90%;
+    margin: 20px auto 0;
+    justify-content: center;
+  }
+
+  /* =========================================
+     入力フォーム (EntryForm) のスマホレイアウト
+  ========================================= */
+  
+
+  /* 一括変更パネルの固定幅を解除し、画面幅に合わせる */
+  .bulk-update-panel {
+    min-width: unset;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+  }
+
+  /* 一括変更の中身も縦並びに */
+  .bulk-controls-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* 曜日選択を折り返し可能に */
+  .day-selector {
+    flex-wrap: wrap;
+  }
+  /* ボタン群を横幅いっぱいに広げる */
+  .right-content {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  /* 送信・キャンセルボタンを縦並びに大きく */
+  .submit-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px !important;
+  }
+
+
+}

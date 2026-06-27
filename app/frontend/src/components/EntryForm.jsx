@@ -5,6 +5,8 @@ import TimeSlotModal from "./TimeSlotModal";
 import headerIcon from "../IMG_icon.jpg";
 import { GAS_URL, DISCORD_URL } from "../constants";
 
+import './styles/EntryForm.css';
+
 function EntryForm({ allData }) {
   const navigate = useNavigate();
 

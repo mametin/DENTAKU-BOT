@@ -6,6 +6,9 @@ import DayFilterModal from "./DayFilterModal";
 import headerIcon from "../IMG_icon.jpg";
 import { loginWithDiscord } from "../constants";
 
+import './styles/CalendarView.css';
+// ...
+
 function CalendarView({ allData }) {
   const navigate = useNavigate();
 

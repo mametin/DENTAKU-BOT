@@ -1,0 +1,425 @@
+/* --- カレンダー操作エリア --- */
+
+/* カレンダーの操作エリア */
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 0px 0;
+  gap: 20px;
+}
+
+/* カレンダー操作エリアの左側 */
+.controls-left-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+/* カレンダー操作エリアの右側 */
+.controls-right-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* 右寄せ */
+  gap: 10px;
+}
+
+/* フィルタ周りの要素を縦並びにする */
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* 日付表示行のenable/disableのスタイル */
+.toggle-summary-enabled {
+  display: inline-block;
+  position: relative;
+  width: 50px;
+  height: 26px;
+  border-radius: 50px;
+  background-color: #dddddd;
+  cursor: pointer;
+  transition: background-color 0.4s;
+}
+
+.toggle-summary-enabled:has(:checked) {
+  background-color: #333;
+}
+
+.toggle-summary-enabled::after {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+  background-color: #fff;
+  content: "";
+  transition: left 0.4s;
+}
+
+.toggle-summary-enabled:has(:checked)::after {
+  left: 25px;
+}
+
+.toggle-summary-enabled input {
+  display: none;
+}
+
+/* ソート用セレクトボックスのスタイル */
+.box-filter {
+  position: relative;
+}
+
+.box-filter::before,
+.box-filter::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.box-filter::before {
+  right: 0;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  border-radius: 0 3px 3px 0;
+  background-color: #333;
+  content: "";
+}
+
+.box-filter::after {
+  position: absolute;
+  top: 50%;
+  right: 1em;
+  transform: translate(50%, -50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  border-bottom: 3px solid #fff;
+  border-right: 3px solid #fff;
+  content: "";
+}
+
+.box-filter select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-width: 230px;
+  height: 2em;
+  padding: 0.4em 3.6em 0.4em 0.8em;
+  border: 2px solid #333;
+  border-radius: 3px;
+  color: #333333;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.box-filter select:focus {
+  outline: 1px solid #212121;
+}
+
+.heading {
+  padding: 0 0.4em 0.2em;
+  border-bottom: 3px solid #333333;
+  background-color: #ffffff;
+  color: #333333;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 1.6rem;
+}
+
+/* ボックスの説明テキスト */
+.box-explanation {
+  padding: 0em 1em 1em 1em;
+  color: #333;
+  font-size: 0.8em;
+}
+
+.count-ok {
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.count-zero {
+  color: #c62828;
+  font-weight: bold;
+}
+
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* フィルタ適用中の表示 */
+.filter-active-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.badge {
+  background: #41e0dd;
+  color: #212121;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.btn-reset-mini {
+  background: #ff5252;
+  color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+/* カレンダーのタブ表示エリア */
+.tab-container {
+  display: flex;
+  gap: 1px;
+  margin-top: 20px;
+  margin-left: 1px;
+  border-bottom: 1.5px ridge #dddddd;
+}
+
+/* タブボタンの基本スタイル */
+.tab-container button {
+  padding: 5px 15px;
+  background-color: #f8f8f8;
+  color: #666;
+  border: 1px solid #ffffff;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.tab-container button:hover {
+  background-color: #e2e2e2;
+}
+
+.tab-container button.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+/* --- テーブル部分 --- */
+
+/* 表を囲むスクロール用エリア */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 1px solid #fafafa;
+}
+
+/* テーブルのスタイル */
+table {
+  border-collapse: collapse;
+  background-color: white;
+  table-layout: auto;
+}
+
+/* テーブルのヘッダーとセルのスタイル */
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 6px 4px;
+  text-align: center;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* 1列目の幅を固定 */
+th:first-child,
+td:first-child {
+  width: 85px !important;
+  min-width: 85px !important;
+}
+
+/* ○△▽×□の幅を小さく均等に固定 */
+th.stat-header,
+td:nth-child(n + 2):nth-child(-n + 6) {
+  width: 30px !important;
+  min-width: 30px !important;
+}
+
+/* ユーザー名の列 */
+th:nth-child(n + 7),
+td:nth-child(n + 7) {
+  width: auto;
+  min-width: max-content;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* --- コメントセクション --- */
+/* コメントセクションのスタイル */
+.comment-title {
+  font-size: 1.2em;
+  color: #333;
+}
+
+.comment-box {
+  display: flex;
+  grid-gap: 0.7em;
+  margin: 0.5em 0 1em;
+  padding: 1em;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  color: #212121;
+}
+
+.comment-box::before {
+  width: 24px;
+  height: 24px;
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.8995 6.85453L17.1421 11.0972L7.24264 20.9967H3V16.754L12.8995 6.85453ZM14.3137 5.44032L16.435 3.319C16.8256 2.92848 17.4587 2.92848 17.8492 3.319L20.6777 6.14743C21.0682 6.53795 21.0682 7.17112 20.6777 7.56164L18.5563 9.68296L14.3137 5.44032Z' fill='%23212121'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.comment-box h2 {
+  margin: 0;
+  padding: 0 0 0 0.7em;
+  border-left: 1px solid #212121;
+}
+
+.comment-list {
+  list-style-type: disc;
+  list-style-position: inside;
+  padding: 0.5em;
+  margin-top: -1.3em;
+  margin-bottom: 1em;
+  overflow-x: auto;
+}
+
+.comment-list li {
+  padding: 0.5em;
+  white-space: nowrap;
+  margin-bottom: 1em;
+  font-size: 0.8em;
+}
+
+.comment-list li:not(:last-child) {
+  border-bottom: 1px dashed #151515;
+}
+
+.comment-list li::marker {
+  color: #151515;
+  font-size: 0.6em;
+}
+
+/* --- ツールチップ (時間指定の詳細など) --- */
+
+/* ユーザー名にマウスオーバーでツールチップ表示 */
+.tooltip-container {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip-container .tooltip-content {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #212121 !important;
+  color: #ffffff !important;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  font-weight: normal;
+  z-index: 99999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.tooltip-container .tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #212121 transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* --- スマホ版（カレンダー部分） --- */
+@media screen and (max-width: 900px) {
+  .calendar-controls .controls-right-group {
+    display: none;
+  }
+
+  /* メニュー内のトグルボタン */
+  .mobile-summary-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 5px;
+    color: #fff;
+  }
+
+  .mobile-summary-toggle span {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  /* メニュー内のソートエリア */
+  .mobile-filter-area {
+    display: block;
+    margin-top: 30px;
+    padding: 0 20px;
+    border-top: 1px solid #444;
+    padding-top: 20px;
+  }
+
+  .mobile-filter-label {
+    color: #888;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* メニュー内のセレクトボックスを横幅いっぱいに */
+  .mobile-filter-area .box-filter select {
+    width: 100%;
+    min-width: unset;
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
+  }
+
+  .mobile-filter-area .btn-resetFilter {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+}

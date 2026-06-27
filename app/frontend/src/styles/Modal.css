@@ -1,0 +1,241 @@
+/* src/styles/Modal.css */
+
+/* --- モーダル全体のベース --- */
+
+/* ポップアップの背景 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ポップアップ本体 */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 320px;
+  color: #333;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.modal-buttons .btn-cancel,
+.modal-buttons .btn-apply {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.modal-buttons .btn-cancel {
+  border: 1px solid #333333;
+  background-color: #fff;
+  color: #2e2e2e;
+}
+
+.modal-buttons .btn-apply {
+  border: 1px solid #333333;
+  background-color: #333333;
+  color: #fff;
+  font-weight: 600;
+}
+
+.modal-buttons .btn-apply:hover {
+  background-color: #232323;
+}
+
+/* --- 時間指定モーダル (TimeSlotModal) 用 --- */
+
+/* 時間帯タグ */
+.slot-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  padding: 2px 8px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+.tag button {
+  border: none;
+  background: none;
+  color: #f87171;
+  cursor: pointer;
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+/* --- フィルターモーダル用 --- */
+.filter-modal {
+  max-width: 400px;
+  width: 90%;
+}
+
+.user-checkbox-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #eee;
+  padding: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.filter-options-area {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.radio-group-v {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.modal-footer-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/*除外設定チェックボックス*/
+.check-vertical {
+  margin: 6em 2em;
+}
+.check-vertical input[type="checkbox"] {
+  display: none;
+}
+/*通常時のラベルの設定*/
+.check-vertical label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 26px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  min-height: 20px;
+}
+/*通常時のチェックボックスの設定*/
+.check-vertical label::before {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid #cccccc;
+  border-radius: 3px;
+}
+/* focus・hover・active・checked時のテキストの設定*/
+.check-vertical label:focus,
+.check-vertical label:hover,
+.check-vertical label:active,
+.check-vertical input:checked + label {
+  color: #333333;
+}
+/* focus・hover・active時のチェックボックスの設定*/
+.check-vertical label:focus::before,
+.check-vertical label:hover::before,
+.check-vertical label:active::before {
+  border-color: #333333;
+  background: #ffffff;
+}
+/* checked時のチェックボックスの設定*/
+.check-vertical input:checked + label::before {
+  border-color: #333333;
+  background: #333333;
+}
+
+/*除外設定ラジオボックス*/
+.radio-group-vertical input[type="radio"] {
+  display: none;
+}
+/*focus・hover・active・checked時のラベルの色*/
+.radio-group-vertical label:focus,
+.radio-group-vertical label:hover,
+.radio-group-vertical label:active,
+.radio-group-vertical input:checked + label {
+  color: #333333;
+}
+/*focus・hover・active・checked時のラジオボタンの色*/
+.radio-group-vertical label:focus:before,
+.radio-group-vertical label:hover:before,
+.radio-group-vertical label:active:before,
+.radio-group-vertical input:checked + label:before {
+  border-color: #333333;
+  background: #ffffff;
+}
+/*通常時のラベルの色*/
+.radio-group-vertical label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 26px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.15s ease;
+  min-height: 20px;
+}
+/*通常時のラジオボタンの色*/
+.radio-group-vertical label:before {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid #cccccc;
+  border-radius: 50%;
+}
+/*チェック時の設定*/
+.radio-group-vertical input:checked + label:before {
+  border-color: #232323;
+  background: #232323;
+}
