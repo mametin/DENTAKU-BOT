@@ -368,21 +368,19 @@ td:nth-child(n + 7) {
 
 /* 記号を正方形の箱にするためのスタイル  */
 .symbol-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 4px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-/* ツールチップのズレを直すための調整 */
-.tooltip-container {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  border-radius: 6px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  aspect-ratio: 1 / 1 !important;
 }
 
 /* --- スマホ版（カレンダー部分） --- */

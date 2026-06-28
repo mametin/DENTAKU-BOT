@@ -541,10 +541,12 @@ function CalendarView({ allData }) {
                               <div className="tooltip-trigger symbol-box mark-☐">☐</div>
                               <span className="tooltip-content">{val}</span>
                             </div>
-                          ) : (
-                            <div className={val !== "-" ? `symbol-box mark-${val}` : ""}>
+                          ) : val !== "-" ? (
+                            <div className={`symbol-box mark-${val}`}>
                               {val}
                             </div>
+                          ) : (
+                            "-"
                           )}
                         </td>
                       );
