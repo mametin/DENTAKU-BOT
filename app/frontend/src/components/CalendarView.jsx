@@ -535,17 +535,16 @@ function CalendarView({ allData }) {
                       const isTimeValue = /\d+-\d+/.test(val);
 
                       return (
-                        <td
-                          key={u}
-                          className={`mark-${isTimeValue ? "☐" : val}`}
-                        >
+                        <td key={u}>
                           {isTimeValue ? (
                             <div className="tooltip-container">
-                              <div className="tooltip-trigger">☐</div>
+                              <div className="tooltip-trigger symbol-box mark-☐">☐</div>
                               <span className="tooltip-content">{val}</span>
                             </div>
                           ) : (
-                            val
+                            <div className={val !== "-" ? `symbol-box mark-${val}` : ""}>
+                              {val}
+                            </div>
                           )}
                         </td>
                       );

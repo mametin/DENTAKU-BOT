@@ -366,6 +366,25 @@ td:nth-child(n + 7) {
   opacity: 1;
 }
 
+/* 記号を正方形の箱にするためのスタイル  */
+.symbol-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ツールチップのズレを直すための調整 */
+.tooltip-container {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* --- スマホ版（カレンダー部分） --- */
 @media screen and (max-width: 900px) {
   .calendar-controls .controls-right-group {
