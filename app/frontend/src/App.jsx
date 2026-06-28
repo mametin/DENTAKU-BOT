@@ -4,7 +4,7 @@ import CalendarView from "./components/CalendarView";
 import EntryForm from "./components/EntryForm";
 import AuthCallback from "./components/AuthCallback";
 
-import './styles/global.css';
+import './styles/App.css';
 
 // --- メインのAppコンポーネント ---
 function App() {
