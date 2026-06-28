@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './styles/Modal.css';
+import '../styles/Modal.css';
 
 const TimeSlotModal = ({ date, initialValue, onSave, onClose }) => {
   // 初期値（"10:00-11:00,13:00-14:00" 形式）をオブジェクトの配列に変換
