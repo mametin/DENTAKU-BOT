@@ -32,6 +32,7 @@ function EntryForm({ allData }) {
   // usestateの定義
   const { targetName } = useParams();
   const [name, setName] = useState(targetName || "");
+  const [isEditMode, setIsEditMode] = useState(!!targetName);
   const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState("");
   const [responses, setResponses] = useState({});
@@ -58,53 +59,68 @@ function EntryForm({ allData }) {
     }
   }, [targetName]);
 
-  // 編集モードのとき、既存データをフォームにセット
+  // targetNameがある場合、現在のフォーム月(items)にそのユーザのID情報があるかで
+  // 編集モードか新規入力モードかを自動切替する
   useEffect(() => {
-    if (targetName && items && items.length > 0) {
-      // itemsの存在チェックを追加
-      const decodedName = decodeURIComponent(targetName);
-      const resObj = {};
-      const otherObj = {};
-      let userComment = "";
-
-      items.forEach((item) => {
-        const val = item.details?.[decodedName] || "";
-        const cleanVal = val === "-" ? "" : val;
-
-        if (item.date === "コメント") {
-          userComment = cleanVal;
-          return;
-        }
-
-        if (item.date === "ユーザID") {
-          return;
-        }
-
-        if (item.details && item.details[decodedName]) {
-          const marks = ["◎", "△", "▽", "✕", ""];
-          if (cleanVal && !marks.includes(cleanVal)) {
-            resObj[item.date] = "その他";
-            otherObj[item.date] = cleanVal;
-          } else {
-            resObj[item.date] = cleanVal;
-          }
-        }
-      });
-
-      setResponses(resObj);
-      setOtherTexts(otherObj);
-      setComment(userComment);
-
-      setInitialData(
-        JSON.stringify({
-          name: decodedName,
-          responses: resObj,
-          otherTexts: otherObj,
-          comment: userComment,
-        }),
-      );
+    if (!targetName) {
+      setIsEditMode(false);
+      return;
+    }
+    const decodedName = decodeURIComponent(targetName);
+    const userIdRow = items.find((item) => item.date === "ユーザID");
+    const hasId = !!(userIdRow && userIdRow.details && userIdRow.details[decodedName]);
+    setIsEditMode(hasId);
+    if (hasId) {
+      setName(decodedName);
     }
   }, [targetName, items]);
+
+  // 編集モードのとき、既存データをフォームにセット
+  useEffect(() => {
+    if (!isEditMode || !targetName || !items || items.length === 0) return;
+
+    const decodedName = decodeURIComponent(targetName);
+    const resObj = {};
+    const otherObj = {};
+    let userComment = "";
+
+    items.forEach((item) => {
+      const val = item.details?.[decodedName] || "";
+      const cleanVal = val === "-" ? "" : val;
+
+      if (item.date === "コメント") {
+        userComment = cleanVal;
+        return;
+      }
+
+      if (item.date === "ユーザID") {
+        return;
+      }
+
+      if (item.details && item.details[decodedName]) {
+        const marks = ["◎", "△", "▽", "✕", ""];
+        if (cleanVal && !marks.includes(cleanVal)) {
+          resObj[item.date] = "その他";
+          otherObj[item.date] = cleanVal;
+        } else {
+          resObj[item.date] = cleanVal;
+        }
+      }
+    });
+
+    setResponses(resObj);
+    setOtherTexts(otherObj);
+    setComment(userComment);
+
+    setInitialData(
+      JSON.stringify({
+        name: decodedName,
+        responses: resObj,
+        otherTexts: otherObj,
+        comment: userComment,
+      }),
+    );
+  }, [isEditMode, targetName, items]);
 
   if (!items || items.length === 0) {
     return (
@@ -248,7 +264,7 @@ function EntryForm({ allData }) {
     const userIdRow = items.find((item) => item.date === "ユーザID");
     let submitId = user.id;
 
-    if (targetName) {
+    if (isEditMode && targetName) {
       const decodedName = decodeURIComponent(targetName);
       if (userIdRow && userIdRow.details && userIdRow.details[decodedName]) {
         submitId = userIdRow.details[decodedName];
@@ -256,7 +272,7 @@ function EntryForm({ allData }) {
     }
 
     const payload = {
-      type: targetName ? "correct" : "submit",
+      type: isEditMode ? "correct" : "submit",
       id: submitId,
       name: name,
       comment: comment,
@@ -338,7 +354,7 @@ function EntryForm({ allData }) {
                   </button>
                 </div>
 
-                <h1>日程の{targetName ? "修正" : "新規入力"}</h1>
+                <h1>日程の{isEditMode ? "修正" : "新規入力"}</h1>
                 <div className="form-group">
                   <div
                     style={{
