@@ -276,7 +276,7 @@ function EntryForm({ allData }) {
       id: submitId,
       name: name,
       comment: comment,
-      responses: finalResponses,
+      responses: submissionResponses,
       targetMonth: formMonth,
     };
 
