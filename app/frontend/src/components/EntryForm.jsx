@@ -68,12 +68,19 @@ function EntryForm({ allData }) {
       let userComment = "";
 
       items.forEach((item) => {
-        const val = item.details[decodedName] || "";
+        const val = item.details?.[decodedName] || "";
         const cleanVal = val === "-" ? "" : val;
 
         if (item.date === "コメント") {
           userComment = cleanVal;
-        } else if (item.details && item.details[decodedName]) {
+          return;
+        }
+
+        if (item.date === "ユーザID") {
+          return;
+        }
+
+        if (item.details && item.details[decodedName]) {
           const marks = ["◎", "△", "▽", "✕", ""];
           if (cleanVal && !marks.includes(cleanVal)) {
             resObj[item.date] = "その他";
@@ -115,8 +122,10 @@ function EntryForm({ allData }) {
   );
 
   const validItems =
-    boundaryIndex === -1 ? items : items.slice(0, boundaryIndex);
-  const dates = validItems.map((item) => item.date);
+  boundaryIndex === -1 ? items : items.slice(0, boundaryIndex);
+
+  const scheduleItems = validItems.filter((item) => item.date !== "ユーザID");
+  const dates = scheduleItems.map((item) => item.date);
 
   // 一括更新のハンドラ
   const handleBulkUpdate = (status) => {
@@ -225,14 +234,14 @@ function EntryForm({ allData }) {
     });
 
     const submissionResponses = {};
-    validItems.forEach((item) => {
+    scheduleItems.forEach((item) => {
       const datekey = item.date;
       const val = responses[datekey];
 
       if (val === "その他") {
         submissionResponses[datekey] = otherTexts[datekey] || "";
       } else {
-        submissionResponses[datekey] = val || ""; 
+        submissionResponses[datekey] = val || "";
       }
     });
 
