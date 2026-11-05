@@ -352,6 +352,13 @@ function EntryForm({ allData }) {
                   >
                     来月
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormMonth("next2")}
+                    className={formMonth === "next2" ? "active" : ""}
+                  >
+                    再来月
+                  </button>
                 </div>
 
                 <h1>日程の{isEditMode ? "修正" : "新規入力"}</h1>
