@@ -1,6 +1,6 @@
 // --- カレンダー表示コンポーネント ---
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import UserFilterModal from "./UserFilterModal";
 import DayFilterModal from "./DayFilterModal";
 import headerIcon from "../IMG_icon.jpg";
@@ -11,13 +11,20 @@ import '../styles/CalendarView.css';
 
 function CalendarView({ allData }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const requestedMonth = searchParams.get("month");
+  const initialMonth = ["last", "current", "next"].includes(requestedMonth)
+    ? requestedMonth
+    : "current";
 
   //ハンバーガーメニュー開閉ステート
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // タブの状態管理
-  const [activeTab, setActiveTab] = useState(1);
-  const [activeMonth, setActiveMonth] = useState("current");
+  const [activeTab, setActiveTab] = useState(
+    { last: 0, current: 1, next: 2 }[initialMonth],
+  );
+  const [activeMonth, setActiveMonth] = useState(initialMonth);
   const items = allData[activeMonth] || [];
 
   // localStorage からログイン情報を取得
