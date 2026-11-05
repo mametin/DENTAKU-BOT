@@ -408,6 +408,11 @@
   aspect-ratio: 1 / 1 !important;
 }
 
+/* PCではメニュー内の絞り込みを隠し、スマホでは下の指定で表示する。 */
+.mobile-filter-area {
+  display: none;
+}
+
 /* --- スマホ版（カレンダー部分） --- */
 @media screen and (max-width: 900px) {
   .calendar-controls .controls-right-group {
