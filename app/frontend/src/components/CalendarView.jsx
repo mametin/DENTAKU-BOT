@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import UserFilterModal from "./UserFilterModal";
 import DayFilterModal from "./DayFilterModal";
+import CalendarScrollArea from "./CalendarScrollArea";
+import CalendarTimeTooltip from "./CalendarTimeTooltip";
 import headerIcon from "../IMG_icon.jpg";
 import { loginWithDiscord } from "../constants";
 
@@ -192,7 +194,7 @@ function CalendarView({ allData }) {
   });
 
   return (
-    <div className="main-layout">
+    <div className="main-layout calendar-page">
       <header className="main-header">
         <div className="header-left">
           <div className="header-icon"></div>
@@ -500,23 +502,23 @@ function CalendarView({ allData }) {
             </div>
           </div>
 
-          <div className="table-wrapper">
-            <table>
+          <CalendarScrollArea key={activeMonth}>
+            <table className="calendar-table">
               <thead>
                 <tr>
-                  <th>日付</th>
+                  <th scope="col" className="date-cell">日付</th>
                   {showSummary && (
                     <>
-                      <th className="stat-header">◎</th>
-                      <th className="stat-header">△</th>
-                      <th className="stat-header">▽</th>
-                      <th className="stat-header">✕</th>
-                      <th className="stat-header">☐</th>
+                      <th scope="col" className="stat-header">◎</th>
+                      <th scope="col" className="stat-header">△</th>
+                      <th scope="col" className="stat-header">▽</th>
+                      <th scope="col" className="stat-header">✕</th>
+                      <th scope="col" className="stat-header">☐</th>
                     </>
                   )}
 
                   {displayColumns.map((user) => (
-                    <th key={user}>
+                    <th key={user} scope="col" className="user-cell">
                       {activeMonth === "last" ? (
                         <span style={{ color: "#666" }}>{user}</span>
                       ) : (
@@ -534,15 +536,15 @@ function CalendarView({ allData }) {
               <tbody>
                 {displayRow.map((item, idx) => (
                   <tr key={idx}>
-                    <td>{item.date}</td>
+                    <th scope="row" className="date-cell">{item.date}</th>
 
                     {showSummary && (
                       <>
-                        <td>{item.details?.["◎"] || 0}</td>
-                        <td>{item.details?.["△"] || 0}</td>
-                        <td>{item.details?.["▽"] || 0}</td>
-                        <td>{item.details?.["✕"] || 0}</td>
-                        <td>{item.details?.["☐"] || 0}</td>
+                        <td className="stat-cell">{item.details?.["◎"] || 0}</td>
+                        <td className="stat-cell">{item.details?.["△"] || 0}</td>
+                        <td className="stat-cell">{item.details?.["▽"] || 0}</td>
+                        <td className="stat-cell">{item.details?.["✕"] || 0}</td>
+                        <td className="stat-cell">{item.details?.["☐"] || 0}</td>
                       </>
                     )}
 
@@ -551,12 +553,9 @@ function CalendarView({ allData }) {
                       const isTimeValue = /\d+-\d+/.test(val);
 
                       return (
-                        <td key={u}>
+                        <td key={u} className="user-cell">
                           {isTimeValue ? (
-                            <div className="tooltip-container">
-                              <div className="tooltip-trigger symbol-box mark-☐">☐</div>
-                              <span className="tooltip-content">{val}</span>
-                            </div>
+                            <CalendarTimeTooltip value={val} label={`${item.date} ${u}`} />
                           ) : val !== "-" ? (
                             <div className={`symbol-box mark-${val}`}>
                               {val}
@@ -571,7 +570,7 @@ function CalendarView({ allData }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </CalendarScrollArea>
         </div>
 
         {commentRow && (
