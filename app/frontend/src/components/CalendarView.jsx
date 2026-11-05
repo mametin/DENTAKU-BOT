@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import UserFilterModal from "./UserFilterModal";
 import DayFilterModal from "./DayFilterModal";
-import headerIcon from "../IMG_icon.jpg";
+import { SiteTitle } from "./CommonComponents";
 import { loginWithDiscord } from "../constants";
 
 import '../styles/CalendarView.css';
@@ -197,10 +197,7 @@ function CalendarView({ allData }) {
       <header className="main-header">
         <div className="header-left">
           <div className="header-icon"></div>
-          <h1 className="header-title">
-            <img src={headerIcon} alt="Icon" className="title-icon" />
-            日程調整くんWEB
-          </h1>
+          <SiteTitle />
         </div>
 
         <button

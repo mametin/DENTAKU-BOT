@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import CalendarView from "./components/CalendarView";
 import EntryForm from "./components/EntryForm";
 import AuthCallback from "./components/AuthCallback";
+import HelpPage from "./components/HelpPage";
 
 import './styles/App.css';
 
@@ -24,22 +25,21 @@ function App() {
       });
   }, []);
 
-  if (loading) {
-    return (
-      <div className="full-screen-loading">
+  const loadingScreen = (
+      <div className="full-screen-loading" role="status" aria-label="データを読み込み中">
         <div className="loader"></div>
       </div>
-    );
-  }
+  );
 
   return (
     <Routes>
-      <Route path="/" element={<CalendarView allData={allData} />} />
-      <Route path="/new" element={<EntryForm allData={allData} />} />
+      <Route path="/" element={loading ? loadingScreen : <CalendarView allData={allData} />} />
+      <Route path="/new" element={loading ? loadingScreen : <EntryForm allData={allData} />} />
+      <Route path="/help" element={<HelpPage />} />
       <Route path="/callback" element={<AuthCallback />} />
       <Route
         path="/edit/:targetName"
-        element={<EntryForm allData={allData} />}
+        element={loading ? loadingScreen : <EntryForm allData={allData} />}
       />
     </Routes>
   );

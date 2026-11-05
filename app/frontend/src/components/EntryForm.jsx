@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TimeSlotModal from "./TimeSlotModal";
-import headerIcon from "../IMG_icon.jpg";
+import { SiteTitle } from "./CommonComponents";
 import { GAS_URL, DISCORD_URL } from "../constants";
 
 import '../styles/EntryForm.css';
@@ -306,10 +306,7 @@ function EntryForm({ allData }) {
       <header className="main-header">
         <div className="header-left">
           <div className="header-icon"></div>
-          <h1 className="header-title">
-            <img src={headerIcon} alt="Icon" className="title-icon" />
-            日程調整くんWEB
-          </h1>
+          <SiteTitle />
         </div>
 
         <div className="header-right">
