@@ -13,7 +13,7 @@ function CalendarView({ allData }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const requestedMonth = searchParams.get("month");
-  const initialMonth = ["last", "current", "next"].includes(requestedMonth)
+  const initialMonth = ["last", "current", "next", "next2"].includes(requestedMonth)
     ? requestedMonth
     : "current";
 
@@ -22,7 +22,7 @@ function CalendarView({ allData }) {
 
   // タブの状態管理
   const [activeTab, setActiveTab] = useState(
-    { last: 0, current: 1, next: 2 }[initialMonth],
+    { last: 0, current: 1, next: 2, next2: 3 }[initialMonth],
   );
   const [activeMonth, setActiveMonth] = useState(initialMonth);
   const items = allData[activeMonth] || [];
@@ -418,6 +418,15 @@ function CalendarView({ allData }) {
                   className={activeTab === 2 ? "active" : ""}
                 >
                   来月
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab(3);
+                    setActiveMonth("next2");
+                  }}
+                  className={activeTab === 3 ? "active" : ""}
+                >
+                  再来月
                 </button>
               </div>
             </div>

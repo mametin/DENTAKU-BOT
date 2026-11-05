@@ -74,7 +74,7 @@ async function getSheetData() {
       !process.env.GOOGLE_PRIVATE_KEY
     ) {
       console.log("認証情報が設定されていません。");
-      return { last: [], current: [], next: [] };
+      return { last: [], current: [], next: [], next2: [] };
     }
 
     const serviceAccountAuth = new JWT({
@@ -89,10 +89,11 @@ async function getSheetData() {
     const sheetConfigs = [
       { index: 0, label: "last" }, // 先月
       { index: 1, label: "current" }, // 今月
-      { index: 2, label: "next" }, // 来月
+    { index: 2, label: "next" }, // 来月
+    { index: 3, label: "next2" }, // 再来月
     ];
 
-    const result = { last: [], current: [], next: [] };
+  const result = { last: [], current: [], next: [], next2: [] };
 
     for (const config of sheetConfigs) {
       const sheet = s.sheetsByIndex[config.index];

@@ -8,7 +8,7 @@ import './styles/App.css';
 
 // --- メインのAppコンポーネント ---
 function App() {
-  const [allData, setAllData] = useState({ last: [], current: [], next: [] });
+  const [allData, setAllData] = useState({ last: [], current: [], next: [], next2: [] });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
